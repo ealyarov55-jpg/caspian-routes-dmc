@@ -1,0 +1,37 @@
+{
+  "nav": {
+    "destinations": "Istiqamətlər",
+    "experiences": "Təcrübələr",
+    "routes": "Marşrutlar",
+    "about": "Haqqımızda",
+    "contact": "Əlaqə",
+    "planTrip": "Səfər planla"
+  },
+  "hero": {
+    "badge1": "Azərbaycan",
+    "badge2": "İpək yolu",
+    "badge3": "Qafqaz",
+    "title1": "Xəzər\nmarşrutlarını kəşf edin",
+    "title2": "Qədim yollar,\nmüasir səyahətlər",
+    "title3": "Dağların dənizlə\nqovuşduğu yer",
+    "subtitle": "Azərbaycan, Qazaxıstan, Türkmənistan, İran və Rusiyada unudulmaz səyahətlər üçün DMC tərəfdaşınız.",
+    "exploreBtn": "Marşrutlara bax",
+    "planBtn": "Səfər planla",
+    "countries": "Ölkə",
+    "routes": "Marşrut",
+    "travelers": "Səyahətçi"
+  },
+  "curated": {
+    "tag": "Sizin üçün seçilmişdir",
+    "title": "Kuratorluq təcrübələri",
+    "viewAll": "Bütün marşrutlar",
+    "from": "Başlayaraq",
+    "explore": "Marşruta bax",
+    "tours": {
+      "baku": { "title": "Bakı şəhər turu", "subtitle": "Bakı, Azərbaycan" },
+      "absheron": { "title": "Abşeron yarımadası", "subtitle": "Od məbədi və palçıq vulkanları" },
+      "sheki": { "title": "Şəki və İpək yolu", "subtitle": "Qədim karvansaralar" },
+      "caspian": { "title": "Xəzər kruizi", "subtitle": "Bakı körfəzi və sahil" }
+    }
+  }
+}

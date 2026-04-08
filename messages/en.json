@@ -1,0 +1,37 @@
+{
+  "nav": {
+    "destinations": "Destinations",
+    "experiences": "Experiences",
+    "routes": "Routes",
+    "about": "About",
+    "contact": "Contact",
+    "planTrip": "Plan Your Trip"
+  },
+  "hero": {
+    "badge1": "Azerbaijan",
+    "badge2": "Silk Road",
+    "badge3": "Caucasus",
+    "title1": "Discover the\nCaspian Routes",
+    "title2": "Ancient Paths,\nModern Journeys",
+    "title3": "Where Mountains\nMeet the Sea",
+    "subtitle": "Your DMC Partner for Unforgettable Journeys in Azerbaijan, Kazakhstan, Turkmenistan, Iran & Russia.",
+    "exploreBtn": "Explore Routes",
+    "planBtn": "Plan Your Trip",
+    "countries": "Countries",
+    "routes": "Routes",
+    "travelers": "Travelers"
+  },
+  "curated": {
+    "tag": "Handpicked for you",
+    "title": "Curated Experiences",
+    "viewAll": "View all routes",
+    "from": "From",
+    "explore": "Explore Route",
+    "tours": {
+      "baku": { "title": "Baku City Tour", "subtitle": "Baku, Azerbaijan" },
+      "absheron": { "title": "Absheron Peninsula", "subtitle": "Fire Temple & Mud Volcanoes" },
+      "sheki": { "title": "Sheki & Silk Road", "subtitle": "Ancient Caravanserais" },
+      "caspian": { "title": "Caspian Sea Cruise", "subtitle": "Baku Bay & Caspian Coast" }
+    }
+  }
+}
