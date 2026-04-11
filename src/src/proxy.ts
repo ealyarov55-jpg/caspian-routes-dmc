@@ -6,10 +6,17 @@ const defaultLocale = "en";
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL(`/${defaultLocale}`, request.url));
+  }
+
   const pathnameHasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
+  
   if (pathnameHasLocale) return;
+  
   return NextResponse.redirect(
     new URL(`/${defaultLocale}${pathname}`, request.url)
   );
