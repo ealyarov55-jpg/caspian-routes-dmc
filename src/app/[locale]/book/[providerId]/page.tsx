@@ -73,6 +73,7 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
   const handleSubmit = async () => {
     if (!profile || !provider || !selectedDate) return;
     setSubmitting(true);
+
     await addDoc(collection(db, "bookings"), {
       clientId: profile.uid,
       clientName: profile.name,
@@ -88,6 +89,26 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
       createdAt: new Date().toISOString(),
       pricePerDay: provider.pricePerDay,
     });
+
+    await fetch("/api/send-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "booking_created",
+        booking: {
+          clientName: profile.name,
+          clientEmail: profile.email,
+          providerName: provider.name,
+          providerEmail: provider.email,
+          routeName: ROUTE_NAMES[routeId] || routeId,
+          date: selectedDate,
+          guests,
+          message,
+          pricePerDay: provider.pricePerDay,
+        },
+      }),
+    });
+
     setSubmitting(false);
     setSubmitted(true);
   };
@@ -129,7 +150,6 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
 
   return (
     <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
-      {/* Header */}
       <div style={{ background: "#021a1a", padding: "0 32px", height: 64, display: "flex", alignItems: "center", gap: 16 }}>
         <Link href={`/${locale}/routes/${routeId}`}
           style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "8px 14px", color: "white", textDecoration: "none", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}>
@@ -141,10 +161,7 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 24px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 24 }}>
 
-          {/* Left - Form */}
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-
-            {/* Route info */}
             {routeId && (
               <div style={{ background: "rgba(10,112,112,0.08)", border: "1px solid rgba(10,112,112,0.2)", borderRadius: 14, padding: "14px 20px", display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#2dd4bf" }} />
@@ -152,13 +169,11 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
               </div>
             )}
 
-            {/* Calendar */}
             <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
                 <Calendar size={18} color="#0a7070" />
                 <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, color: "#021a1a", fontWeight: 600 }}>Select Date</h2>
               </div>
-
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
                 <button onClick={prevMonth} style={{ width: 32, height: 32, borderRadius: "50%", border: "1.5px solid #e2eded", background: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <ChevronLeft size={14} color="#4a6060" />
@@ -168,11 +183,9 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
                   <ChevronRight size={14} color="#4a6060" />
                 </button>
               </div>
-
               <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, marginBottom: 8 }}>
                 {DAYS.map(d => <div key={d} style={{ textAlign: "center", fontSize: 10, fontWeight: 700, color: "#94a3a3", textTransform: "uppercase", letterSpacing: "0.05em" }}>{d}</div>)}
               </div>
-
               <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4 }}>
                 {Array.from({ length: firstDay }).map((_, i) => <div key={`e-${i}`} />)}
                 {Array.from({ length: daysInMonth }).map((_, i) => {
@@ -181,7 +194,6 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
                   const isPast = dateStr < todayStr;
                   const isProviderAvailable = provider.availableDates?.includes(dateStr);
                   const isSelected = dateStr === selectedDate;
-
                   return (
                     <button key={day}
                       onClick={() => !isPast && isProviderAvailable && setSelectedDate(dateStr)}
@@ -198,28 +210,22 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
                   );
                 })}
               </div>
-              <p style={{ fontSize: 12, color: "#94a3a3", marginTop: 12, textAlign: "center" }}>
-                Highlighted dates = guide is available
-              </p>
+              <p style={{ fontSize: 12, color: "#94a3a3", marginTop: 12, textAlign: "center" }}>Highlighted dates = guide is available</p>
             </div>
 
-            {/* Guests */}
             <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <User size={18} color="#0a7070" />
                 <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, color: "#021a1a", fontWeight: 600 }}>Number of Guests</h2>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                <button onClick={() => setGuests(g => Math.max(1, g - 1))}
-                  style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid #e2eded", background: "white", cursor: "pointer", fontSize: 20, color: "#4a6060", display: "flex", alignItems: "center", justifyContent: "center" }}>−</button>
+                <button onClick={() => setGuests(g => Math.max(1, g - 1))} style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid #e2eded", background: "white", cursor: "pointer", fontSize: 20, color: "#4a6060", display: "flex", alignItems: "center", justifyContent: "center" }}>−</button>
                 <span style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 32, fontWeight: 600, color: "#021a1a", minWidth: 40, textAlign: "center" }}>{guests}</span>
-                <button onClick={() => setGuests(g => Math.min(20, g + 1))}
-                  style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid #e2eded", background: "white", cursor: "pointer", fontSize: 20, color: "#4a6060", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
+                <button onClick={() => setGuests(g => Math.min(20, g + 1))} style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid #e2eded", background: "white", cursor: "pointer", fontSize: 20, color: "#4a6060", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
                 <span style={{ color: "#94a3a3", fontSize: 14 }}>person{guests !== 1 ? "s" : ""}</span>
               </div>
             </div>
 
-            {/* Message */}
             <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <MessageSquare size={18} color="#0a7070" />
@@ -230,15 +236,11 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
                 rows={4}
                 style={{ width: "100%", padding: "12px 16px", borderRadius: 12, background: "#f8fafa", border: "1.5px solid #e2eded", color: "#0d1f1f", fontSize: 14, fontFamily: "DM Sans, sans-serif", outline: "none", resize: "vertical", boxSizing: "border-box" }} />
             </div>
-
           </div>
 
-          {/* Right - Summary */}
           <div style={{ position: "sticky", top: 24 }}>
             <div style={{ background: "white", borderRadius: 20, padding: 24, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
               <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 20, color: "#021a1a", marginBottom: 20 }}>Booking Summary</h3>
-
-              {/* Guide */}
               <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px 0", borderBottom: "1px solid #f0f7f7", marginBottom: 16 }}>
                 <div style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg, #042e2e, #0a7070)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: 20 }}>
                   {provider.name?.[0]?.toUpperCase()}
@@ -248,8 +250,6 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
                   <p style={{ color: "#94a3a3", fontSize: 12 }}>{provider.carModel} {provider.carYear}</p>
                 </div>
               </div>
-
-              {/* Details */}
               <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 20 }}>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "#94a3a3", fontSize: 13 }}>Date</span>
@@ -266,7 +266,6 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
                   </div>
                 )}
               </div>
-
               {provider.pricePerDay && (
                 <div style={{ background: "#f0f7f7", borderRadius: 12, padding: "14px 16px", marginBottom: 20 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -277,9 +276,7 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
                   </div>
                 </div>
               )}
-
-              <button onClick={handleSubmit}
-                disabled={!selectedDate || submitting}
+              <button onClick={handleSubmit} disabled={!selectedDate || submitting}
                 style={{
                   width: "100%", padding: "14px", borderRadius: 14, border: "none",
                   background: !selectedDate ? "#e2eded" : "linear-gradient(135deg, #0a7070, #0d9090)",
@@ -290,7 +287,6 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
                 }}>
                 {submitting ? "Sending..." : !selectedDate ? "Select a Date First" : "Send Booking Request"}
               </button>
-
               <p style={{ fontSize: 11, color: "#94a3a3", textAlign: "center", marginTop: 12 }}>
                 No payment required. Guide will contact you to confirm.
               </p>
