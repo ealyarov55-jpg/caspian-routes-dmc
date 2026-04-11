@@ -75,7 +75,7 @@ export default function AvatarUpload({ uid, currentPhoto, name, onUpload }: Avat
           {photo ? (
             <img src={photo} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           ) : (
-            <span style={{ color: "white", fontSize: 32, fontWeight: 700 }}>{name?.[0]?.toUpperCase()}</span>
+            <span style={{ color: "white", fontSize: 32, fontWeight: 700 }}>{name ? name[0].toUpperCase() : "?"}</span>
           )}
         </div>
 
