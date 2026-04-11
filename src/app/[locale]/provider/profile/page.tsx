@@ -64,21 +64,20 @@ export default function ProviderProfilePage({ params }: { params: Promise<{ loca
     arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val];
 
   const handleSave = async () => {
-    if (!profile) return;
-    setSaving(true);
-    await setDoc(doc(db, "providers", profile.uid), {
-      ...form,
-      photoURL,
-      uid: profile.uid,
-      name: profile.name,
-      email: profile.email,
-      updatedAt: new Date().toISOString(),
-    });
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
-  };
-
+  if (!profile) return;
+  setSaving(true);
+  await setDoc(doc(db, "providers", profile.uid), {
+    ...form,
+    photoURL,
+    uid: profile.uid,
+    name: profile.name,
+    email: profile.email,
+    updatedAt: new Date().toISOString(),
+  }, { merge: true });
+  setSaving(false);
+  setSaved(true);
+  setTimeout(() => setSaved(false), 3000);
+};
   if (loading || !profile) return null;
 
   const inputStyle = {
