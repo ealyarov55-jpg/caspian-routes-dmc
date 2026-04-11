@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { storage, db } from "@/lib/firebase";
@@ -18,6 +18,10 @@ export default function AvatarUpload({ uid, currentPhoto, name, onUpload }: Avat
   const [progress, setProgress] = useState(0);
   const [photo, setPhoto] = useState(currentPhoto || "");
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (currentPhoto) setPhoto(currentPhoto);
+  }, [currentPhoto]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
