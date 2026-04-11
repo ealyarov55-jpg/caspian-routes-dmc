@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { User, Car, DollarSign, FileText, ArrowLeft, Check } from "lucide-react";
+import AvatarUpload from "@/components/ui/AvatarUpload";
 
 export default function ProviderProfilePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
@@ -14,6 +15,7 @@ export default function ProviderProfilePage({ params }: { params: Promise<{ loca
 
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [photoURL, setPhotoURL] = useState("");
   const [form, setForm] = useState({
     bio: "",
     carModel: "",
@@ -35,11 +37,12 @@ export default function ProviderProfilePage({ params }: { params: Promise<{ loca
     if (!loading && profile?.role !== "provider") router.push(`/${locale}/dashboard`);
   }, [loading, profile]);
 
- useEffect(() => {
+  useEffect(() => {
     if (profile) {
       getDoc(doc(db, "providers", profile.uid)).then(snap => {
         if (snap.exists()) {
           const data = snap.data();
+          setPhotoURL(data.photoURL || "");
           setForm({
             bio: data.bio || "",
             carModel: data.carModel || "",
@@ -65,6 +68,7 @@ export default function ProviderProfilePage({ params }: { params: Promise<{ loca
     setSaving(true);
     await setDoc(doc(db, "providers", profile.uid), {
       ...form,
+      photoURL,
       uid: profile.uid,
       name: profile.name,
       email: profile.email,
@@ -82,7 +86,6 @@ export default function ProviderProfilePage({ params }: { params: Promise<{ loca
     background: "white", border: "1.5px solid #e2eded",
     color: "#0d1f1f", fontSize: 14, fontFamily: "DM Sans, sans-serif",
     outline: "none", boxSizing: "border-box" as const,
-    transition: "border-color 0.2s",
   };
 
   const labelStyle = {
@@ -108,12 +111,30 @@ export default function ProviderProfilePage({ params }: { params: Promise<{ loca
           <span style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 20, fontWeight: 600 }}>Provider Profile</span>
         </div>
         <button onClick={handleSave} disabled={saving}
-          style={{ background: saved ? "#065050" : "linear-gradient(135deg, #0a7070, #0d9090)", border: "none", borderRadius: 12, padding: "10px 24px", cursor: "pointer", color: "white", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", gap: 8, boxShadow: "0 4px 16px rgba(10,112,112,0.3)" }}>
+          style={{ background: saved ? "#065050" : "linear-gradient(135deg, #0a7070, #0d9090)", border: "none", borderRadius: 12, padding: "10px 24px", cursor: "pointer", color: "white", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", gap: 8 }}>
           {saved ? <><Check size={16} /> Saved!</> : saving ? "Saving..." : "Save Profile"}
         </button>
       </div>
 
       <div style={{ maxWidth: 800, margin: "0 auto", padding: "40px 24px" }}>
+
+        {/* Avatar */}
+        <div style={sectionStyle}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(10,112,112,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <User size={18} color="#0a7070" />
+            </div>
+            <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, color: "#021a1a", fontWeight: 600 }}>Profile Photo</h2>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <AvatarUpload
+              uid={profile.uid}
+              name={profile.name}
+              currentPhoto={photoURL}
+              onUpload={(url) => setPhotoURL(url)}
+            />
+          </div>
+        </div>
 
         {/* Basic Info */}
         <div style={sectionStyle}>
@@ -195,7 +216,7 @@ export default function ProviderProfilePage({ params }: { params: Promise<{ loca
           </div>
         </div>
 
-        {/* Languages */}
+        {/* Languages & Services */}
         <div style={sectionStyle}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
             <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(10,112,112,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
