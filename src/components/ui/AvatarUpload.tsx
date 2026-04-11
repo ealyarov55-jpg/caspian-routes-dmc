@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { storage, db } from "@/lib/firebase";
 import { Camera, Loader } from "lucide-react";
 
@@ -23,7 +23,6 @@ export default function AvatarUpload({ uid, currentPhoto, name, onUpload }: Avat
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate
     if (!file.type.startsWith("image/")) {
       alert("Please select an image file");
       return;
@@ -51,8 +50,7 @@ export default function AvatarUpload({ uid, currentPhoto, name, onUpload }: Avat
       },
       async () => {
         const url = await getDownloadURL(uploadTask.snapshot.ref);
-        // Save to Firestore
-        await updateDoc(doc(db, "providers", uid), { photoURL: url });
+        await setDoc(doc(db, "providers", uid), { photoURL: url }, { merge: true });
         setPhoto(url);
         setUploading(false);
         onUpload?.(url);
@@ -62,7 +60,6 @@ export default function AvatarUpload({ uid, currentPhoto, name, onUpload }: Avat
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-      {/* Avatar */}
       <div style={{ position: "relative", cursor: "pointer" }} onClick={() => fileRef.current?.click()}>
         <div style={{
           width: 96, height: 96, borderRadius: "50%",
@@ -78,7 +75,6 @@ export default function AvatarUpload({ uid, currentPhoto, name, onUpload }: Avat
           )}
         </div>
 
-        {/* Overlay */}
         <div style={{
           position: "absolute", inset: 0, borderRadius: "50%",
           background: "rgba(2,26,26,0.5)",
@@ -97,7 +93,6 @@ export default function AvatarUpload({ uid, currentPhoto, name, onUpload }: Avat
         </div>
       </div>
 
-      {/* Progress */}
       {uploading && (
         <div style={{ width: 96 }}>
           <div style={{ background: "#e2eded", borderRadius: 999, height: 4, overflow: "hidden" }}>
@@ -107,7 +102,6 @@ export default function AvatarUpload({ uid, currentPhoto, name, onUpload }: Avat
         </div>
       )}
 
-      {/* Button */}
       <button onClick={() => fileRef.current?.click()} disabled={uploading}
         style={{ fontSize: 12, color: "#0a7070", background: "none", border: "none", cursor: "pointer", fontFamily: "DM Sans, sans-serif", textDecoration: "underline" }}>
         {uploading ? "Uploading..." : "Change photo"}
