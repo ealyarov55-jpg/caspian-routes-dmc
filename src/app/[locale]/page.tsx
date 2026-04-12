@@ -3,6 +3,7 @@ import HeroSection from "@/components/sections/HeroSection";
 import HowItWorks from "@/components/sections/HowItWorks";
 import CuratedSection from "@/components/sections/CuratedSection";
 import WhyChooseUs from "@/components/sections/WhyChooseUs";
+import Footer from "@/components/sections/Footer";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -13,6 +14,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <HowItWorks />
       <CuratedSection />
       <WhyChooseUs />
+      <Footer />
     </main>
   );
 }
