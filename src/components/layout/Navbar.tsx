@@ -86,7 +86,7 @@ export default function Navbar({ locale }: { locale: string }) {
             <button onClick={() => setLangOpen(!langOpen)}
               style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "6px 12px", cursor: "pointer", color: "white", fontFamily: "DM Sans, sans-serif", fontSize: 13 }}>
               <Globe size={14} color="#2dd4bf" />
-              {locale.toUpperCase()}
+              {locale?.toUpperCase() || "EN"}
               <ChevronDown size={12} color="rgba(255,255,255,0.6)" />
             </button>
             {langOpen && (
