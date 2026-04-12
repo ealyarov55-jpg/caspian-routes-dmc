@@ -2,30 +2,30 @@ import TourCard, { Tour } from "@/components/ui/TourCard";
 
 const tours: Tour[] = [
   {
-    id: "baku-city-tour",
-    title: "Baku City Tour",
-    subtitle: "Baku, Azerbaijan",
+    id: "sheki-silk-road",
+    title: "Sheki & Silk Road",
+    subtitle: "Mountains & Ancient Forests",
     image: "/images/pexels-arzu-ibaeva-479643718-16976814.jpg",
     duration: "3 days",
-    price: 1000,
-    tag: "Popular",
+    price: 700,
   },
   {
-    id: "absheron-peninsula",
-    title: "Absheron Peninsula",
-    subtitle: "Fire Temple & Mud Volcanoes",
+    id: "caucasus-nature",
+    title: "Caucasus Nature Trek",
+    subtitle: "Forests & Mountain Villages",
     image: "/images/pexels-rahibyaqubov-17050728.jpg",
     duration: "2 days",
     price: 450,
     tag: "New",
   },
   {
-    id: "sheki-silk-road",
-    title: "Sheki & Silk Road",
-    subtitle: "Ancient Caravanserais",
+    id: "baku-city-tour",
+    title: "Baku City Tour",
+    subtitle: "Baku Boulevard & Old City",
     image: "/images/pexels-sultan-jafarov-475048977-18207490.jpg",
-    duration: "4 days",
-    price: 700,
+    duration: "1-3 days",
+    price: 300,
+    tag: "Popular",
   },
   {
     id: "caspian-sea-cruise",
@@ -37,7 +37,6 @@ const tours: Tour[] = [
     tag: "Premium",
   },
 ];
-
 export default function CuratedSection() {
   return (
     <section className="py-24 px-6" style={{ background: "#f0f7f7" }}>
