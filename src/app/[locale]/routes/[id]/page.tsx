@@ -10,9 +10,9 @@ import { useRouter } from "next/navigation";
 
 const ROUTES: Record<string, any> = {
   "baku-city-tour": {
-    title: "Baku City Tour",
+    title: "Baku City Tour",  
     subtitle: "Baku, Azerbaijan",
-    image: "/images/baku.jpg",
+    image: "/images/pexels-sultan-jafarov-475048977-18207490.jpg",
     duration: "3 days",
     difficulty: "Easy",
     price: 1000,
@@ -24,7 +24,7 @@ const ROUTES: Record<string, any> = {
   "absheron-peninsula": {
     title: "Absheron Peninsula",
     subtitle: "Fire Temple & Mud Volcanoes",
-    image: "/images/absheron.jpg",
+    image: "/images/pexels-dnrgs-33587121.jpg",
     duration: "2 days",
     difficulty: "Easy",
     price: 450,
@@ -36,7 +36,7 @@ const ROUTES: Record<string, any> = {
   "sheki-silk-road": {
     title: "Sheki & Silk Road",
     subtitle: "Ancient Caravanserais",
-    image: "/images/sheki.jpg",
+    image: "/images/pexels-arzu-ibaeva-479643718-16976814.jpg",
     duration: "4 days",
     difficulty: "Moderate",
     price: 700,
@@ -47,7 +47,7 @@ const ROUTES: Record<string, any> = {
   "caspian-sea-cruise": {
     title: "Caspian Sea Cruise",
     subtitle: "Baku Bay & Caspian Coast",
-    image: "/images/caspian.jpg",
+    image: "/images/pexels-zulfugarkarimov-34686330.jpg",
     duration: "5 days",
     difficulty: "Easy",
     price: 1200,
@@ -102,7 +102,11 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
 
   return (
     <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
-
+<style>{`
+  @media (min-width: 768px) {
+    .route-detail-grid { grid-template-columns: 1fr 380px !important; }
+  }
+`}</style>
       {/* Hero */}
       <div style={{ position: "relative", height: 420, overflow: "hidden" }}>
         <img src={route.image} alt={route.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -125,7 +129,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
       </div>
 
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 24px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: 32, alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr)", gap: 32, alignItems: "start" }} className="route-detail-grid">
 
           {/* Left */}
           <div>
