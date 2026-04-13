@@ -8,10 +8,10 @@ import { MapPin, Clock, Star, Users, Filter, Search } from "lucide-react";
 import Link from "next/link";
 
 const ROUTES = [
-  { id: "baku-city-tour", title: "Baku City Tour", subtitle: "Baku, Azerbaijan", image: "/images/baku.jpg", duration: "3 days", difficulty: "Easy", highlights: ["Flame Towers", "Old City", "Boulevard"], tag: "Popular" },
-  { id: "absheron-peninsula", title: "Absheron Peninsula", subtitle: "Fire Temple & Mud Volcanoes", image: "/images/absheron.jpg", duration: "2 days", difficulty: "Easy", highlights: ["Ateshgah", "Mud Volcanoes", "Bibi-Heybat"], tag: "New" },
-  { id: "sheki-silk-road", title: "Sheki & Silk Road", subtitle: "Ancient Caravanserais", image: "/images/sheki.jpg", duration: "4 days", difficulty: "Moderate", highlights: ["Sheki Khan Palace", "Caravanserai", "Silk Market"] },
-  { id: "caspian-sea-cruise", title: "Caspian Sea Cruise", subtitle: "Baku Bay & Caspian Coast", image: "/images/caspian.jpg", duration: "5 days", difficulty: "Easy", highlights: ["Caspian Sea", "Baku Bay", "Coastal Villages"], tag: "Premium" },
+  { id: "baku-city-tour", title: "Baku City Tour", subtitle: "Baku, Azerbaijan", image: "/images/pexels-sultan-jafarov-475048977-18207490.jpg", duration: "3 days", difficulty: "Easy", highlights: ["Flame Towers", "Old City", "Boulevard"], tag: "Popular" },
+{ id: "absheron-peninsula", title: "Absheron Peninsula", subtitle: "Fire Temple & Mud Volcanoes", image: "/images/pexels-dnrgs-33587121.jpg", duration: "2 days", difficulty: "Easy", highlights: ["Ateshgah", "Mud Volcanoes", "Bibi-Heybat"], tag: "New" },
+{ id: "sheki-silk-road", title: "Sheki & Silk Road", subtitle: "Ancient Caravanserais", image: "/images/pexels-arzu-ibaeva-479643718-16976814.jpg", duration: "4 days", difficulty: "Moderate", highlights: ["Sheki Khan Palace", "Caravanserai", "Silk Market"] },
+{ id: "caspian-sea-cruise", title: "Caspian Sea Cruise", subtitle: "Baku Bay & Caspian Coast", image: "/images/pexels-zulfugarkarimov-34686330.jpg", duration: "5 days", difficulty: "Easy", highlights: ["Caspian Sea", "Baku Bay", "Coastal Villages"], tag: "Premium" },
 ];
 
 interface Provider {
