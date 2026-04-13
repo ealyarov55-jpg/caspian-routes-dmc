@@ -6,11 +6,10 @@ import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { ArrowLeft, Clock, Star, MapPin, Users, Check } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const ROUTES: Record<string, any> = {
   "baku-city-tour": {
-    title: "Baku City Tour",  
+    title: "Baku City Tour",
     subtitle: "Baku, Azerbaijan",
     image: "/images/pexels-sultan-jafarov-475048977-18207490.jpg",
     duration: "3 days",
@@ -64,18 +63,13 @@ interface Provider {
   carModel: string;
   carYear: string;
   pricePerDay: string;
-  pricePerHour: string;
   languages: string[];
-  services: string[];
   bio: string;
   availableDates: string[];
-  phone: string;
 }
 
 export default function RouteDetailPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { locale, id } = use(params);
-  const { profile } = useAuth();
-  const router = useRouter();
   const route = ROUTES[id];
   const [providers, setProviders] = useState<Provider[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,22 +85,26 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
     });
   }, []);
 
+  const tr = (en: string, ru: string, az: string) =>
+    locale === "ru" ? ru : locale === "az" ? az : en;
+
   if (!route) return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "DM Sans, sans-serif" }}>
       <div style={{ textAlign: "center" }}>
         <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 48, color: "#021a1a" }}>Route not found</h1>
-        <Link href={`/${locale}/routes`} style={{ color: "#0a7070", textDecoration: "none" }}>← Back to routes</Link>
+        <Link href={`/${locale}/routes`} style={{ color: "#0a7070", textDecoration: "none" }}>← {tr("Back to routes", "Все маршруты", "Marşrutlara qayıt")}</Link>
       </div>
     </div>
   );
 
   return (
     <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
-<style>{`
-  @media (min-width: 768px) {
-    .route-detail-grid { grid-template-columns: 1fr 380px !important; }
-  }
-`}</style>
+      <style>{`
+        @media (min-width: 768px) {
+          .route-detail-grid { grid-template-columns: 1fr 380px !important; }
+        }
+      `}</style>
+
       {/* Hero */}
       <div style={{ position: "relative", height: 420, overflow: "hidden" }}>
         <img src={route.image} alt={route.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -114,12 +112,12 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
         <div style={{ position: "absolute", inset: 0, padding: "24px 32px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Link href={`/${locale}/routes`}
             style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10, padding: "8px 16px", color: "white", textDecoration: "none", fontSize: 13, fontFamily: "DM Sans, sans-serif", width: "fit-content" }}>
-            <ArrowLeft size={14} /> All Routes
+            <ArrowLeft size={14} /> {tr("All Routes", "Все маршруты", "Bütün marşrutlar")}
           </Link>
           <div>
             {route.tag && <span style={{ background: "#c9a84c", color: "white", fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12, display: "inline-block" }}>{route.tag}</span>}
             <h1 style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 500, marginBottom: 12 }}>{route.title}</h1>
-            <div style={{ display: "flex", gap: 20 }}>
+            <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}><Clock size={14} color="#2dd4bf" /><span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>{route.duration}</span></div>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}><Star size={14} color="#2dd4bf" /><span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>{route.difficulty}</span></div>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}><MapPin size={14} color="#2dd4bf" /><span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>{route.subtitle}</span></div>
@@ -133,15 +131,17 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
 
           {/* Left */}
           <div>
-            {/* Description */}
             <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 4px 24px rgba(4,46,46,0.08)", marginBottom: 20 }}>
-              <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", marginBottom: 14 }}>About this Route</h2>
+              <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", marginBottom: 14 }}>
+                {tr("About this Route", "О маршруте", "Marşrut haqqında")}
+              </h2>
               <p style={{ color: "#4a6060", lineHeight: 1.7, fontSize: 15 }}>{route.description}</p>
             </div>
 
-            {/* Highlights */}
             <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 4px 24px rgba(4,46,46,0.08)", marginBottom: 20 }}>
-              <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", marginBottom: 16 }}>Highlights</h2>
+              <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", marginBottom: 16 }}>
+                {tr("Highlights", "Основные места", "Əsas yerlər")}
+              </h2>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                 {route.highlights.map((h: string) => (
                   <div key={h} style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -154,9 +154,10 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
               </div>
             </div>
 
-            {/* Includes */}
             <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
-              <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", marginBottom: 16 }}>What's Included</h2>
+              <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", marginBottom: 16 }}>
+                {tr("What's Included", "Что включено", "Nə daxildir")}
+              </h2>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {route.includes.map((inc: string) => (
                   <div key={inc} style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -174,17 +175,16 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
                 <Users size={18} color="#0a7070" />
                 <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 20, color: "#021a1a", fontWeight: 600 }}>
-                  Available Guides ({providers.length})
+                  {tr("Available Guides", "Доступные гиды", "Mövcud bələdçilər")} ({providers.length})
                 </h3>
               </div>
 
               {loading ? (
-                <p style={{ color: "#94a3a3", fontSize: 13 }}>Loading guides...</p>
+                <p style={{ color: "#94a3a3", fontSize: 13 }}>Loading...</p>
               ) : providers.length === 0 ? (
                 <div style={{ textAlign: "center", padding: "24px 0" }}>
                   <Users size={32} color="#e2eded" style={{ marginBottom: 8 }} />
-                  <p style={{ color: "#94a3a3", fontSize: 14 }}>No guides available yet</p>
-                  <p style={{ color: "#c4d4d4", fontSize: 12, marginTop: 4 }}>Check back soon</p>
+                  <p style={{ color: "#94a3a3", fontSize: 14 }}>{tr("No guides available yet", "Пока нет гидов", "Hələ bələdçi yoxdur")}</p>
                 </div>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -192,7 +192,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
                     <div key={p.uid} style={{ padding: 16, borderRadius: 14, border: "1.5px solid #e2eded" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
                         <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #042e2e, #0a7070)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: 18, flexShrink: 0 }}>
-                          {p.name?.[0]?.toUpperCase()}
+                          {p.name ? p.name[0].toUpperCase() : "?"}
                         </div>
                         <div style={{ flex: 1 }}>
                           <p style={{ fontWeight: 600, color: "#021a1a", fontSize: 15 }}>{p.name}</p>
@@ -201,7 +201,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
                         {p.pricePerDay && (
                           <div style={{ textAlign: "right" }}>
                             <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 20, fontWeight: 700, color: "#021a1a" }}>${p.pricePerDay}</p>
-                            <p style={{ fontSize: 10, color: "#94a3a3" }}>per day</p>
+                            <p style={{ fontSize: 10, color: "#94a3a3" }}>{tr("per day", "в день", "gündə")}</p>
                           </div>
                         )}
                       </div>
@@ -215,7 +215,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
                       )}
                       <Link href={`/${locale}/book/${p.uid}?route=${id}`}
                         style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "10px", borderRadius: 10, textDecoration: "none", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
-                        Book This Guide
+                        {tr("Book This Guide", "Забронировать", "Rezerv et")}
                       </Link>
                     </div>
                   ))}
