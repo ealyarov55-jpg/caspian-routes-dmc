@@ -11,10 +11,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     <main>
       <Navbar locale={locale} />
       <HeroSection locale={locale} />
-      <HowItWorks />
-      <CuratedSection />
-      <WhyChooseUs />
-      <Footer />
+      <HowItWorks locale={locale} />
+      <CuratedSection locale={locale} />
+      <WhyChooseUs locale={locale} />
+      <Footer locale={locale} />
     </main>
   );
 }

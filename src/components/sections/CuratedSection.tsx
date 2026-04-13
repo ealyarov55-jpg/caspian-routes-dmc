@@ -1,4 +1,5 @@
 import TourCard, { Tour } from "@/components/ui/TourCard";
+import { getT } from "@/lib/i18n";
 
 const tours: Tour[] = [
   {
@@ -37,17 +38,20 @@ const tours: Tour[] = [
     tag: "Premium",
   },
 ];
-export default function CuratedSection() {
+
+export default function CuratedSection({ locale = "en" }: { locale?: string }) {
+  const t = getT(locale);
+
   return (
     <section className="py-24 px-6" style={{ background: "#f0f7f7" }}>
       <div className="max-w-7xl mx-auto">
         <div className="flex items-end justify-between mb-12">
           <div>
             <p style={{ color: "#0a7070", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>
-              Handpicked for you
+              {t.curated.tag}
             </p>
             <h2 className="font-serif" style={{ color: "#021a1a", fontWeight: 300, fontSize: "clamp(2rem, 4vw, 3rem)", lineHeight: 1.1 }}>
-              Curated Experiences
+              {t.curated.title}
             </h2>
           </div>
           <div className="hidden md:flex items-center gap-3">
@@ -58,13 +62,13 @@ export default function CuratedSection() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {tours.map((tour) => (
-            <TourCard key={tour.id} tour={tour} />
+            <TourCard key={tour.id} tour={tour} locale={locale} />
           ))}
         </div>
 
         <div className="text-center mt-12">
-          <a href="/routes" style={{ color: "#0a7070", fontSize: 14, fontFamily: "DM Sans, sans-serif", fontWeight: 500, textDecoration: "none", borderBottom: "1px solid rgba(10,112,112,0.4)", paddingBottom: 2 }}>
-            View all routes →
+          <a href={`/${locale}/routes`} style={{ color: "#0a7070", fontSize: 14, fontFamily: "DM Sans, sans-serif", fontWeight: 500, textDecoration: "none", borderBottom: "1px solid rgba(10,112,112,0.4)", paddingBottom: 2 }}>
+            {t.curated.viewAll} →
           </a>
         </div>
       </div>
