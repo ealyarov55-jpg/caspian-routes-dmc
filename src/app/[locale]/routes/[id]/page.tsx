@@ -3,57 +3,104 @@
 import { useState, use, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { useAuth } from "@/context/AuthContext";
 import { ArrowLeft, Clock, Star, MapPin, Users, Check } from "lucide-react";
 import Link from "next/link";
 
 const ROUTES: Record<string, any> = {
   "baku-city-tour": {
-    title: "Baku City Tour",
-    subtitle: "Baku, Azerbaijan",
+    title: { en: "Baku City Tour", ru: "Тур по Баку", az: "Bakı Şəhər Turu" },
+    subtitle: { en: "Baku, Azerbaijan", ru: "Баку, Азербайджан", az: "Bakı, Azərbaycan" },
     image: "/images/pexels-sultan-jafarov-475048977-18207490.jpg",
     duration: "3 days",
-    difficulty: "Easy",
+    difficulty: { en: "Easy", ru: "Лёгкий", az: "Asan" },
     price: 1000,
     tag: "Popular",
-    description: "Discover the stunning contrast of ancient and modern Baku. Walk through the UNESCO-listed Old City (Icherisheher), marvel at the iconic Flame Towers, and stroll along the beautiful Caspian Boulevard.",
-    highlights: ["Flame Towers", "Old City (Icherisheher)", "Baku Boulevard", "Heydar Aliyev Center", "Carpet Museum", "Funicular Railway"],
-    includes: ["Private driver", "English-speaking guide", "Hotel pickup", "Entrance fees"],
+    description: {
+      en: "Discover the stunning contrast of ancient and modern Baku. Walk through the UNESCO-listed Old City (Icherisheher), marvel at the iconic Flame Towers, and stroll along the beautiful Caspian Boulevard.",
+      ru: "Откройте для себя удивительный контраст древнего и современного Баку. Прогуляйтесь по внесённому в список ЮНЕСКО Старому городу (Ичеришехер), полюбуйтесь знаменитыми Пламенными башнями и прогуляйтесь по красивой Каспийской набережной.",
+      az: "Qədim və müasir Bakının heyrətamiz kontrastını kəşf edin. UNESCO-nun siyahısına daxil edilmiş İçərişəhəri gəzin, ikonik Alov Qüllələrinə heyran olun və gözəl Xəzər bulvarında gəzinti edin.",
+    },
+    highlights: {
+      en: ["Flame Towers", "Old City (Icherisheher)", "Baku Boulevard", "Heydar Aliyev Center", "Carpet Museum", "Funicular Railway"],
+      ru: ["Пламенные башни", "Старый город (Ичеришехер)", "Бакинский бульвар", "Центр Гейдара Алиева", "Музей ковра", "Фуникулёр"],
+      az: ["Alov Qüllələri", "İçərişəhər", "Bakı Bulvarı", "Heydər Əliyev Mərkəzi", "Xalça Muzeyi", "Funikulyor"],
+    },
+    includes: {
+      en: ["Private driver", "English-speaking guide", "Hotel pickup", "Entrance fees"],
+      ru: ["Личный водитель", "Русскоязычный гид", "Трансфер из отеля", "Входные билеты"],
+      az: ["Şəxsi sürücü", "Azərbaycanca bələdçi", "Otel transferi", "Giriş biletləri"],
+    },
   },
   "absheron-peninsula": {
-    title: "Absheron Peninsula",
-    subtitle: "Fire Temple & Mud Volcanoes",
+    title: { en: "Absheron Peninsula", ru: "Апшеронский полуостров", az: "Abşeron Yarımadası" },
+    subtitle: { en: "Fire Temple & Mud Volcanoes", ru: "Храм огня и грязевые вулканы", az: "Od Məbədi və Palçıq Vulkanları" },
     image: "/images/pexels-dnrgs-33587121.jpg",
     duration: "2 days",
-    difficulty: "Easy",
+    difficulty: { en: "Easy", ru: "Лёгкий", az: "Asan" },
     price: 450,
     tag: "New",
-    description: "Explore the ancient Zoroastrian Fire Temple (Ateshgah), witness the eternal flames of Yanar Dag, and see the unique mud volcanoes that dot the Absheron Peninsula.",
-    highlights: ["Ateshgah Fire Temple", "Yanar Dag (Burning Mountain)", "Mud Volcanoes", "Bibi-Heybat Mosque", "Oil Rocks"],
-    includes: ["Private driver", "Guided tour", "Hotel pickup", "Entrance fees"],
+    description: {
+      en: "Explore the ancient Zoroastrian Fire Temple (Ateshgah), witness the eternal flames of Yanar Dag, and see the unique mud volcanoes that dot the Absheron Peninsula.",
+      ru: "Исследуйте древний зороастрийский Храм огня (Атешгях), станьте свидетелем вечных огней Янар Дага и посмотрите на уникальные грязевые вулканы на Апшеронском полуострове.",
+      az: "Qədim Zərdüşt Od Məbədini (Atəşgah) kəşf edin, Yanar Dağın əbədi alovlarına şahid olun və Abşeron yarımadasındakı unikal palçıq vulkanlarını görün.",
+    },
+    highlights: {
+      en: ["Ateshgah Fire Temple", "Yanar Dag (Burning Mountain)", "Mud Volcanoes", "Bibi-Heybat Mosque", "Oil Rocks"],
+      ru: ["Храм огня Атешгях", "Янар Даг (Горящая гора)", "Грязевые вулканы", "Мечеть Биби-Эйбат", "Нефтяные камни"],
+      az: ["Atəşgah Od Məbədi", "Yanar Dağ", "Palçıq Vulkanları", "Bibi-Heybət Məscidi", "Neft Daşları"],
+    },
+    includes: {
+      en: ["Private driver", "Guided tour", "Hotel pickup", "Entrance fees"],
+      ru: ["Личный водитель", "Экскурсионный тур", "Трансфер из отеля", "Входные билеты"],
+      az: ["Şəxsi sürücü", "Bələdçili tur", "Otel transferi", "Giriş biletləri"],
+    },
   },
   "sheki-silk-road": {
-    title: "Sheki & Silk Road",
-    subtitle: "Ancient Caravanserais",
+    title: { en: "Sheki & Silk Road", ru: "Шеки и Шёлковый путь", az: "Şəki və İpək Yolu" },
+    subtitle: { en: "Ancient Caravanserais", ru: "Древние Карaван-сараи", az: "Qədim Karvansaralar" },
     image: "/images/pexels-arzu-ibaeva-479643718-16976814.jpg",
     duration: "4 days",
-    difficulty: "Moderate",
+    difficulty: { en: "Moderate", ru: "Средний", az: "Orta" },
     price: 700,
-    description: "Journey along the ancient Silk Road to the historic city of Sheki, home to stunning caravanserais, the beautiful Khan's Palace, and traditional Azerbaijani crafts.",
-    highlights: ["Sheki Khan Palace", "Upper Caravanserai", "Sheki Bazaar", "Albanian Church", "Silk Factory", "Nukha Fortress"],
-    includes: ["Private driver", "English-speaking guide", "Hotel (3 nights)", "Breakfast included"],
+    description: {
+      en: "Journey along the ancient Silk Road to the historic city of Sheki, home to stunning caravanserais, the beautiful Khan's Palace, and traditional Azerbaijani crafts.",
+      ru: "Отправьтесь по древнему Шёлковому пути в исторический город Шеки — город великолепных карaван-сараев, прекрасного Ханского дворца и традиционных азербайджанских ремёсел.",
+      az: "Qədim İpək yolu boyunca tarixi Şəki şəhərinə səyahət edin — möhtəşəm karvansaralar, gözəl Xan Sarayı və ənənəvi Azərbaycan sənətkarlığının məkanı.",
+    },
+    highlights: {
+      en: ["Sheki Khan Palace", "Upper Caravanserai", "Sheki Bazaar", "Albanian Church", "Silk Factory", "Nukha Fortress"],
+      ru: ["Шекинский Ханский дворец", "Верхний Карaван-сарай", "Шекинский базар", "Албанская церковь", "Шёлковая фабрика", "Нухинская крепость"],
+      az: ["Şəki Xan Sarayı", "Yuxarı Karvansara", "Şəki Bazarı", "Alban Kilsəsi", "İpək Fabriki", "Nuxu Qalası"],
+    },
+    includes: {
+      en: ["Private driver", "English-speaking guide", "Hotel (3 nights)", "Breakfast included"],
+      ru: ["Личный водитель", "Русскоязычный гид", "Отель (3 ночи)", "Завтрак включён"],
+      az: ["Şəxsi sürücü", "Bələdçi", "Otel (3 gecə)", "Səhər yeməyi daxildir"],
+    },
   },
   "caspian-sea-cruise": {
-    title: "Caspian Sea Cruise",
-    subtitle: "Baku Bay & Caspian Coast",
+    title: { en: "Caspian Sea Cruise", ru: "Круиз по Каспию", az: "Xəzər Dənizi Kruizi" },
+    subtitle: { en: "Baku Bay & Caspian Coast", ru: "Бакинская бухта и Каспийское побережье", az: "Bakı Körfəzi və Xəzər Sahili" },
     image: "/images/pexels-zulfugarkarimov-34686330.jpg",
     duration: "5 days",
-    difficulty: "Easy",
+    difficulty: { en: "Easy", ru: "Лёгкий", az: "Asan" },
     price: 1200,
     tag: "Premium",
-    description: "Experience the unique beauty of the Caspian Sea, the world's largest lake. Explore Baku's seafront boulevard, visit coastal villages, and enjoy sunset cruises on the Caspian.",
-    highlights: ["Baku Boulevard", "Caspian Sunset Cruise", "Coastal Villages", "Nardaran Castle", "Sand Dunes", "Fishing Villages"],
-    includes: ["Private driver", "Boat cruise", "Hotel (4 nights)", "All meals"],
+    description: {
+      en: "Experience the unique beauty of the Caspian Sea, the world's largest lake. Explore Baku's seafront boulevard, visit coastal villages, and enjoy sunset cruises on the Caspian.",
+      ru: "Познайте уникальную красоту Каспийского моря — крупнейшего озера в мире. Прогуляйтесь по набережному бульвару Баку, посетите прибрежные сёла и насладитесь закатными круизами по Каспию.",
+      az: "Dünyanın ən böyük gölü olan Xəzər dənizinin unikal gözəlliyini yaşayın. Bakının dəniz kənarı bulvarını gəzin, sahil kəndlərini ziyarət edin və Xəzərdə gün batımı kruizindən zövq alın.",
+    },
+    highlights: {
+      en: ["Baku Boulevard", "Caspian Sunset Cruise", "Coastal Villages", "Nardaran Castle", "Sand Dunes", "Fishing Villages"],
+      ru: ["Бакинский бульвар", "Закатный круиз по Каспию", "Прибрежные сёла", "Замок Нардаран", "Песчаные дюны", "Рыбацкие деревни"],
+      az: ["Bakı Bulvarı", "Xəzər Gün Batımı Kruizi", "Sahil Kəndləri", "Nardaran Qalası", "Qum Təpələri", "Balıqçı Kəndləri"],
+    },
+    includes: {
+      en: ["Private driver", "Boat cruise", "Hotel (4 nights)", "All meals"],
+      ru: ["Личный водитель", "Круиз на катере", "Отель (4 ночи)", "Все блюда"],
+      az: ["Şəxsi sürücü", "Qayıq kruizi", "Otel (4 gecə)", "Bütün yeməklər"],
+    },
   },
 };
 
@@ -73,6 +120,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
   const route = ROUTES[id];
   const [providers, setProviders] = useState<Provider[]>([]);
   const [loading, setLoading] = useState(true);
+  const lang = (locale === "ru" || locale === "az") ? locale : "en";
 
   useEffect(() => {
     getDocs(collection(db, "providers")).then(snap => {
@@ -86,7 +134,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
   }, []);
 
   const tr = (en: string, ru: string, az: string) =>
-    locale === "ru" ? ru : locale === "az" ? az : en;
+    lang === "ru" ? ru : lang === "az" ? az : en;
 
   if (!route) return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "DM Sans, sans-serif" }}>
@@ -107,7 +155,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
 
       {/* Hero */}
       <div style={{ position: "relative", height: 420, overflow: "hidden" }}>
-        <img src={route.image} alt={route.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <img src={route.image} alt={route.title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(2,26,26,0.9) 0%, rgba(2,26,26,0.3) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, padding: "24px 32px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Link href={`/${locale}/routes`}
@@ -116,11 +164,11 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
           </Link>
           <div>
             {route.tag && <span style={{ background: "#c9a84c", color: "white", fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12, display: "inline-block" }}>{route.tag}</span>}
-            <h1 style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 500, marginBottom: 12 }}>{route.title}</h1>
+            <h1 style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 500, marginBottom: 12 }}>{route.title[lang]}</h1>
             <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}><Clock size={14} color="#2dd4bf" /><span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>{route.duration}</span></div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}><Star size={14} color="#2dd4bf" /><span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>{route.difficulty}</span></div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}><MapPin size={14} color="#2dd4bf" /><span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>{route.subtitle}</span></div>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}><Star size={14} color="#2dd4bf" /><span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>{route.difficulty[lang]}</span></div>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}><MapPin size={14} color="#2dd4bf" /><span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>{route.subtitle[lang]}</span></div>
             </div>
           </div>
         </div>
@@ -135,7 +183,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
               <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", marginBottom: 14 }}>
                 {tr("About this Route", "О маршруте", "Marşrut haqqında")}
               </h2>
-              <p style={{ color: "#4a6060", lineHeight: 1.7, fontSize: 15 }}>{route.description}</p>
+              <p style={{ color: "#4a6060", lineHeight: 1.7, fontSize: 15 }}>{route.description[lang]}</p>
             </div>
 
             <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 4px 24px rgba(4,46,46,0.08)", marginBottom: 20 }}>
@@ -143,7 +191,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
                 {tr("Highlights", "Основные места", "Əsas yerlər")}
               </h2>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                {route.highlights.map((h: string) => (
+                {route.highlights[lang].map((h: string) => (
                   <div key={h} style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(10,112,112,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                       <Check size={11} color="#0a7070" />
@@ -159,7 +207,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
                 {tr("What's Included", "Что включено", "Nə daxildir")}
               </h2>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {route.includes.map((inc: string) => (
+                {route.includes[lang].map((inc: string) => (
                   <div key={inc} style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <Check size={14} color="#2dd4bf" />
                     <span style={{ fontSize: 14, color: "#4a6060" }}>{inc}</span>
