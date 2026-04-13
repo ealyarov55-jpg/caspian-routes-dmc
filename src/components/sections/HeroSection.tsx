@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, MapPin, Star, Users } from "lucide-react";
+import { ArrowRight, MapPin } from "lucide-react";
 import { getT } from "@/lib/i18n";
 
 const slideImages = [
@@ -33,12 +33,15 @@ export default function HeroSection({ locale }: { locale: string }) {
     return () => clearInterval(timer);
   }, []);
 
-  const badges = [t.hero.countries === "Countries" ? "Azerbaijan" : t.hero.countries === "Страны" ? "Азербайджан" : "Azərbaycan",
+  const badges = [
+    t.hero.countries === "Countries" ? "Azerbaijan" : t.hero.countries === "Страны" ? "Азербайджан" : "Azərbaycan",
     t.hero.countries === "Countries" ? "Silk Road" : t.hero.countries === "Страны" ? "Шёлковый путь" : "İpək yolu",
-    t.hero.countries === "Countries" ? "Caucasus" : t.hero.countries === "Страны" ? "Кавказ" : "Qafqaz"];
+    t.hero.countries === "Countries" ? "Caucasus" : t.hero.countries === "Страны" ? "Кавказ" : "Qafqaz",
+  ];
 
   return (
     <section style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
+      {/* Background */}
       <div style={{
         position: "absolute", inset: 0,
         backgroundImage: `url(${slideImages[current].image})`,
@@ -48,6 +51,7 @@ export default function HeroSection({ locale }: { locale: string }) {
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(2,26,26,0.95) 0%, rgba(4,46,46,0.75) 50%, rgba(10,80,80,0.3) 100%)" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(2,26,26,0.8) 0%, transparent 60%)" }} />
 
+      {/* Content */}
       <div style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "96px 24px 64px", width: "100%" }}>
         <div style={{ maxWidth: 680 }}>
 
@@ -80,31 +84,15 @@ export default function HeroSection({ locale }: { locale: string }) {
           </p>
 
           {/* Buttons */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 64 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
             <Link href={`/${locale}/routes`} className="btn-primary">
               {t.hero.exploreBtn} <ArrowRight size={16} />
             </Link>
-            <Link href={`/${locale}/plan`} className="btn-outline">
+            <Link href={`/${locale}/routes`} className="btn-outline">
               {t.hero.planBtn}
             </Link>
           </div>
 
-          {/* Stats */}
-          <div style={{ display: "flex", gap: 40 }}>
-            {[
-              { icon: MapPin, value: "4", label: t.hero.countries },
-              { icon: Star, value: "120+", label: t.hero.routes },
-              { icon: Users, value: "5000+", label: t.hero.travelers },
-            ].map(({ icon: Icon, value, label }) => (
-              <div key={label}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
-                  <Icon size={14} color="#2dd4bf" />
-                  <span style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 26, fontWeight: 600 }}>{value}</span>
-                </div>
-                <span style={{ fontFamily: "DM Sans, sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.15em" }}>{label}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
