@@ -35,7 +35,7 @@ export default function Footer({ locale = "en" }: { locale?: string }) {
   return (
     <footer style={{ background: "#021a1a", fontFamily: "DM Sans, sans-serif" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 24px 48px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 48 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 32 }}>
 
           <div>
             <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", marginBottom: 20 }}>
