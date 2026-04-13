@@ -24,7 +24,7 @@ export default async function LocaleLayout({
           rel="stylesheet"
         />
       </head>
-      <body>
+      <body style={{ overflowX: "hidden" }}>
         <AuthProvider>
           {children}
         </AuthProvider>

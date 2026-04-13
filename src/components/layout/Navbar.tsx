@@ -19,11 +19,18 @@ export default function Navbar({ locale }: { locale: string }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const switchLocale = (newLocale: string) => {
@@ -31,6 +38,7 @@ export default function Navbar({ locale }: { locale: string }) {
     segments[1] = newLocale;
     router.push(segments.join("/"));
     setLangOpen(false);
+    setMobileOpen(false);
   };
 
   const navLinks = [
@@ -67,70 +75,82 @@ export default function Navbar({ locale }: { locale: string }) {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex" style={{ alignItems: "center", gap: 32 }}>
-          {navLinks.map((link) => (
-            <Link key={link.label} href={link.href}
-              style={{ display: "flex", alignItems: "center", gap: 4, color: "rgba(255,255,255,0.8)", fontFamily: "DM Sans, sans-serif", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>
-              {link.label}
-              {link.hasDropdown && <ChevronDown size={14} color="#2dd4bf" />}
+        {!isMobile && (
+          <nav style={{ display: "flex", alignItems: "center", gap: 32 }}>
+            {navLinks.map((link) => (
+              <Link key={link.label} href={link.href}
+                style={{ display: "flex", alignItems: "center", gap: 4, color: "rgba(255,255,255,0.8)", fontFamily: "DM Sans, sans-serif", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>
+                {link.label}
+                {link.hasDropdown && <ChevronDown size={14} color="#2dd4bf" />}
+              </Link>
+            ))}
+          </nav>
+        )}
+
+        {/* Desktop Right */}
+        {!isMobile && (
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <Search size={16} color="rgba(255,255,255,0.7)" style={{ cursor: "pointer" }} />
+            <div style={{ position: "relative" }}>
+              <button onClick={() => setLangOpen(!langOpen)}
+                style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "6px 12px", cursor: "pointer", color: "white", fontFamily: "DM Sans, sans-serif", fontSize: 13 }}>
+                <Globe size={14} color="#2dd4bf" />
+                {locale?.toUpperCase() || "EN"}
+                <ChevronDown size={12} color="rgba(255,255,255,0.6)" />
+              </button>
+              {langOpen && (
+                <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: "#042e2e", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", minWidth: 140, boxShadow: "0 16px 40px rgba(0,0,0,0.3)", zIndex: 100 }}>
+                  {localesList.map((loc) => (
+                    <button key={loc.code} onClick={() => switchLocale(loc.code)}
+                      style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", padding: "10px 16px", background: loc.code === locale ? "rgba(45,212,191,0.1)" : "transparent", border: "none", cursor: "pointer", color: loc.code === locale ? "#2dd4bf" : "rgba(255,255,255,0.8)", fontFamily: "DM Sans, sans-serif", fontSize: 13 }}>
+                      <span>{loc.full}</span>
+                      <span style={{ fontSize: 11, opacity: 0.6 }}>{loc.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.2)" }} />
+            <Link href={`/${locale}/routes`}
+              style={{ fontSize: 13, padding: "10px 20px", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", borderRadius: 10, textDecoration: "none", fontFamily: "DM Sans, sans-serif", fontWeight: 600 }}>
+              {t.nav.planTrip}
             </Link>
-          ))}
-        </nav>
-
-        {/* Right */}
-        <div className="hidden md:flex" style={{ alignItems: "center", gap: 12 }}>
-          <Search size={16} color="rgba(255,255,255,0.7)" style={{ cursor: "pointer" }} />
-
-          {/* Lang switcher */}
-          <div style={{ position: "relative" }}>
-            <button onClick={() => setLangOpen(!langOpen)}
-              style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "6px 12px", cursor: "pointer", color: "white", fontFamily: "DM Sans, sans-serif", fontSize: 13 }}>
-              <Globe size={14} color="#2dd4bf" />
-              {locale?.toUpperCase() || "EN"}
-              <ChevronDown size={12} color="rgba(255,255,255,0.6)" />
-            </button>
-            {langOpen && (
-              <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: "#042e2e", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", minWidth: 140, boxShadow: "0 16px 40px rgba(0,0,0,0.3)", zIndex: 100 }}>
-                {localesList.map((loc) => (
-                  <button key={loc.code} onClick={() => switchLocale(loc.code)}
-                    style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", padding: "10px 16px", background: loc.code === locale ? "rgba(45,212,191,0.1)" : "transparent", border: "none", cursor: "pointer", color: loc.code === locale ? "#2dd4bf" : "rgba(255,255,255,0.8)", fontFamily: "DM Sans, sans-serif", fontSize: 13 }}>
-                    <span>{loc.full}</span>
-                    <span style={{ fontSize: 11, opacity: 0.6 }}>{loc.label}</span>
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
+        )}
 
-          <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.2)" }} />
-          <Link href={`/${locale}/plan`} className="btn-primary" style={{ fontSize: 13, padding: "10px 20px" }}>
-            {t.nav.planTrip}
-          </Link>
-        </div>
-
-        {/* Mobile */}
-        <button className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 8 }}>
-          {mobileOpen ? <X size={20} color="white" /> : <Menu size={20} color="white" />}
-        </button>
+        {/* Mobile burger */}
+        {isMobile && (
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {/* Lang switcher mobile */}
+            <div style={{ display: "flex", gap: 6 }}>
+              {localesList.map((loc) => (
+                <button key={loc.code} onClick={() => switchLocale(loc.code)}
+                  style={{ padding: "4px 8px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.2)", background: loc.code === locale ? "#0a7070" : "transparent", color: "white", fontFamily: "DM Sans, sans-serif", fontSize: 11, cursor: "pointer", fontWeight: 600 }}>
+                  {loc.label}
+                </button>
+              ))}
+            </div>
+            <button onClick={() => setMobileOpen(!mobileOpen)}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 8 }}>
+              {mobileOpen ? <X size={24} color="white" /> : <Menu size={24} color="white" />}
+            </button>
+          </div>
+        )}
       </div>
 
-      {mobileOpen && (
+      {/* Mobile Menu */}
+      {isMobile && mobileOpen && (
         <div style={{ background: "rgba(2,26,26,0.98)", borderTop: "1px solid rgba(255,255,255,0.08)", padding: 24, display: "flex", flexDirection: "column", gap: 20 }}>
           {navLinks.map((link) => (
             <Link key={link.label} href={link.href} onClick={() => setMobileOpen(false)}
-              style={{ color: "rgba(255,255,255,0.8)", fontFamily: "DM Sans, sans-serif", fontSize: 16, textDecoration: "none" }}>
+              style={{ color: "rgba(255,255,255,0.8)", fontFamily: "DM Sans, sans-serif", fontSize: 16, textDecoration: "none", padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
               {link.label}
             </Link>
           ))}
-          <div style={{ display: "flex", gap: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-            {localesList.map((loc) => (
-              <button key={loc.code} onClick={() => switchLocale(loc.code)}
-                style={{ flex: 1, padding: 8, borderRadius: 8, border: "1px solid rgba(255,255,255,0.15)", background: loc.code === locale ? "#0a7070" : "transparent", color: "white", fontFamily: "DM Sans, sans-serif", fontSize: 13, cursor: "pointer" }}>
-                {loc.label}
-              </button>
-            ))}
-          </div>
+          <Link href={`/${locale}/routes`} onClick={() => setMobileOpen(false)}
+            style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "14px", borderRadius: 12, textDecoration: "none", fontSize: 15, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+            {t.nav.planTrip}
+          </Link>
         </div>
       )}
     </header>
