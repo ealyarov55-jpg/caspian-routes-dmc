@@ -7,9 +7,9 @@ import { Menu, X, ChevronDown, Globe } from "lucide-react";
 import { getT } from "@/lib/i18n";
 
 const localesList = [
-  { code: "en", label: "EN", full: "English" },
-  { code: "ru", label: "RU", full: "Русский" },
-  { code: "az", label: "AZ", full: "Azərbaycan" },
+  { code: "en", label: "EN", full: "English", flag: "🇬🇧" },
+  { code: "ru", label: "RU", full: "Русский", flag: "🇷🇺" },
+  { code: "az", label: "AZ", full: "Azərbaycan", flag: "🇦🇿" },
 ];
 
 export default function Navbar({ locale }: { locale: string }) {
@@ -95,8 +95,8 @@ export default function Navbar({ locale }: { locale: string }) {
             <div style={{ position: "relative" }}>
               <button onClick={() => setLangOpen(!langOpen)}
                 style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "6px 12px", cursor: "pointer", color: "white", fontFamily: "DM Sans, sans-serif", fontSize: 13 }}>
-                <Globe size={14} color="#2dd4bf" />
-                {locale?.toUpperCase() || "EN"}
+                <span>{localesList.find(l => l.code === locale)?.flag || "🇬🇧"}</span>
+{locale?.toUpperCase() || "EN"}
                 <ChevronDown size={12} color="rgba(255,255,255,0.6)" />
               </button>
               {langOpen && (
@@ -104,8 +104,11 @@ export default function Navbar({ locale }: { locale: string }) {
                   {localesList.map((loc) => (
                     <button key={loc.code} onClick={() => switchLocale(loc.code)}
                       style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", padding: "10px 16px", background: loc.code === locale ? "rgba(45,212,191,0.1)" : "transparent", border: "none", cursor: "pointer", color: loc.code === locale ? "#2dd4bf" : "rgba(255,255,255,0.8)", fontFamily: "DM Sans, sans-serif", fontSize: 13 }}>
-                      <span>{loc.full}</span>
-                      <span style={{ fontSize: 11, opacity: 0.6 }}>{loc.label}</span>
+                      <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+  <span>{loc.flag}</span>
+  <span>{loc.full}</span>
+</span>
+<span style={{ fontSize: 11, opacity: 0.6 }}>{loc.label}</span>
                     </button>
                   ))}
                 </div>
@@ -125,7 +128,7 @@ export default function Navbar({ locale }: { locale: string }) {
               {localesList.map((loc) => (
                 <button key={loc.code} onClick={() => switchLocale(loc.code)}
                   style={{ padding: "4px 8px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.2)", background: loc.code === locale ? "#0a7070" : "transparent", color: "white", fontFamily: "DM Sans, sans-serif", fontSize: 11, cursor: "pointer", fontWeight: 600 }}>
-                  {loc.label}
+                 {loc.flag} {loc.label}
                 </button>
               ))}
             </div>
