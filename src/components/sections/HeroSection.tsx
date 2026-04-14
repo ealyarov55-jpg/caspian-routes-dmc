@@ -6,9 +6,9 @@ import { ArrowRight, MapPin } from "lucide-react";
 import { getT } from "@/lib/i18n";
 
 const slideImages = [
-  { image: "/images/maxxja-baku-1997163_1920.jpg", badgeKey: "badge1" },
-  { image: "/images/pexels-zulfugarkarimov-33085326.jpg", badgeKey: "badge2" },
-  { image: "/images/pozziss-azerbaijan-4856054_1920.jpg", badgeKey: "badge3" },
+{ image: "/images/maxxja-baku-1997163_1920-opt.jpg", badgeKey: "badge1" },
+{ image: "/images/pexels-zulfugarkarimov-33085326-opt.jpg", badgeKey: "badge2" },
+{ image: "/images/pozziss-azerbaijan-4856054_1920-opt.jpg", badgeKey: "badge3" },
 ];
 
 const slideTitles = [

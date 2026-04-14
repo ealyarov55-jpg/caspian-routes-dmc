@@ -20,12 +20,13 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <head>
         <link rel="preload" as="image" href="/images/maxxja-baku-1997163_1920.jpg" />
-        <link rel="preload" as="image" href="/images/pexels-zulfugarkarimov-33085326.jpg" />
-        <link rel="preload" as="image" href="/images/pozziss-azerbaijan-4856054_1920.jpg" />
-        <link rel="preload" as="image" href="/images/pexels-arzu-ibaeva-479643718-16976814.jpg" />
-        <link rel="preload" as="image" href="/images/pexels-rahibyaqubov-17050728.jpg" />
-        <link rel="preload" as="image" href="/images/pexels-sultan-jafarov-475048977-18207490.jpg" />
-        <link rel="preload" as="image" href="/images/pexels-zulfugarkarimov-34686330.jpg" />
+        <link rel="preload" as="image" href="/images/maxxja-baku-1997163_1920-opt.jpg" />
+<link rel="preload" as="image" href="/images/pexels-zulfugarkarimov-33085326-opt.jpg" />
+<link rel="preload" as="image" href="/images/pozziss-azerbaijan-4856054_1920-opt.jpg" />
+<link rel="preload" as="image" href="/images/pexels-arzu-ibaeva-479643718-16976814-opt.jpg" />
+<link rel="preload" as="image" href="/images/pexels-rahibyaqubov-17050728-opt.jpg" />
+<link rel="preload" as="image" href="/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg" />
+<link rel="preload" as="image" href="/images/pexels-zulfugarkarimov-34686330-opt.jpg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

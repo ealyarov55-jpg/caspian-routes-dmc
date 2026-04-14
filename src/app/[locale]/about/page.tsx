@@ -121,10 +121,10 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
             </p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }} className="about-photos">
-            <img src="/images/maxxja-baku-1997163_1920.jpg" alt="Baku" style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 16 }} />
-            <img src="/images/pexels-zulfugarkarimov-33085326.jpg" alt="Azerbaijan" style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 16, marginTop: 24 }} />
-            <img src="/images/pexels-arzu-ibaeva-479643718-16976814.jpg" alt="Nature" style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 16, marginTop: -24 }} />
-            <img src="/images/pozziss-azerbaijan-4856054_1920.jpg" alt="Caspian" style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 16 }} />
+            <img src="/images/maxxja-baku-1997163_1920-opt.jpg" alt="Baku" style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 16 }} />
+            <img src="/images/pexels-zulfugarkarimov-33085326-opt.jpg" alt="Azerbaijan" style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 16, marginTop: 24 }} />
+            <img src="/images/pexels-arzu-ibaeva-479643718-16976814-opt.jpg" alt="Nature" style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 16, marginTop: -24 }} />
+            <img src="/images/pozziss-azerbaijan-4856054_1920-opt.jpg" alt="Caspian" style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 16 }} />
           </div>
         </div>
       </div>
