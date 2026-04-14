@@ -19,6 +19,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
+        <link rel="preload" as="image" href="/images/maxxja-baku-1997163_1920.jpg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
