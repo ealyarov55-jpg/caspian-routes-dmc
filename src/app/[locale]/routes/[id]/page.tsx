@@ -10,7 +10,7 @@ const ROUTES: Record<string, any> = {
   "baku-city-tour": {
     title: { en: "Baku City Tour", ru: "Тур по Баку", az: "Bakı Şəhər Turu" },
     subtitle: { en: "Baku, Azerbaijan", ru: "Баку, Азербайджан", az: "Bakı, Azərbaycan" },
-    image: "/images/pexels-sultan-jafarov-475048977-18207490.jpg",
+    image:  "/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg",
     duration: "3 days",
     difficulty: { en: "Easy", ru: "Лёгкий", az: "Asan" },
     price: 1000,
@@ -34,7 +34,7 @@ const ROUTES: Record<string, any> = {
   "absheron-peninsula": {
     title: { en: "Absheron Peninsula", ru: "Апшеронский полуостров", az: "Abşeron Yarımadası" },
     subtitle: { en: "Fire Temple & Mud Volcanoes", ru: "Храм огня и грязевые вулканы", az: "Od Məbədi və Palçıq Vulkanları" },
-    image: "/images/pexels-dnrgs-33587121.jpg",
+    image: "/images/pexels-dnrgs-33587121-opt.jpg",
     duration: "2 days",
     difficulty: { en: "Easy", ru: "Лёгкий", az: "Asan" },
     price: 450,
@@ -58,7 +58,7 @@ const ROUTES: Record<string, any> = {
   "sheki-silk-road": {
     title: { en: "Sheki & Silk Road", ru: "Шеки и Шёлковый путь", az: "Şəki və İpək Yolu" },
     subtitle: { en: "Ancient Caravanserais", ru: "Древние Карaван-сараи", az: "Qədim Karvansaralar" },
-    image: "/images/pexels-arzu-ibaeva-479643718-16976814.jpg",
+    image: "/images/pexels-arzu-ibaeva-479643718-16976814-opt.jpg",
     duration: "4 days",
     difficulty: { en: "Moderate", ru: "Средний", az: "Orta" },
     price: 700,
@@ -81,7 +81,7 @@ const ROUTES: Record<string, any> = {
   "caspian-sea-cruise": {
     title: { en: "Caspian Sea Cruise", ru: "Круиз по Каспию", az: "Xəzər Dənizi Kruizi" },
     subtitle: { en: "Baku Bay & Caspian Coast", ru: "Бакинская бухта и Каспийское побережье", az: "Bakı Körfəzi və Xəzər Sahili" },
-    image: "/images/pexels-zulfugarkarimov-34686330.jpg",
+    image: "/images/pexels-zulfugarkarimov-34686330-opt.jpg",
     duration: "5 days",
     difficulty: { en: "Easy", ru: "Лёгкий", az: "Asan" },
     price: 1200,
