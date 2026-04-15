@@ -34,12 +34,7 @@ export default function Navbar({ locale }: { locale: string }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close dropdowns when clicking outside
-  useEffect(() => {
-    const handleClick = () => { setLangOpen(false); setUserOpen(false); };
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
-  }, []);
+  
 
   const switchLocale = (newLocale: string) => {
     const segments = pathname.split("/");
