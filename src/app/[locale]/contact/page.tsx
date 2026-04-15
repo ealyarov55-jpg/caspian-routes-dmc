@@ -2,7 +2,7 @@
 
 import { use, useState } from "react";
 import { MapPin, Phone, Mail, Send, Check } from "lucide-react";
-
+import Navbar from "@/components/layout/Navbar";
 export default function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
   const lang = (locale === "ru" || locale === "az") ? locale : "en";
@@ -44,10 +44,11 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
   ];
 
   return (
-    <div style={{ minHeight: "100vh", fontFamily: "DM Sans, sans-serif" }}>
+  <div style={{ minHeight: "100vh", fontFamily: "DM Sans, sans-serif" }}>
+    <Navbar locale={locale} />
 
       {/* Hero */}
-      <div style={{ background: "linear-gradient(160deg, #021a1a 0%, #042e2e 60%, #065050 100%)", padding: "120px 24px 80px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <div style={{ background: "linear-gradient(160deg, #021a1a 0%, #042e2e 60%, #065050 100%)", padding: "160px 24px 80px", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, opacity: 0.04, backgroundImage: "radial-gradient(circle at 1px 1px, #2dd4bf 1px, transparent 0)", backgroundSize: "40px 40px" }} />
         <div style={{ position: "relative", zIndex: 1, maxWidth: 600, margin: "0 auto" }}>
           <p style={{ color: "#2dd4bf", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 16 }}>

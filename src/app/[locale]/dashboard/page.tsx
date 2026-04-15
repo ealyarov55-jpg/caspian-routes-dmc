@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { LogOut, User, MapPin, Calendar, Star, Bell, ChevronRight, Settings, Users, BarChart3, Clock } from "lucide-react";
 import Link from "next/link";
-
+import Navbar from "@/components/layout/Navbar";
 export default function DashboardPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
   const { profile, loading, logout } = useAuth();
@@ -53,7 +53,8 @@ export default function DashboardPage({ params }: { params: Promise<{ locale: st
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+  <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+    <Navbar locale={locale} />
       <style>{`
         .dash-topbar { padding: 0 20px !important; }
         .dash-name { display: none !important; }
@@ -64,7 +65,7 @@ export default function DashboardPage({ params }: { params: Promise<{ locale: st
       `}</style>
 
       {/* Topbar */}
-      <div style={{ background: "#021a1a", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 40, boxShadow: "0 4px 24px rgba(0,0,0,0.2)" }} className="dash-topbar">
+      <div style={{ background: "#021a1a", height: 64,marginTop: 72, display: "flex", alignItems: "center", justifyContent: "space-between",  zIndex: 40, boxShadow: "0 4px 24px rgba(0,0,0,0.2)" }} className="dash-topbar">
         <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
           <div style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(135deg, #042e2e, #0a7070)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <svg viewBox="0 0 40 40" style={{ width: 22, height: 22 }} fill="none">

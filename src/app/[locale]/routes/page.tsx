@@ -6,6 +6,7 @@ import { db } from "@/lib/firebase";
 import { Clock, Star, Users, Search } from "lucide-react";
 import Link from "next/link";
 import { getT } from "@/lib/i18n";
+import Navbar from "@/components/layout/Navbar";
 
 const ROUTES = [
   { id: "baku-city-tour", title: "Baku City Tour", subtitle: "Baku, Azerbaijan", image: "/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg", duration: "3 days", difficulty: "Easy", highlights: ["Flame Towers", "Old City", "Boulevard"], tag: "Popular" },
@@ -63,8 +64,10 @@ export default function RoutesPage({ params }: { params: Promise<{ locale: strin
         }
       `}</style>
 
+      <Navbar locale={locale} />
+
       {/* Header */}
-      <div style={{ background: "linear-gradient(160deg, #021a1a 0%, #065050 100%)", padding: "80px 24px 60px" }}>
+      <div style={{ background: "linear-gradient(160deg, #021a1a 0%, #065050 100%)", padding: "120px 24px 60px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <p style={{ color: "#2dd4bf", fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 12 }}>Azerbaijan</p>
           <h1 style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 300, marginBottom: 16 }}>

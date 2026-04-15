@@ -7,7 +7,7 @@ import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { ArrowLeft, Calendar, User, MessageSquare, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-
+import Navbar from "@/components/layout/Navbar";
 const MONTHS_EN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const MONTHS_RU = ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
 const MONTHS_AZ = ["Yanvar","Fevral","Mart","Aprel","May","İyun","İyul","Avqust","Sentyabr","Oktyabr","Noyabr","Dekabr"];
@@ -174,7 +174,8 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
   const totalPrice = provider.pricePerDay ? Number(provider.pricePerDay) * guests * (selectedDates.length || 1) : 0;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+  <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+    <Navbar locale={locale} />
       <style>{`
         .book-grid { grid-template-columns: minmax(0,1fr) !important; }
         .book-summary { position: static !important; }
@@ -185,7 +186,7 @@ export default function BookPage({ params }: { params: Promise<{ locale: string;
       `}</style>
 
       {/* Header */}
-      <div style={{ background: "#021a1a", padding: "0 20px", height: 64, display: "flex", alignItems: "center", gap: 16 }}>
+      <div style={{ background: "#021a1a", padding: "0 20px", height: 64,marginTop:72, display: "flex", alignItems: "center", gap: 16 }}>
         <Link href={`/${locale}/routes/${routeId}`}
           style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "8px 14px", color: "white", textDecoration: "none", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}>
           <ArrowLeft size={14} /> {tr("Back", "Назад", "Geri")}

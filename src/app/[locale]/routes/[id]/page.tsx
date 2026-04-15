@@ -5,7 +5,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { ArrowLeft, Clock, Star, MapPin, Users, Check } from "lucide-react";
 import Link from "next/link";
-
+import Navbar from "@/components/layout/Navbar";
 const ROUTES: Record<string, any> = {
   "baku-city-tour": {
     title: { en: "Baku City Tour", ru: "Тур по Баку", az: "Bakı Şəhər Turu" },
@@ -146,7 +146,8 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+  <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+    <Navbar locale={locale} />
       <style>{`
         @media (min-width: 768px) {
           .route-detail-grid { grid-template-columns: 1fr 380px !important; }
@@ -157,7 +158,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
       <div style={{ position: "relative", height: 420, overflow: "hidden" }}>
         <img src={route.image} alt={route.title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(2,26,26,0.9) 0%, rgba(2,26,26,0.3) 100%)" }} />
-        <div style={{ position: "absolute", inset: 0, padding: "24px 32px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <div style={{ position: "absolute", inset: 0, padding: "80px 32px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Link href={`/${locale}/routes`}
             style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10, padding: "8px 16px", color: "white", textDecoration: "none", fontSize: 13, fontFamily: "DM Sans, sans-serif", width: "fit-content" }}>
             <ArrowLeft size={14} /> {tr("All Routes", "Все маршруты", "Bütün marşrutlar")}

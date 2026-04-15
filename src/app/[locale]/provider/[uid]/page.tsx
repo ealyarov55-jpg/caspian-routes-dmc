@@ -9,7 +9,7 @@ import { ArrowLeft, Star, Car, Globe, Briefcase, Send } from "lucide-react";
 import Link from "next/link";
 import StarRating from "@/components/ui/StarRating";
 import { formatDistanceToNow } from "date-fns";
-
+import Navbar from "@/components/layout/Navbar";
 interface Provider {
   uid: string;
   name: string;
@@ -102,9 +102,10 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ local
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+  <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+    <Navbar locale={locale} />
       {/* Header */}
-      <div style={{ background: "#021a1a", padding: "0 32px", height: 64, display: "flex", alignItems: "center", gap: 16 }}>
+      <div style={{ background: "#021a1a", padding: "0 32px", height: 64,marginTop: 72, display: "flex", alignItems: "center", gap: 16 }}>
         <button onClick={() => router.back()}
           style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "8px 14px", cursor: "pointer", color: "white", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}>
           <ArrowLeft size={14} /> Back

@@ -7,7 +7,7 @@ import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { ArrowLeft, Calendar, Users, Clock, Check, X, MapPin, Star } from "lucide-react";
 import Link from "next/link";
-
+import Navbar from "@/components/layout/Navbar";
 interface Booking {
   id: string;
   providerName: string;
@@ -68,8 +68,9 @@ export default function ClientBookingsPage({ params }: { params: Promise<{ local
 
   if (loading || !profile) return null;
 
-  return (
-    <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+ return (
+  <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+    <Navbar locale={locale} />
       <style>{`
         .bookings-header { padding: 0 16px !important; }
         .booking-grid { grid-template-columns: 1fr !important; }
@@ -80,7 +81,7 @@ export default function ClientBookingsPage({ params }: { params: Promise<{ local
       `}</style>
 
       {/* Header */}
-      <div style={{ background: "#021a1a", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between" }} className="bookings-header">
+      <div style={{ background: "#021a1a", height: 64, marginTop:72,display:"flex", alignItems: "center", justifyContent: "space-between" }} className="bookings-header">
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => router.push(`/${locale}/dashboard`)}
             style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "8px 14px", cursor: "pointer", color: "white", display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontFamily: "DM Sans, sans-serif" }}>
