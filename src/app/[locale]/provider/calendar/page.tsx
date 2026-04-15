@@ -6,14 +6,27 @@ import { useAuth } from "@/context/AuthContext";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { ArrowLeft, Check, ChevronLeft, ChevronRight } from "lucide-react";
+import Navbar from "@/components/layout/Navbar";
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const DAYS_EN = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DAYS_RU = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+const DAYS_AZ = ["Be", "Ça", "Çə", "Ca", "Cü", "Şə", "Bz"];
+
+const MONTHS_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const MONTHS_RU = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+const MONTHS_AZ = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "İyun", "İyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"];
 
 export default function ProviderCalendarPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
   const { profile, loading } = useAuth();
   const router = useRouter();
+  const lang = (locale === "ru" || locale === "az") ? locale : "en";
+
+  const tr = (en: string, ru: string, az: string) =>
+    lang === "ru" ? ru : lang === "az" ? az : en;
+
+  const DAYS = lang === "ru" ? DAYS_RU : lang === "az" ? DAYS_AZ : DAYS_EN;
+  const MONTHS = lang === "ru" ? MONTHS_RU : lang === "az" ? MONTHS_AZ : MONTHS_EN;
 
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
@@ -44,9 +57,9 @@ export default function ProviderCalendarPage({ params }: { params: Promise<{ loc
   };
 
   const toggleDate = (dateStr: string) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (new Date(dateStr) < today) return;
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+    if (new Date(dateStr) < todayDate) return;
     setAvailable(prev =>
       prev.includes(dateStr) ? prev.filter(d => d !== dateStr) : [...prev, dateStr]
     );
@@ -78,38 +91,48 @@ export default function ProviderCalendarPage({ params }: { params: Promise<{ loc
 
   return (
     <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+      <Navbar locale={locale} />
+
       {/* Header */}
-      <div style={{ background: "#021a1a", padding: "0 32px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <div style={{ background: "#021a1a", padding: "0 20px", height: 64, marginTop: 72, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => router.push(`/${locale}/dashboard`)}
             style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "8px 14px", cursor: "pointer", color: "white", display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontFamily: "DM Sans, sans-serif" }}>
-            <ArrowLeft size={14} /> Dashboard
+            <ArrowLeft size={14} /> {tr("Dashboard", "Панель", "Panel")}
           </button>
-          <span style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 20, fontWeight: 600 }}>Availability Calendar</span>
+          <span style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 20, fontWeight: 600 }}>
+            {tr("Availability Calendar", "Календарь доступности", "Mövcudluq təqvimi")}
+          </span>
         </div>
         <button onClick={handleSave} disabled={saving}
-          style={{ background: saved ? "#065050" : "linear-gradient(135deg, #0a7070, #0d9090)", border: "none", borderRadius: 12, padding: "10px 24px", cursor: "pointer", color: "white", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", gap: 8 }}>
-          {saved ? <><Check size={16} /> Saved!</> : saving ? "Saving..." : "Save Availability"}
+          style={{ background: saved ? "#065050" : "linear-gradient(135deg, #0a7070, #0d9090)", border: "none", borderRadius: 12, padding: "10px 20px", cursor: "pointer", color: "white", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", gap: 8 }}>
+          {saved ? <><Check size={16} /> {tr("Saved!", "Сохранено!", "Saxlanıldı!")}</> : saving ? tr("Saving...", "Сохраняем...", "Saxlanılır...") : tr("Save", "Сохранить", "Saxla")}
         </button>
       </div>
 
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "40px 24px" }}>
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "32px 16px" }}>
 
         {/* Info */}
         <div style={{ background: "rgba(10,112,112,0.08)", border: "1px solid rgba(10,112,112,0.2)", borderRadius: 14, padding: "14px 20px", marginBottom: 24, display: "flex", gap: 12, alignItems: "center" }}>
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#2dd4bf", flexShrink: 0 }} />
-          <p style={{ color: "#065050", fontSize: 13 }}>Click on dates to mark yourself as <strong>available</strong>. Tourists will see your availability when booking.</p>
+          <p style={{ color: "#065050", fontSize: 13 }}>
+            {tr(
+              "Click on dates to mark yourself as available. Tourists will see your availability when booking.",
+              "Нажмите на даты чтобы отметить свою доступность. Туристы увидят ваш календарь при бронировании.",
+              "Mövcud olduğunuz tarixləri seçin. Turistlər rezervasiya zamanı mövcudluğunuzu görəcək."
+            )}
+          </p>
         </div>
 
         {/* Calendar */}
-        <div style={{ background: "white", borderRadius: 24, padding: 32, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
+        <div style={{ background: "white", borderRadius: 24, padding: 24, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
           {/* Month navigation */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
             <button onClick={prevMonth}
               style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid #e2eded", background: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <ChevronLeft size={16} color="#4a6060" />
             </button>
-            <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 26, color: "#021a1a", fontWeight: 600 }}>
+            <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", fontWeight: 600 }}>
               {MONTHS[month]} {year}
             </h2>
             <button onClick={nextMonth}
@@ -142,8 +165,7 @@ export default function ProviderCalendarPage({ params }: { params: Promise<{ loc
                     background: isAvailable ? "#0a7070" : isToday ? "rgba(10,112,112,0.08)" : "transparent",
                     color: isAvailable ? "white" : isPast ? "#d0dede" : isToday ? "#0a7070" : "#0d1f1f",
                     fontSize: 14, fontWeight: isToday || isAvailable ? 600 : 400,
-                    fontFamily: "DM Sans, sans-serif",
-                    transition: "all 0.15s",
+                    fontFamily: "DM Sans, sans-serif", transition: "all 0.15s",
                     outline: isToday && !isAvailable ? "1.5px solid #0a7070" : "none",
                   }}>
                   {day}
@@ -154,11 +176,11 @@ export default function ProviderCalendarPage({ params }: { params: Promise<{ loc
         </div>
 
         {/* Legend */}
-        <div style={{ display: "flex", gap: 24, marginTop: 20, justifyContent: "center" }}>
+        <div style={{ display: "flex", gap: 20, marginTop: 20, justifyContent: "center", flexWrap: "wrap" }}>
           {[
-            { color: "#0a7070", label: "Available" },
-            { color: "rgba(10,112,112,0.08)", label: "Today", outline: "1.5px solid #0a7070" },
-            { color: "transparent", label: "Not available" },
+            { color: "#0a7070", label: tr("Available", "Доступен", "Mövcuddur") },
+            { color: "rgba(10,112,112,0.08)", label: tr("Today", "Сегодня", "Bu gün"), outline: "1.5px solid #0a7070" },
+            { color: "transparent", label: tr("Not available", "Недоступен", "Mövcud deyil") },
           ].map(item => (
             <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div style={{ width: 20, height: 20, borderRadius: 6, background: item.color, border: item.outline || "1px solid #e2eded" }} />
@@ -167,9 +189,8 @@ export default function ProviderCalendarPage({ params }: { params: Promise<{ loc
           ))}
         </div>
 
-        {/* Selected count */}
         <p style={{ textAlign: "center", marginTop: 16, color: "#0a7070", fontSize: 13, fontWeight: 600 }}>
-          {available.length} day{available.length !== 1 ? "s" : ""} marked as available
+          {available.length} {tr("day(s) marked as available", "дн. отмечено как доступно", "gün mövcud kimi qeyd edildi")}
         </p>
       </div>
     </div>
