@@ -155,7 +155,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
       `}</style>
 
       {/* Hero */}
-      <div style={{ position: "relative", height: 420, overflow: "hidden" }}>
+      <div style={{ position: "relative", height: 420, overflow: "hidden", marginTop: 72 }}>
         <img src={route.image} alt={route.title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(2,26,26,0.9) 0%, rgba(2,26,26,0.3) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, padding: "80px 32px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
