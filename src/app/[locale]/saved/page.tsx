@@ -113,7 +113,7 @@ export default function SavedRoutesPage({ params }: { params: Promise<{ locale: 
                 <div style={{ padding: 20 }}>
                   <p style={{ color: "#0a7070", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 4 }}>{route.subtitle}</p>
                   <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 20, color: "#021a1a", fontWeight: 600, marginBottom: 16 }}>{route.title}</h3>
-                  <Link href={`/${locale}/routes/${route.routeId}`}
+                  <Link href={route.routeId ? `/${locale}/routes/${route.routeId}` : `/${locale}/routes`}
                     style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "10px", borderRadius: 12, textDecoration: "none", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
                     {tr("View Route", "Открыть маршрут", "Marşruta bax")}
                   </Link>
