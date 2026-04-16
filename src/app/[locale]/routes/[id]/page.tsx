@@ -6,11 +6,12 @@ import { db } from "@/lib/firebase";
 import { ArrowLeft, Clock, Star, MapPin, Users, Check } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+
 const ROUTES: Record<string, any> = {
   "baku-city-tour": {
     title: { en: "Baku City Tour", ru: "Тур по Баку", az: "Bakı Şəhər Turu" },
     subtitle: { en: "Baku, Azerbaijan", ru: "Баку, Азербайджан", az: "Bakı, Azərbaycan" },
-    image:  "/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg",
+    image: "/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg",
     duration: "3 days",
     difficulty: { en: "Easy", ru: "Лёгкий", az: "Asan" },
     price: 1000,
@@ -78,6 +79,30 @@ const ROUTES: Record<string, any> = {
       az: ["Şəxsi sürücü", "Bələdçi", "Otel (3 gecə)", "Səhər yeməyi daxildir"],
     },
   },
+  "caucasus-nature": {
+    title: { en: "Caucasus Nature Trek", ru: "Поход по Кавказу", az: "Qafqaz Təbiət Turu" },
+    subtitle: { en: "Forests & Mountain Villages", ru: "Леса и горные сёла", az: "Meşələr və dağ kəndləri" },
+    image: "/images/pexels-rahibyaqubov-17050728-opt.jpg",
+    duration: "2 days",
+    difficulty: { en: "Moderate", ru: "Средний", az: "Orta" },
+    price: 450,
+    tag: "New",
+    description: {
+      en: "Explore the stunning forests and mountain villages of the Caucasus. Hike through ancient trails and discover traditional Azerbaijani village life.",
+      ru: "Исследуйте удивительные леса и горные сёла Кавказа. Пройдите по древним тропам и откройте традиционный уклад жизни азербайджанских сёл.",
+      az: "Qafqazın möhtəşəm meşələrini və dağ kəndlərini kəşf edin. Qədim cığırlarla gəzin və ənənəvi Azərbaycan kənd həyatını tanıyın.",
+    },
+    highlights: {
+      en: ["Mountain Forests", "Village Life", "Hiking Trails", "Local Cuisine", "Waterfalls"],
+      ru: ["Горные леса", "Сельский быт", "Туристические тропы", "Местная кухня", "Водопады"],
+      az: ["Dağ meşələri", "Kənd həyatı", "Gəzinti cığırları", "Yerli mətbəx", "Şəlalələr"],
+    },
+    includes: {
+      en: ["Private driver", "Hiking guide", "Hotel (1 night)", "Lunch included"],
+      ru: ["Личный водитель", "Гид по походу", "Отель (1 ночь)", "Обед включён"],
+      az: ["Şəxsi sürücü", "Gəzinti bələdçisi", "Otel (1 gecə)", "Nahar daxildir"],
+    },
+  },
   "caspian-sea-cruise": {
     title: { en: "Caspian Sea Cruise", ru: "Круиз по Каспию", az: "Xəzər Dənizi Kruizi" },
     subtitle: { en: "Baku Bay & Caspian Coast", ru: "Бакинская бухта и Каспийское побережье", az: "Bakı Körfəzi və Xəzər Sahili" },
@@ -137,17 +162,20 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
     lang === "ru" ? ru : lang === "az" ? az : en;
 
   if (!route) return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "DM Sans, sans-serif" }}>
-      <div style={{ textAlign: "center" }}>
-        <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 48, color: "#021a1a" }}>Route not found</h1>
-        <Link href={`/${locale}/routes`} style={{ color: "#0a7070", textDecoration: "none" }}>← {tr("Back to routes", "Все маршруты", "Marşrutlara qayıt")}</Link>
+    <div style={{ minHeight: "100vh", background: "#f0f7f7", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "DM Sans, sans-serif" }}>
+      <div style={{ textAlign: "center", padding: 24 }}>
+        <p style={{ color: "#94a3a3", fontSize: 14, marginBottom: 16 }}>{tr("Route not found", "Маршрут не найден", "Marşrut tapılmadı")}</p>
+        <Link href={`/${locale}/routes`}
+          style={{ display: "inline-block", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "12px 24px", borderRadius: 12, textDecoration: "none", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+          {tr("Browse All Routes", "Все маршруты", "Bütün marşrutlar")}
+        </Link>
       </div>
     </div>
   );
 
   return (
-  <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
-    <Navbar locale={locale} />
+    <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
+      <Navbar locale={locale} />
       <style>{`
         @media (min-width: 768px) {
           .route-detail-grid { grid-template-columns: 1fr 380px !important; }
@@ -227,7 +255,6 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
                   {tr("Available Guides", "Доступные гиды", "Mövcud bələdçilər")} ({providers.length})
                 </h3>
               </div>
-
               {loading ? (
                 <p style={{ color: "#94a3a3", fontSize: 13 }}>Loading...</p>
               ) : providers.length === 0 ? (
