@@ -134,6 +134,14 @@ export default function DashboardPage({ params }: { params: Promise<{ locale: st
 
 function ClientDashboard({ locale, tr }: { locale: string; tr: Function }) {
   const quickLinks = [
+ {
+  icon: User,
+  title: tr("My Profile", "Мой профиль", "Profilim"),
+  desc: tr("Settings & account", "Настройки аккаунта", "Hesab parametrləri"),
+  href: `/${locale}/profile`,
+  color: "#065050",
+  bg: "rgba(6,80,80,0.08)",
+},
     {
       icon: MapPin,
       title: tr("Browse Routes", "Смотреть маршруты", "Marşrutlara bax"),
@@ -154,7 +162,7 @@ function ClientDashboard({ locale, tr }: { locale: string; tr: Function }) {
       icon: Star,
       title: tr("Saved Routes", "Сохранённые маршруты", "Saxlanılmış marşrutlar"),
       desc: tr("Your favourite tours", "Ваши избранные туры", "Sevimli turlarınız"),
-      href: `/${locale}/routes`,
+      href: `/${locale}/saved`,
       color: "#c9a84c",
       bg: "rgba(201,168,76,0.08)",
     },
