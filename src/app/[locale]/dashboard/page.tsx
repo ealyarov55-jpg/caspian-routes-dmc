@@ -249,9 +249,14 @@ function ProviderDashboard({ locale, tr }: { locale: string; tr: Function }) {
 
 function AdminDashboard({ locale, tr }: { locale: string; tr: Function }) {
   const cards = [
-    { icon: MapPin, title: tr("Manage Routes", "Маршруты", "Marşrutlar"), desc: tr("Add & edit routes", "Добавить и редактировать", "Marşrut əlavə et"), href: `/${locale}/admin`, color: "#0a7070", bg: "rgba(10,112,112,0.08)" },
-    { icon: Users, title: tr("Providers", "Провайдеры", "Provayderlar"), desc: tr("Moderate providers", "Модерация провайдеров", "Provayderləri idarə et"), href: `/${locale}/admin`, color: "#065050", bg: "rgba(6,80,80,0.08)" },
-    { icon: BarChart3, title: tr("All Bookings", "Все бронирования", "Bütün rezervasiyalar"), desc: tr("View all requests", "Просмотр всех заявок", "Bütün sorğulara bax"), href: `/${locale}/admin`, color: "#c9a84c", bg: "rgba(201,168,76,0.08)" },
+    {
+      icon: BarChart3,
+      title: tr("Admin Panel", "Панель администратора", "Admin paneli"),
+      desc: tr("Manage everything", "Управляйте всем", "Hər şeyi idarə edin"),
+      href: `/${locale}/admin`,
+      color: "#0a7070",
+      bg: "rgba(10,112,112,0.08)",
+    },
   ];
 
   return (
