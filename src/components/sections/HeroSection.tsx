@@ -88,9 +88,9 @@ export default function HeroSection({ locale }: { locale: string }) {
             <Link href={`/${locale}/routes`} className="btn-primary">
               {t.hero.exploreBtn} <ArrowRight size={16} />
             </Link>
-            <Link href={`/${locale}/routes`} className="btn-outline">
-              {t.hero.planBtn}
-            </Link>
+            <Link href={`/${locale}/auth`} className="btn-outline">
+  {t.hero.planBtn}
+</Link>
           </div>
 
         </div>
