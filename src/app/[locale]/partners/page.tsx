@@ -65,7 +65,7 @@ export default function PartnersPage({ params }: { params: Promise<{ locale: str
     {
       icon: Star,
       title: tr("Partner Commission", "Комиссия партнёрам", "Tərəfdaş komissiyası"),
-      desc: tr("Earn 10-20% commission on every booking you send us.", "Зарабатывайте 10-20% комиссию с каждого бронирования.", "Hər rezervasiyadan 10-20% komissiya qazanın."),
+desc: tr("Earn competitive commission on every confirmed booking you send us.", "Получайте конкурентную комиссию с каждого подтверждённого бронирования.", "Bizə göndərdiyiniz hər təsdiqlənmiş rezervasiyadan komissiya qazanın."),
     },
     {
       icon: Briefcase,
@@ -202,7 +202,7 @@ export default function PartnersPage({ params }: { params: Promise<{ locale: str
               { step: "01", title: tr("Apply", "Подайте заявку", "Müraciət edin"), desc: tr("Fill out the partner application form below.", "Заполните форму заявки партнёра ниже.", "Aşağıdakı tərəfdaş müraciət formasını doldurun.") },
               { step: "02", title: tr("Get Approved", "Получите одобрение", "Təsdiq alın"), desc: tr("We review your application within 24 hours.", "Мы рассматриваем заявку в течение 24 часов.", "Müraciətinizi 24 saat ərzində nəzərdən keçiririk.") },
               { step: "03", title: tr("Access Net Prices", "Получите Net-цены", "Net qiymətlərə çıxış"), desc: tr("Get access to our full catalog with wholesale prices.", "Получите доступ к каталогу с оптовыми ценами.", "Topdansatış qiymətləri ilə tam kataloqumuza çıxış əldə edin.") },
-              { step: "04", title: tr("Earn Commission", "Зарабатывайте", "Komissiya qazanın"), desc: tr("Send bookings and earn 10-20% commission.", "Отправляйте бронирования и зарабатывайте 10-20%.", "Rezervasiyalar göndərin və 10-20% komissiya qazanın.") },
+{ step: "04", title: tr("Earn Commission", "Зарабатывайте", "Komissiya qazanın"), desc: tr("Send bookings and earn commission on every confirmed booking.", "Отправляйте бронирования и получайте комиссию с каждого подтверждённого бронирования.", "Rezervasiyalar göndərin və hər təsdiqlənmiş rezervasiyadan komissiya əldə edin.") },
             ].map(s => (
               <div key={s.step} style={{ textAlign: "center" }}>
                 <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, #042e2e, #0a7070)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
