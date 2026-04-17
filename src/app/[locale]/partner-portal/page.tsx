@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
-import { ArrowLeft, Users, MapPin, Clock, Star, ChevronRight, Lock, Briefcase } from "lucide-react";
+import { ArrowLeft, Users, MapPin, Clock, ChevronRight, Lock, Briefcase } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 
@@ -53,7 +53,6 @@ export default function PartnerPortalPage({ params }: { params: Promise<{ locale
 
   if (loading || !profile) return null;
 
-  // If not partner — show locked screen
   if (profile.role !== "partner" && profile.role !== "admin") {
     return (
       <div style={{ minHeight: "100vh", background: "#f0f7f7", fontFamily: "DM Sans, sans-serif" }}>
@@ -68,9 +67,9 @@ export default function PartnerPortalPage({ params }: { params: Promise<{ locale
             </h1>
             <p style={{ color: "#4a6060", fontSize: 15, lineHeight: 1.7, marginBottom: 32 }}>
               {tr(
-                "This section is available for verified travel agency partners only. Apply for partnership to get access to net prices and our full catalog.",
-                "Этот раздел доступен только для проверенных партнёров-турагентств. Подайте заявку на партнёрство для получения доступа к net-ценам и полному каталогу.",
-                "Bu bölmə yalnız yoxlanılmış turizm agentliyi tərəfdaşları üçün mövcuddur. Net qiymətlərə və tam kataloqumuza giriş əldə etmək üçün tərəfdaşlıq üçün müraciət edin."
+                "This section is available for verified travel agency partners only.",
+                "Этот раздел доступен только для проверенных партнёров-турагентств.",
+                "Bu bölmə yalnız yoxlanılmış turizm agentliyi tərəfdaşları üçün mövcuddur."
               )}
             </p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
@@ -177,7 +176,7 @@ export default function PartnerPortalPage({ params }: { params: Promise<{ locale
                       <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{tr("Retail Price", "Розничная цена", "Pərakəndə qiymət")}</p>
                       <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, fontWeight: 700, color: "#021a1a" }}>${route.retailPrice}</p>
                     </div>
-                    <Link href={`/${locale}/contact`}
+                    <Link href={`/${locale}/partner-quote?route=${route.id}`}
                       style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "12px 20px", borderRadius: 12, textDecoration: "none", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif", whiteSpace: "nowrap" }}>
                       {tr("Request Quote", "Запросить цену", "Qiymət sorğusu")} <ChevronRight size={14} />
                     </Link>
@@ -224,7 +223,7 @@ export default function PartnerPortalPage({ params }: { params: Promise<{ locale
                       {p.pricePerDay ? `$${p.pricePerDay}` : tr("On request", "По запросу", "Sorğu ilə")}
                     </span>
                   </div>
-                  <Link href={`/${locale}/contact`}
+                  <Link href={`/${locale}/partner-quote`}
                     style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "10px", borderRadius: 12, textDecoration: "none", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
                     {tr("Book for Client", "Забронировать для клиента", "Müştəri üçün rezerv et")}
                   </Link>
