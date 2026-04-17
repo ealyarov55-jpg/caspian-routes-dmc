@@ -6,16 +6,28 @@ import { ArrowRight, MapPin } from "lucide-react";
 import { getT } from "@/lib/i18n";
 
 const slideImages = [
-{ image: "/images/maxxja-baku-1997163_1920-opt.jpg", badgeKey: "badge1" },
-{ image: "/images/pexels-zulfugarkarimov-33085326-opt.jpg", badgeKey: "badge2" },
-{ image: "/images/pozziss-azerbaijan-4856054_1920-opt.jpg", badgeKey: "badge3" },
+  { image: "/images/maxxja-baku-1997163_1920-opt.jpg", badgeKey: "badge1" },
+  { image: "/images/pexels-zulfugarkarimov-33085326-opt.jpg", badgeKey: "badge2" },
+  { image: "/images/pozziss-azerbaijan-4856054_1920-opt.jpg", badgeKey: "badge3" },
 ];
 
-const slideTitles = [
-  ["Discover the", "Caspian Routes"],
-  ["Ancient Paths,", "Modern Journeys"],
-  ["Where Mountains", "Meet the Sea"],
-];
+const slideTitles: Record<string, string[][]> = {
+  en: [
+    ["Discover the", "Caspian Routes"],
+    ["Ancient Paths,", "Modern Journeys"],
+    ["Where Mountains", "Meet the Sea"],
+  ],
+  ru: [
+    ["Откройте для себя", "Каспийские маршруты"],
+    ["Древние тропы,", "Современные путешествия"],
+    ["Где горы", "встречают море"],
+  ],
+  az: [
+    ["Kəşf edin", "Xəzər Marşrutlarını"],
+    ["Qədim yollar,", "Müasir səyahətlər"],
+    ["Dağların", "dənizlə görüşü"],
+  ],
+};
 
 export default function HeroSection({ locale }: { locale: string }) {
   const t = getT(locale);
@@ -34,9 +46,9 @@ export default function HeroSection({ locale }: { locale: string }) {
   }, []);
 
   const badges = [
-    t.hero.countries === "Countries" ? "Azerbaijan" : t.hero.countries === "Страны" ? "Азербайджан" : "Azərbaycan",
-    t.hero.countries === "Countries" ? "Silk Road" : t.hero.countries === "Страны" ? "Шёлковый путь" : "İpək yolu",
-    t.hero.countries === "Countries" ? "Caucasus" : t.hero.countries === "Страны" ? "Кавказ" : "Qafqaz",
+    locale === "ru" ? "Азербайджан" : locale === "az" ? "Azərbaycan" : "Azerbaijan",
+    locale === "ru" ? "Шёлковый путь" : locale === "az" ? "İpək yolu" : "Silk Road",
+    locale === "ru" ? "Кавказ" : locale === "az" ? "Qafqaz" : "Caucasus",
   ];
 
   return (
@@ -74,8 +86,8 @@ export default function HeroSection({ locale }: { locale: string }) {
             lineHeight: 1.1, marginBottom: 24, fontSize: "clamp(2.8rem, 6vw, 5rem)",
             opacity: animating ? 0 : 1, transition: "opacity 0.5s ease",
           }}>
-            {slideTitles[current][0]}<br />
-            <span style={{ color: "#2dd4bf" }}>{slideTitles[current][1]}</span>
+            {slideTitles[locale]?.[current]?.[0] || slideTitles["en"][current][0]}<br />
+            <span style={{ color: "#2dd4bf" }}>{slideTitles[locale]?.[current]?.[1] || slideTitles["en"][current][1]}</span>
           </h1>
 
           {/* Subtitle */}
@@ -89,8 +101,8 @@ export default function HeroSection({ locale }: { locale: string }) {
               {t.hero.exploreBtn} <ArrowRight size={16} />
             </Link>
             <Link href={`/${locale}/auth`} className="btn-outline">
-  {t.hero.planBtn}
-</Link>
+              {t.hero.planBtn}
+            </Link>
           </div>
 
         </div>

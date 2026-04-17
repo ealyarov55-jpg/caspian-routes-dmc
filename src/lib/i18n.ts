@@ -12,7 +12,7 @@ export const translations = {
       planTrip: "Plan Your Trip",
     },
     hero: {
-  subtitle: "B2B DMC for tour operators and travel agencies. Net prices + partner commissions for Azerbaijan, Kazakhstan, Turkmenistan, Iran & Russia.",
+ subtitle: "B2B DMC for tour operators and travel agencies. Net prices + partner commissions across Azerbaijan.",
   exploreBtn: "View Services",
   planBtn: "Become a Partner",
   countries: "Countries",
@@ -76,7 +76,7 @@ export const translations = {
       planTrip: "Спланировать поездку",
     },
     hero: {
-  subtitle: "B2B DMC для туроператоров и турагентств. Net-цены + комиссия партнёрам по Азербайджану, Казахстану, Туркменистану, Ирану и России.",
+ subtitle: "B2B DMC для туроператоров и турагентств. Net-цены + комиссия партнёрам по Азербайджану.",
   exploreBtn: "Смотреть услуги",
   planBtn: "Стать партнёром",
   countries: "Страны",
@@ -140,7 +140,7 @@ export const translations = {
       planTrip: "Səfər planla",
     },
     hero: {
-  subtitle: "Tur operatorları və turizm agentlikləri üçün B2B DMC. Net qiymətlər + tərəfdaş komissiyaları.",
+ subtitle: "Tur operatorları və turizm agentlikləri üçün B2B DMC. Net qiymətlər + tərəfdaş komissiyaları Azərbaycanda.",
   exploreBtn: "Xidmətlərə bax",
   planBtn: "Tərəfdaş ol",
   countries: "Ölkələr",
