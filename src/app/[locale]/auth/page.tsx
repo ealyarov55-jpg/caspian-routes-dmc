@@ -50,17 +50,22 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
   };
 
   const roles = [
-    {
-      value: "client",
-      label: tr("Tourist / Client", "Турист / Клиент", "Turist / Müştəri"),
-      desc: tr("Browse routes & book", "Смотреть маршруты и бронировать", "Marşrutlara bax və rezerv et"),
-    },
-    {
-      value: "provider",
-      label: tr("Driver / Guide", "Водитель / Гид", "Sürücü / Bələdçi"),
-      desc: tr("Offer your services", "Предложите свои услуги", "Xidmətlərinizi təklif edin"),
-    },
-  ];
+  {
+    value: "client",
+    label: tr("Tourist / Client", "Турист / Клиент", "Turist / Müştəri"),
+    desc: tr("Browse routes & book", "Смотреть маршруты и бронировать", "Marşrutlara bax və rezerv et"),
+  },
+  {
+    value: "provider",
+    label: tr("Driver / Guide", "Водитель / Гид", "Sürücü / Bələdçi"),
+    desc: tr("Offer your services", "Предложите свои услуги", "Xidmətlərinizi təklif edin"),
+  },
+  {
+    value: "partner",
+    label: tr("Travel Agency / Partner", "Турагентство / Партнёр", "Turizm agentliyi / Tərəfdaş"),
+    desc: tr("Book for your clients", "Бронирование для клиентов", "Müştəriləriniz üçün rezervasiya"),
+  },
+];
 
   return (
     <div style={{
