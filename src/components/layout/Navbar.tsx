@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, ChevronDown, LogOut, User, LayoutDashboard } from "lucide-react";
+import { Menu, X, ChevronDown, LogOut, User, LayoutDashboard, Briefcase } from "lucide-react";
 import { getT } from "@/lib/i18n";
 import { useAuth } from "@/context/AuthContext";
 
@@ -34,8 +34,6 @@ export default function Navbar({ locale }: { locale: string }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  
-
   const switchLocale = (newLocale: string) => {
     const segments = pathname.split("/");
     segments[1] = newLocale;
@@ -52,8 +50,6 @@ export default function Navbar({ locale }: { locale: string }) {
   };
 
   const navLinks = [
-    { label: t.nav.destinations, href: `/${locale}/routes`, hasDropdown: false },
-    { label: t.nav.experiences, href: `/${locale}/routes` },
     { label: t.nav.routes, href: `/${locale}/routes` },
     { label: t.nav.about, href: `/${locale}/about` },
     { label: t.nav.contact, href: `/${locale}/contact` },
@@ -107,7 +103,7 @@ export default function Navbar({ locale }: { locale: string }) {
           </nav>
 
           {/* Desktop Right */}
-          <div className="nav-desktop" style={{ alignItems: "center", gap: 12 }}>
+          <div className="nav-desktop" style={{ alignItems: "center", gap: 10 }}>
 
             {/* Lang switcher */}
             <div style={{ position: "relative" }} onClick={e => e.stopPropagation()}>
@@ -134,6 +130,13 @@ export default function Navbar({ locale }: { locale: string }) {
             </div>
 
             <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.2)" }} />
+
+            {/* For Partners button */}
+            <Link href={`/${locale}/partners`}
+              style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, padding: "8px 16px", background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.4)", color: "#c9a84c", borderRadius: 10, textDecoration: "none", fontFamily: "DM Sans, sans-serif", fontWeight: 600, whiteSpace: "nowrap" }}>
+              <Briefcase size={13} />
+              {tr("For Partners", "Для партнёров", "Tərəfdaşlar üçün")}
+            </Link>
 
             {/* Auth section */}
             {profile ? (
@@ -224,6 +227,13 @@ export default function Navbar({ locale }: { locale: string }) {
               </Link>
             ))}
 
+            {/* Partners link mobile */}
+            <Link href={`/${locale}/partners`} onClick={() => setMobileOpen(false)}
+              style={{ display: "flex", alignItems: "center", gap: 8, color: "#c9a84c", fontFamily: "DM Sans, sans-serif", fontSize: 16, textDecoration: "none", padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <Briefcase size={16} />
+              {tr("For Partners", "Для партнёров", "Tərəfdaşlar üçün")}
+            </Link>
+
             {profile ? (
               <>
                 <div style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
@@ -248,10 +258,12 @@ export default function Navbar({ locale }: { locale: string }) {
                 </button>
               </>
             ) : (
-              <Link href={`/${locale}/auth`} onClick={() => setMobileOpen(false)}
-                style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "14px", borderRadius: 12, textDecoration: "none", fontSize: 15, fontWeight: 600, fontFamily: "DM Sans, sans-serif", marginTop: 12 }}>
-                {tr("Sign In", "Войти", "Daxil ol")}
-              </Link>
+              <>
+                <Link href={`/${locale}/auth`} onClick={() => setMobileOpen(false)}
+                  style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "14px", borderRadius: 12, textDecoration: "none", fontSize: 15, fontWeight: 600, fontFamily: "DM Sans, sans-serif", marginTop: 12 }}>
+                  {tr("Sign In", "Войти", "Daxil ol")}
+                </Link>
+              </>
             )}
           </div>
         )}
