@@ -129,9 +129,9 @@ export default function PartnersPage({ params }: { params: Promise<{ locale: str
           </h1>
           <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 17, lineHeight: 1.8, marginBottom: 40, maxWidth: 600 }}>
             {tr(
-              "Net prices, dedicated support, and full DMC services for tour operators and travel agencies. Join 50+ partners who trust Caspian Routes.",
-              "Net-цены, персональная поддержка и полный спектр DMC-услуг для туроператоров и турагентств. Присоединяйтесь к 50+ партнёрам, которые доверяют Caspian Routes.",
-              "Tur operatorları və turizm agentlikləri üçün net qiymətlər, şəxsi dəstək və tam DMC xidmətləri. Caspian Routes-a güvənən 50+ tərəfdaşa qoşulun."
+              "Net prices, dedicated support, and full DMC services for tour operators and travel agencies. No joining fee — you earn commission only after real bookings.",
+"Net-цены, персональная поддержка и полный спектр DMC-услуг. Никаких вступительных взносов — комиссия только после реальных бронирований.",
+              "Tur operatorları və turizm agentlikləri üçün net qiymətlər və tam DMC xidmətləri. Qoşulma haqqı yoxdur — komissiya yalnız real rezervasiyalardan sonra."
             )}
           </p>
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
@@ -152,9 +152,9 @@ export default function PartnersPage({ params }: { params: Promise<{ locale: str
         <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 32, textAlign: "center" }}>
           {[
             { value: "50+", label: tr("Active Partners", "Активных партнёров", "Aktiv tərəfdaşlar") },
-            { value: "10-20%", label: tr("Commission Rate", "Размер комиссии", "Komissiya dərəcəsi") },
-            { value: "24/7", label: tr("Support Available", "Поддержка доступна", "Dəstək mövcuddur") },
-            { value: "100%", label: tr("Net Prices", "Net-цены", "Net qiymətlər") },
+{ value: "10-20%", label: tr("Commission Rate", "Размер комиссии", "Komissiya dərəcəsi") },
+{ value: "24/7", label: tr("Support Available", "Поддержка доступна", "Dəstək mövcuddur") },
+{ value: "100%", label: tr("Net Prices", "Net-цены", "Net qiymətlər") },
           ].map(stat => (
             <div key={stat.label}>
               <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 40, fontWeight: 700, color: "#2dd4bf", lineHeight: 1, marginBottom: 8 }}>{stat.value}</p>
