@@ -151,7 +151,7 @@ export default function PartnersPage({ params }: { params: Promise<{ locale: str
       <div style={{ background: "#021a1a", padding: "40px 24px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 32, textAlign: "center" }}>
           {[
-            { value: "50+", label: tr("Active Partners", "Активных партнёров", "Aktiv tərəfdaşlar") },
+            { value: "0₼", label: tr("No joining fee", "Без вступительного взноса", "Qoşulma haqqı yoxdur") },
 { value: "10-20%", label: tr("Commission Rate", "Размер комиссии", "Komissiya dərəcəsi") },
 { value: "24/7", label: tr("Support Available", "Поддержка доступна", "Dəstək mövcuddur") },
 { value: "100%", label: tr("Net Prices", "Net-цены", "Net qiymətlər") },
