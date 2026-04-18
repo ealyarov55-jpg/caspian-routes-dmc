@@ -162,6 +162,12 @@ export default function Navbar({ locale }: { locale: string }) {
                       <LayoutDashboard size={14} color="#2dd4bf" />
                       {tr("Dashboard", "Панель управления", "İdarə paneli")}
                     </Link>
+                    {profile.role === "partner" && (
+  <Link href={`/${locale}/partner-dashboard`} onClick={() => setMobileOpen(false)}
+    style={{ display: "block", textAlign: "center", background: "rgba(201,168,76,0.15)", color: "#c9a84c", padding: "10px", borderRadius: 10, textDecoration: "none", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif", marginBottom: 8 }}>
+    {tr("My Requests", "Мои запросы", "Mənim sorğularım")}
+  </Link>
+)}
                     {profile.role === "provider" && (
                       <Link href={`/${locale}/provider/profile`} onClick={() => setUserOpen(false)}
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", color: "rgba(255,255,255,0.8)", textDecoration: "none", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}
@@ -180,6 +186,15 @@ export default function Navbar({ locale }: { locale: string }) {
                         {tr("My Bookings", "Мои бронирования", "Rezervasiyalarım")}
                       </Link>
                     )}
+                    {profile.role === "partner" && (
+  <Link href={`/${locale}/partner-dashboard`} onClick={() => setUserOpen(false)}
+    style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", color: "rgba(255,255,255,0.8)", textDecoration: "none", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}
+    onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
+    onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+    <Briefcase size={14} color="#c9a84c" />
+    {tr("My Requests", "Мои запросы", "Mənim sorğularım")}
+  </Link>
+)}
                     <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
                       <button onClick={handleLogout}
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", color: "rgba(239,68,68,0.8)", background: "none", border: "none", cursor: "pointer", fontSize: 13, fontFamily: "DM Sans, sans-serif", width: "100%" }}
