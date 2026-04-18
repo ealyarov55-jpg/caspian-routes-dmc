@@ -275,6 +275,16 @@ export default function AdminPage({ params }: { params: Promise<{ locale: string
                         <p style={{ color: "#4a6060", fontSize: 13 }}>
                           {tr("Partner", "Партнёр", "Tərəfdaş")}: <strong>{q.partnerName}</strong> · {q.partnerEmail}
                         </p>
+                        {(q as any).clientName && (
+  <p style={{ color: "#4a6060", fontSize: 13 }}>
+    {tr("Client", "Клиент", "Müştəri")}: <strong>{(q as any).clientName}</strong>
+  </p>
+)}
+{(q as any).type === "itinerary" && (q as any).items && (
+  <p style={{ color: "#94a3a3", fontSize: 12, marginTop: 4 }}>
+    {tr("Itinerary", "Маршрут", "Marşrut")}: {(q as any).items.map((i: any) => `${i.name} ×${i.quantity}`).join(", ")}
+  </p>
+)}
                         <p style={{ color: "#94a3a3", fontSize: 12, marginTop: 2 }}>{new Date(q.createdAt).toLocaleString()}</p>
                       </div>
                       <span style={{ display: "flex", alignItems: "center", gap: 5, background: statusBg(q.status), color: statusColor(q.status), fontSize: 11, fontWeight: 700, padding: "6px 12px", borderRadius: 999, textTransform: "uppercase", whiteSpace: "nowrap", flexShrink: 0 }}>
