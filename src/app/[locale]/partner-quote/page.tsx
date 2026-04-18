@@ -3,6 +3,8 @@
 import { useState, use, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { ArrowLeft, Send, Check, Calendar, Users, MapPin, MessageSquare, Briefcase } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -50,6 +52,29 @@ export default function PartnerQuotePage({ params }: { params: Promise<{ locale:
   const handleSubmit = async () => {
     if (!form.routeId || !form.arrivalDate || !profile) return;
     setSending(true);
+
+    const routeName = selectedRoute?.title[lang as keyof typeof selectedRoute.title] || form.routeId;
+
+    // Save to Firestore
+    await addDoc(collection(db, "partnerQuotes"), {
+      partnerId: profile.uid,
+      partnerName: profile.name,
+      partnerEmail: profile.email,
+      routeId: form.routeId,
+      routeName,
+      arrivalDate: form.arrivalDate,
+      departureDate: form.departureDate,
+      pax: form.pax,
+      guideLanguage: form.guideLanguage,
+      hotelRequired: form.hotelRequired,
+      transferRequired: form.transferRequired,
+      specialRequests: form.specialRequests,
+      estimatedNetTotal: estimatedTotal,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    });
+
+    // Send email
     await fetch("/api/send-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -59,7 +84,7 @@ export default function PartnerQuotePage({ params }: { params: Promise<{ locale:
           partnerName: profile.name,
           partnerEmail: profile.email,
           routeId: form.routeId,
-          routeName: selectedRoute?.title[lang as keyof typeof selectedRoute.title] || form.routeId,
+          routeName,
           arrivalDate: form.arrivalDate,
           departureDate: form.departureDate,
           pax: form.pax,
@@ -71,6 +96,7 @@ export default function PartnerQuotePage({ params }: { params: Promise<{ locale:
         },
       }),
     });
+
     setSending(false);
     setSubmitted(true);
   };
@@ -130,10 +156,16 @@ export default function PartnerQuotePage({ params }: { params: Promise<{ locale:
                 "Kommersiya təklifini hazırlayacaq və 2 saat ərzində e-poçtunuza göndərəcəyik."
               )}
             </p>
-            <Link href={`/${locale}/partner-portal`}
-              style={{ display: "inline-block", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "14px 32px", borderRadius: 14, textDecoration: "none", fontSize: 15, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
-              {tr("Back to Portal", "Вернуться в портал", "Portala qayıt")}
-            </Link>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <Link href={`/${locale}/partner-dashboard`}
+                style={{ display: "inline-block", background: "linear-gradient(135deg, #c9a84c, #d4a843)", color: "white", padding: "14px 28px", borderRadius: 14, textDecoration: "none", fontSize: 15, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+                {tr("View My Requests", "Мои запросы", "Sorğularım")}
+              </Link>
+              <Link href={`/${locale}/partner-portal`}
+                style={{ display: "inline-block", background: "white", border: "1.5px solid #e2eded", color: "#021a1a", padding: "14px 28px", borderRadius: 14, textDecoration: "none", fontSize: 15, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+                {tr("Back to Portal", "Вернуться в портал", "Portala qayıt")}
+              </Link>
+            </div>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 20 }} className="quote-grid">
@@ -258,7 +290,6 @@ export default function PartnerQuotePage({ params }: { params: Promise<{ locale:
                 <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 20, color: "#021a1a", marginBottom: 20 }}>
                   {tr("Quote Summary", "Сводка запроса", "Sorğu xülasəsi")}
                 </h3>
-
                 <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 20 }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <span style={{ color: "#94a3a3", fontSize: 13 }}>{tr("Route", "Маршрут", "Marşrut")}</span>
@@ -289,7 +320,6 @@ export default function PartnerQuotePage({ params }: { params: Promise<{ locale:
                     </div>
                   )}
                 </div>
-
                 {selectedRoute && (
                   <div style={{ background: "rgba(10,112,112,0.06)", borderRadius: 12, padding: "14px 16px", marginBottom: 20 }}>
                     <p style={{ color: "#4a6060", fontSize: 12, marginBottom: 4 }}>{tr("Estimated Net Total", "Примерная Net-сумма", "Təxmini Net cəmi")}</p>
@@ -297,13 +327,11 @@ export default function PartnerQuotePage({ params }: { params: Promise<{ locale:
                     <p style={{ color: "#94a3a3", fontSize: 11, marginTop: 4 }}>{tr("Final price in quote", "Финальная цена в КП", "Yekun qiymət kommersiya təklifində")}</p>
                   </div>
                 )}
-
                 <button onClick={handleSubmit} disabled={!form.routeId || !form.arrivalDate || sending}
                   style={{ width: "100%", padding: "14px", borderRadius: 14, border: "none", background: (!form.routeId || !form.arrivalDate) ? "#e2eded" : "linear-gradient(135deg, #0a7070, #0d9090)", color: (!form.routeId || !form.arrivalDate) ? "#94a3a3" : "white", fontSize: 15, fontWeight: 600, cursor: (!form.routeId || !form.arrivalDate) ? "not-allowed" : "pointer", fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: (form.routeId && form.arrivalDate) ? "0 8px 24px rgba(10,112,112,0.3)" : "none" }}>
                   <Send size={16} />
                   {sending ? tr("Sending...", "Отправляем...", "Göndərilir...") : tr("Send Quote Request", "Отправить запрос", "Sorğu göndər")}
                 </button>
-
                 <p style={{ fontSize: 11, color: "#94a3a3", textAlign: "center", marginTop: 12 }}>
                   {tr("We reply within 2 hours during business hours.", "Отвечаем в течение 2 часов в рабочее время.", "İş saatlarında 2 saat ərzində cavab veririk.")}
                 </p>

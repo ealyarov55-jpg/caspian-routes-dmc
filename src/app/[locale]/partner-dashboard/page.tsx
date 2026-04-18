@@ -9,14 +9,18 @@ import { ArrowLeft, Briefcase, Clock, Check, X, MapPin, Calendar, Users, Chevron
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 
-interface Booking {
+interface PartnerQuote {
   id: string;
   routeName: string;
-  date: string;
-  guests: number;
+  arrivalDate: string;
+  departureDate: string;
+  pax: number;
   status: "pending" | "confirmed" | "cancelled";
-  pricePerDay: string;
-  providerName: string;
+  estimatedNetTotal: number;
+  guideLanguage: string;
+  hotelRequired: boolean;
+  transferRequired: boolean;
+  specialRequests: string;
   createdAt: string;
 }
 
@@ -29,8 +33,8 @@ export default function PartnerDashboardPage({ params }: { params: Promise<{ loc
   const tr = (en: string, ru: string, az: string) =>
     lang === "ru" ? ru : lang === "az" ? az : en;
 
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loadingBookings, setLoadingBookings] = useState(true);
+  const [quotes, setQuotes] = useState<PartnerQuote[]>([]);
+  const [loadingQuotes, setLoadingQuotes] = useState(true);
   const [filter, setFilter] = useState<"all" | "pending" | "confirmed" | "cancelled">("all");
 
   useEffect(() => {
@@ -42,19 +46,19 @@ export default function PartnerDashboardPage({ params }: { params: Promise<{ loc
 
   useEffect(() => {
     if (profile) {
-      const q = query(collection(db, "bookings"), where("clientId", "==", profile.uid));
+      const q = query(collection(db, "partnerQuotes"), where("partnerId", "==", profile.uid));
       getDocs(q).then(snap => {
-        const data = snap.docs.map(d => ({ id: d.id, ...d.data() } as Booking));
+        const data = snap.docs.map(d => ({ id: d.id, ...d.data() } as PartnerQuote));
         data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        setBookings(data);
-        setLoadingBookings(false);
+        setQuotes(data);
+        setLoadingQuotes(false);
       });
     }
   }, [profile]);
 
   if (loading || !profile) return null;
 
-  const filtered = filter === "all" ? bookings : bookings.filter(b => b.status === filter);
+  const filtered = filter === "all" ? quotes : quotes.filter(q => q.status === filter);
 
   const statusColor = { pending: "#c9a84c", confirmed: "#0a7070", cancelled: "#ef4444" };
   const statusBg = { pending: "rgba(201,168,76,0.1)", confirmed: "rgba(10,112,112,0.1)", cancelled: "rgba(239,68,68,0.1)" };
@@ -69,10 +73,10 @@ export default function PartnerDashboardPage({ params }: { params: Promise<{ loc
   };
 
   const stats = [
-    { label: tr("Total Requests", "Всего запросов", "Ümumi sorğular"), value: bookings.length, color: "#0a7070" },
-    { label: tr("Confirmed", "Подтверждено", "Təsdiqləndi"), value: bookings.filter(b => b.status === "confirmed").length, color: "#2dd4bf" },
-    { label: tr("Pending", "Ожидает", "Gözləyir"), value: bookings.filter(b => b.status === "pending").length, color: "#c9a84c" },
-    { label: tr("Cancelled", "Отменено", "Ləğv edildi"), value: bookings.filter(b => b.status === "cancelled").length, color: "#ef4444" },
+    { label: tr("Total Requests", "Всего запросов", "Ümumi sorğular"), value: quotes.length, color: "#0a7070" },
+    { label: tr("Confirmed", "Подтверждено", "Təsdiqləndi"), value: quotes.filter(q => q.status === "confirmed").length, color: "#2dd4bf" },
+    { label: tr("Pending", "Ожидает", "Gözləyir"), value: quotes.filter(q => q.status === "pending").length, color: "#c9a84c" },
+    { label: tr("Cancelled", "Отменено", "Ləğv edildi"), value: quotes.filter(q => q.status === "cancelled").length, color: "#ef4444" },
   ];
 
   return (
@@ -137,13 +141,13 @@ export default function PartnerDashboardPage({ params }: { params: Promise<{ loc
           {(["all", "pending", "confirmed", "cancelled"] as const).map(f => (
             <button key={f} onClick={() => setFilter(f)}
               style={{ padding: "8px 16px", borderRadius: 999, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500, fontFamily: "DM Sans, sans-serif", background: filter === f ? "#021a1a" : "white", color: filter === f ? "white" : "#4a6060", boxShadow: "0 2px 8px rgba(4,46,46,0.06)", transition: "all 0.2s" }}>
-              {filterLabel(f)} ({f === "all" ? bookings.length : bookings.filter(b => b.status === f).length})
+              {filterLabel(f)} ({f === "all" ? quotes.length : quotes.filter(q => q.status === f).length})
             </button>
           ))}
         </div>
 
-        {/* Bookings list */}
-        {loadingBookings ? (
+        {/* Quotes list */}
+        {loadingQuotes ? (
           <p style={{ color: "#94a3a3", textAlign: "center", padding: 40 }}>{tr("Loading...", "Загружаем...", "Yüklənir...")}</p>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "60px 24px", background: "white", borderRadius: 20, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
@@ -161,29 +165,27 @@ export default function PartnerDashboardPage({ params }: { params: Promise<{ loc
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {filtered.map(booking => (
-              <div key={booking.id} style={{
+            {filtered.map(quote => (
+              <div key={quote.id} style={{
                 background: "white", borderRadius: 20, padding: 20,
                 boxShadow: "0 4px 24px rgba(4,46,46,0.08)",
-                border: booking.status === "confirmed" ? "1.5px solid rgba(10,112,112,0.2)" :
-                        booking.status === "pending" ? "1.5px solid rgba(201,168,76,0.2)" : "1.5px solid transparent"
+                border: quote.status === "confirmed" ? "1.5px solid rgba(10,112,112,0.2)" :
+                        quote.status === "pending" ? "1.5px solid rgba(201,168,76,0.2)" : "1.5px solid transparent"
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14, gap: 12 }}>
                   <div>
                     <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 20, color: "#021a1a", fontWeight: 600, marginBottom: 4 }}>
-                      {booking.routeName || tr("Custom Tour", "Индивидуальный тур", "Fərdi tur")}
+                      {quote.routeName || tr("Custom Tour", "Индивидуальный тур", "Fərdi tur")}
                     </h3>
-                    {booking.providerName && (
-                      <p style={{ color: "#94a3a3", fontSize: 13 }}>
-                        {tr("Guide", "Гид", "Bələdçi")}: <span style={{ color: "#4a6060", fontWeight: 500 }}>{booking.providerName}</span>
-                      </p>
-                    )}
+                    <p style={{ color: "#94a3a3", fontSize: 12 }}>
+                      {new Date(quote.createdAt).toLocaleDateString()}
+                    </p>
                   </div>
-                  <span style={{ display: "flex", alignItems: "center", gap: 5, background: statusBg[booking.status], color: statusColor[booking.status], fontSize: 11, fontWeight: 700, padding: "6px 12px", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap", flexShrink: 0 }}>
-                    {booking.status === "pending" && <Clock size={12} />}
-                    {booking.status === "confirmed" && <Check size={12} />}
-                    {booking.status === "cancelled" && <X size={12} />}
-                    {statusLabel(booking.status)}
+                  <span style={{ display: "flex", alignItems: "center", gap: 5, background: statusBg[quote.status], color: statusColor[quote.status], fontSize: 11, fontWeight: 700, padding: "6px 12px", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap", flexShrink: 0 }}>
+                    {quote.status === "pending" && <Clock size={12} />}
+                    {quote.status === "confirmed" && <Check size={12} />}
+                    {quote.status === "cancelled" && <X size={12} />}
+                    {statusLabel(quote.status)}
                   </span>
                 </div>
 
@@ -191,30 +193,36 @@ export default function PartnerDashboardPage({ params }: { params: Promise<{ loc
                   <div style={{ background: "#f8fafa", borderRadius: 10, padding: "10px 14px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
                       <Calendar size={11} color="#94a3a3" />
-                      <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em" }}>{tr("Date", "Дата", "Tarix")}</p>
+                      <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em" }}>{tr("Arrival", "Приезд", "Gəliş")}</p>
                     </div>
-                    <p style={{ color: "#021a1a", fontSize: 13, fontWeight: 600 }}>{booking.date}</p>
+                    <p style={{ color: "#021a1a", fontSize: 13, fontWeight: 600 }}>{quote.arrivalDate}</p>
                   </div>
                   <div style={{ background: "#f8fafa", borderRadius: 10, padding: "10px 14px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
                       <Users size={11} color="#94a3a3" />
                       <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em" }}>{tr("Pax", "Человек", "Nəfər")}</p>
                     </div>
-                    <p style={{ color: "#021a1a", fontSize: 13, fontWeight: 600 }}>{booking.guests}</p>
+                    <p style={{ color: "#021a1a", fontSize: 13, fontWeight: 600 }}>{quote.pax}</p>
                   </div>
                   <div style={{ background: "#f8fafa", borderRadius: 10, padding: "10px 14px" }}>
-                    <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{tr("Total", "Итого", "Cəmi")}</p>
-                    <p style={{ fontFamily: "Cormorant Garamond, serif", color: "#021a1a", fontSize: 20, fontWeight: 700 }}>
-                      {booking.pricePerDay ? `$${Number(booking.pricePerDay) * booking.guests}` : "TBD"}
+                    <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{tr("Net Total", "Net-сумма", "Net cəmi")}</p>
+                    <p style={{ fontFamily: "Cormorant Garamond, serif", color: "#0a7070", fontSize: 20, fontWeight: 700 }}>
+                      ${quote.estimatedNetTotal || "TBD"}
                     </p>
                   </div>
                 </div>
 
-                {booking.status === "confirmed" && (
-                  <div style={{ background: "rgba(10,112,112,0.06)", border: "1px solid rgba(10,112,112,0.15)", borderRadius: 10, padding: "10px 14px", display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {quote.hotelRequired && <span style={{ fontSize: 11, background: "rgba(10,112,112,0.08)", color: "#0a7070", padding: "4px 10px", borderRadius: 999 }}>🏨 {tr("Hotel", "Отель", "Otel")}</span>}
+                  {quote.transferRequired && <span style={{ fontSize: 11, background: "rgba(10,112,112,0.08)", color: "#0a7070", padding: "4px 10px", borderRadius: 999 }}>✈️ {tr("Transfer", "Трансфер", "Transfer")}</span>}
+                  {quote.guideLanguage && <span style={{ fontSize: 11, background: "rgba(10,112,112,0.08)", color: "#0a7070", padding: "4px 10px", borderRadius: 999 }}>🌐 {quote.guideLanguage}</span>}
+                </div>
+
+                {quote.status === "confirmed" && (
+                  <div style={{ background: "rgba(10,112,112,0.06)", border: "1px solid rgba(10,112,112,0.15)", borderRadius: 10, padding: "10px 14px", marginTop: 12, display: "flex", alignItems: "center", gap: 8 }}>
                     <Check size={14} color="#0a7070" />
                     <p style={{ color: "#065050", fontSize: 13 }}>
-                      {tr("Booking confirmed! The guide will contact you shortly.", "Бронирование подтверждено! Гид скоро свяжется с вами.", "Rezervasiya təsdiqləndi! Bələdçi tezliklə sizinlə əlaqə saxlayacaq.")}
+                      {tr("Quote confirmed! We will send you the full proposal shortly.", "Запрос подтверждён! Мы скоро пришлём полное КП.", "Sorğu təsdiqləndi! Tezliklə tam kommersiya təklifi göndərəcəyik.")}
                     </p>
                   </div>
                 )}
