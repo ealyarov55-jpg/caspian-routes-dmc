@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
-import { ArrowLeft, Users, MapPin, Calendar, Check, X, Trash2, Briefcase, BarChart3 } from "lucide-react";
+import { ArrowLeft, Users, MapPin, Calendar, Check, X, Trash2, Briefcase, BarChart3, Clock } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 
 interface Provider {
@@ -30,16 +30,20 @@ interface Booking {
   createdAt: string;
 }
 
-interface PartnerRequest {
+interface PartnerQuote {
   id: string;
-  companyName: string;
-  contactName: string;
-  email: string;
-  phone: string;
-  country: string;
-  type: string;
-  message: string;
-  status: "pending" | "approved" | "rejected";
+  partnerName: string;
+  partnerEmail: string;
+  routeName: string;
+  arrivalDate: string;
+  departureDate: string;
+  pax: number;
+  guideLanguage: string;
+  hotelRequired: boolean;
+  transferRequired: boolean;
+  specialRequests: string;
+  estimatedNetTotal: number;
+  status: "pending" | "confirmed" | "cancelled";
   createdAt: string;
 }
 
@@ -60,9 +64,10 @@ export default function AdminPage({ params }: { params: Promise<{ locale: string
   const tr = (en: string, ru: string, az: string) =>
     lang === "ru" ? ru : lang === "az" ? az : en;
 
-  const [tab, setTab] = useState<"overview" | "providers" | "bookings" | "partners" | "users">("overview");
+  const [tab, setTab] = useState<"overview" | "providers" | "bookings" | "partners" | "quotes" | "users">("overview");
   const [providers, setProviders] = useState<Provider[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [partnerQuotes, setPartnerQuotes] = useState<PartnerQuote[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [loadingData, setLoadingData] = useState(true);
 
@@ -77,12 +82,16 @@ export default function AdminPage({ params }: { params: Promise<{ locale: string
         getDocs(collection(db, "providers")),
         getDocs(collection(db, "bookings")),
         getDocs(collection(db, "users")),
-      ]).then(([provSnap, bookSnap, userSnap]) => {
+        getDocs(collection(db, "partnerQuotes")),
+      ]).then(([provSnap, bookSnap, userSnap, quotesSnap]) => {
         setProviders(provSnap.docs.map(d => d.data() as Provider));
         const booksData = bookSnap.docs.map(d => ({ id: d.id, ...d.data() } as Booking));
         booksData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         setBookings(booksData);
         setUsers(userSnap.docs.map(d => d.data() as User));
+        const quotesData = quotesSnap.docs.map(d => ({ id: d.id, ...d.data() } as PartnerQuote));
+        quotesData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setPartnerQuotes(quotesData);
         setLoadingData(false);
       });
     }
@@ -104,20 +113,27 @@ export default function AdminPage({ params }: { params: Promise<{ locale: string
     setUsers(prev => prev.map(u => u.uid === uid ? { ...u, role: newRole } : u));
   };
 
+  const updateQuoteStatus = async (id: string, status: "confirmed" | "cancelled") => {
+    await updateDoc(doc(db, "partnerQuotes", id), { status });
+    setPartnerQuotes(prev => prev.map(q => q.id === id ? { ...q, status } : q));
+  };
+
   if (loading || !profile) return null;
 
   const partners = users.filter(u => u.role === "partner");
   const pendingProviders = providers.filter(p => !p.approved);
+  const pendingQuotes = partnerQuotes.filter(q => q.status === "pending");
 
   const stats = [
     { label: tr("Providers", "Провайдеры", "Provayderlar"), value: providers.length, icon: Users, color: "#0a7070" },
     { label: tr("Bookings", "Бронирования", "Rezervasiyalar"), value: bookings.length, icon: Calendar, color: "#c9a84c" },
-    { label: tr("Pending", "Ожидает", "Gözləyir"), value: bookings.filter(b => b.status === "pending").length, icon: MapPin, color: "#065050" },
-    { label: tr("Partners", "Партнёры", "Tərəfdaşlar"), value: partners.length, icon: Briefcase, color: "#2dd4bf" },
+    { label: tr("Partner Quotes", "Запросы партнёров", "Tərəfdaş sorğuları"), value: partnerQuotes.length, icon: Briefcase, color: "#065050" },
+    { label: tr("Partners", "Партнёры", "Tərəfdaşlar"), value: partners.length, icon: BarChart3, color: "#2dd4bf" },
   ];
 
   const tabs = [
     { key: "overview", label: tr("Overview", "Обзор", "Ümumi baxış") },
+    { key: "quotes", label: `${tr("Partner Quotes", "Запросы партнёров", "Tərəfdaş sorğuları")} ${pendingQuotes.length > 0 ? `(${pendingQuotes.length})` : ""}` },
     { key: "bookings", label: tr("Bookings", "Бронирования", "Rezervasiyalar") },
     { key: "providers", label: tr("Providers", "Провайдеры", "Provayderlar") },
     { key: "partners", label: tr("Partners", "Партнёры", "Tərəfdaşlar") },
@@ -157,8 +173,13 @@ export default function AdminPage({ params }: { params: Promise<{ locale: string
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {pendingProviders.length > 0 && (
+          {pendingQuotes.length > 0 && (
             <span style={{ background: "#c9a84c", color: "white", fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 999 }}>
+              {pendingQuotes.length} {tr("new quotes", "новых запросов", "yeni sorğu")}
+            </span>
+          )}
+          {pendingProviders.length > 0 && (
+            <span style={{ background: "rgba(255,255,255,0.15)", color: "white", fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 999 }}>
               {pendingProviders.length} {tr("pending", "ожидает", "gözləyir")}
             </span>
           )}
@@ -185,7 +206,7 @@ export default function AdminPage({ params }: { params: Promise<{ locale: string
         <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
           {tabs.map(t => (
             <button key={t.key} onClick={() => setTab(t.key as any)}
-              style={{ padding: "10px 18px", borderRadius: 12, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500, fontFamily: "DM Sans, sans-serif", background: tab === t.key ? "#021a1a" : "white", color: tab === t.key ? "white" : "#4a6060", boxShadow: "0 2px 8px rgba(4,46,46,0.06)", transition: "all 0.2s" }}>
+              style={{ padding: "10px 18px", borderRadius: 12, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500, fontFamily: "DM Sans, sans-serif", background: tab === t.key ? "#021a1a" : t.key === "quotes" && pendingQuotes.length > 0 ? "rgba(201,168,76,0.15)" : "white", color: tab === t.key ? "white" : t.key === "quotes" && pendingQuotes.length > 0 ? "#c9a84c" : "#4a6060", boxShadow: "0 2px 8px rgba(4,46,46,0.06)", transition: "all 0.2s" }}>
               {t.label}
             </button>
           ))}
@@ -196,9 +217,26 @@ export default function AdminPage({ params }: { params: Promise<{ locale: string
           <div style={{ display: "grid", gap: 20 }} className="admin-overview">
             <div style={{ background: "white", borderRadius: 20, padding: 24, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
               <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 20, color: "#021a1a", marginBottom: 16 }}>
+                {tr("Recent Partner Quotes", "Последние запросы партнёров", "Son tərəfdaş sorğuları")}
+              </h3>
+              {partnerQuotes.slice(0, 5).map(q => (
+                <div key={q.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #f0f7f7" }}>
+                  <div>
+                    <p style={{ fontSize: 14, fontWeight: 500, color: "#021a1a" }}>{q.partnerName}</p>
+                    <p style={{ fontSize: 12, color: "#94a3a3" }}>{q.routeName} · {q.arrivalDate} · {q.pax} pax</p>
+                  </div>
+                  <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 999, textTransform: "uppercase", background: statusBg(q.status), color: statusColor(q.status) }}>
+                    {statusLabel(q.status)}
+                  </span>
+                </div>
+              ))}
+              {partnerQuotes.length === 0 && <p style={{ color: "#94a3a3", fontSize: 14 }}>{tr("No quotes yet", "Запросов пока нет", "Hələ sorğu yoxdur")}</p>}
+            </div>
+            <div style={{ background: "white", borderRadius: 20, padding: 24, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
+              <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 20, color: "#021a1a", marginBottom: 16 }}>
                 {tr("Recent Bookings", "Последние бронирования", "Son rezervasiyalar")}
               </h3>
-              {bookings.slice(0, 6).map(b => (
+              {bookings.slice(0, 5).map(b => (
                 <div key={b.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #f0f7f7" }}>
                   <div>
                     <p style={{ fontSize: 14, fontWeight: 500, color: "#021a1a" }}>{b.clientName}</p>
@@ -211,26 +249,92 @@ export default function AdminPage({ params }: { params: Promise<{ locale: string
               ))}
               {bookings.length === 0 && <p style={{ color: "#94a3a3", fontSize: 14 }}>{tr("No bookings yet", "Бронирований пока нет", "Hələ rezervasiya yoxdur")}</p>}
             </div>
-            <div style={{ background: "white", borderRadius: 20, padding: 24, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
-              <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 20, color: "#021a1a", marginBottom: 16 }}>
-                {tr("Providers", "Провайдеры", "Provayderlar")}
-              </h3>
-              {providers.slice(0, 6).map(p => (
-                <div key={p.uid} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: "1px solid #f0f7f7" }}>
-                  <div style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg, #042e2e, #0a7070)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: 14, fontWeight: 700, flexShrink: 0 }}>
-                    {p.name?.[0]?.toUpperCase()}
+          </div>
+        )}
+
+        {/* Partner Quotes */}
+        {tab === "quotes" && (
+          <div>
+            <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", marginBottom: 16 }}>
+              {tr("Partner Quote Requests", "Запросы от партнёров", "Tərəfdaş sorğuları")} ({partnerQuotes.length})
+            </h2>
+            {partnerQuotes.length === 0 ? (
+              <div style={{ textAlign: "center", padding: 60, background: "white", borderRadius: 20 }}>
+                <Briefcase size={48} color="#e2eded" style={{ marginBottom: 16 }} />
+                <p style={{ color: "#94a3a3" }}>{tr("No partner quotes yet", "Запросов от партнёров пока нет", "Hələ tərəfdaş sorğusu yoxdur")}</p>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {partnerQuotes.map(q => (
+                  <div key={q.id} style={{ background: "white", borderRadius: 20, padding: 24, boxShadow: "0 4px 24px rgba(4,46,46,0.08)", border: q.status === "pending" ? "1.5px solid rgba(201,168,76,0.3)" : "1.5px solid transparent" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16, gap: 12 }}>
+                      <div>
+                        <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 20, color: "#021a1a", fontWeight: 600, marginBottom: 4 }}>
+                          {q.routeName}
+                        </h3>
+                        <p style={{ color: "#4a6060", fontSize: 13 }}>
+                          {tr("Partner", "Партнёр", "Tərəfdaş")}: <strong>{q.partnerName}</strong> · {q.partnerEmail}
+                        </p>
+                        <p style={{ color: "#94a3a3", fontSize: 12, marginTop: 2 }}>{new Date(q.createdAt).toLocaleString()}</p>
+                      </div>
+                      <span style={{ display: "flex", alignItems: "center", gap: 5, background: statusBg(q.status), color: statusColor(q.status), fontSize: 11, fontWeight: 700, padding: "6px 12px", borderRadius: 999, textTransform: "uppercase", whiteSpace: "nowrap", flexShrink: 0 }}>
+                        {q.status === "pending" && <Clock size={12} />}
+                        {q.status === "confirmed" && <Check size={12} />}
+                        {q.status === "cancelled" && <X size={12} />}
+                        {statusLabel(q.status)}
+                      </span>
+                    </div>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 10, marginBottom: 16 }}>
+                      <div style={{ background: "#f8fafa", borderRadius: 10, padding: "10px 14px" }}>
+                        <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{tr("Arrival", "Приезд", "Gəliş")}</p>
+                        <p style={{ color: "#021a1a", fontSize: 13, fontWeight: 600 }}>{q.arrivalDate}</p>
+                      </div>
+                      {q.departureDate && (
+                        <div style={{ background: "#f8fafa", borderRadius: 10, padding: "10px 14px" }}>
+                          <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{tr("Departure", "Отъезд", "Ayrılış")}</p>
+                          <p style={{ color: "#021a1a", fontSize: 13, fontWeight: 600 }}>{q.departureDate}</p>
+                        </div>
+                      )}
+                      <div style={{ background: "#f8fafa", borderRadius: 10, padding: "10px 14px" }}>
+                        <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{tr("Pax", "Человек", "Nəfər")}</p>
+                        <p style={{ color: "#021a1a", fontSize: 13, fontWeight: 600 }}>{q.pax}</p>
+                      </div>
+                      <div style={{ background: "rgba(10,112,112,0.06)", borderRadius: 10, padding: "10px 14px" }}>
+                        <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{tr("Net Total", "Net-сумма", "Net cəmi")}</p>
+                        <p style={{ fontFamily: "Cormorant Garamond, serif", color: "#0a7070", fontSize: 20, fontWeight: 700 }}>${q.estimatedNetTotal}</p>
+                      </div>
+                    </div>
+
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: q.specialRequests ? 12 : 0 }}>
+                      {q.guideLanguage && <span style={{ fontSize: 11, background: "rgba(10,112,112,0.08)", color: "#0a7070", padding: "4px 10px", borderRadius: 999 }}>🌐 {q.guideLanguage}</span>}
+                      {q.hotelRequired && <span style={{ fontSize: 11, background: "rgba(10,112,112,0.08)", color: "#0a7070", padding: "4px 10px", borderRadius: 999 }}>🏨 {tr("Hotel", "Отель", "Otel")}</span>}
+                      {q.transferRequired && <span style={{ fontSize: 11, background: "rgba(10,112,112,0.08)", color: "#0a7070", padding: "4px 10px", borderRadius: 999 }}>✈️ {tr("Transfer", "Трансфер", "Transfer")}</span>}
+                    </div>
+
+                    {q.specialRequests && (
+                      <div style={{ background: "rgba(10,112,112,0.04)", border: "1px solid rgba(10,112,112,0.1)", borderRadius: 10, padding: "10px 14px", marginBottom: 16 }}>
+                        <p style={{ color: "#0a7070", fontSize: 11, fontWeight: 600, marginBottom: 4, textTransform: "uppercase" }}>{tr("Special Requests", "Особые пожелания", "Xüsusi istəklər")}</p>
+                        <p style={{ color: "#4a6060", fontSize: 13 }}>{q.specialRequests}</p>
+                      </div>
+                    )}
+
+                    {q.status === "pending" && (
+                      <div style={{ display: "flex", gap: 10 }}>
+                        <button onClick={() => updateQuoteStatus(q.id, "confirmed")}
+                          style={{ flex: 1, padding: "11px", borderRadius: 12, border: "none", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                          <Check size={16} /> {tr("Confirm Quote", "Подтвердить запрос", "Sorğunu təsdiq et")}
+                        </button>
+                        <button onClick={() => updateQuoteStatus(q.id, "cancelled")}
+                          style={{ flex: 1, padding: "11px", borderRadius: 12, border: "1.5px solid #fee2e2", background: "white", color: "#ef4444", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                          <X size={16} /> {tr("Decline", "Отклонить", "Rədd et")}
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: 14, fontWeight: 500, color: "#021a1a" }}>{p.name}</p>
-                    <p style={{ fontSize: 12, color: "#94a3a3" }}>{p.carModel || "No vehicle"}</p>
-                  </div>
-                  {p.approved
-                    ? <span style={{ fontSize: 11, color: "#0a7070", fontWeight: 600 }}>✓ {tr("Active", "Активен", "Aktiv")}</span>
-                    : <span style={{ fontSize: 11, color: "#c9a84c", fontWeight: 600 }}>{tr("Pending", "Ожидает", "Gözləyir")}</span>}
-                </div>
-              ))}
-              {providers.length === 0 && <p style={{ color: "#94a3a3", fontSize: 14 }}>{tr("No providers yet", "Провайдеров пока нет", "Hələ prövaydr yoxdur")}</p>}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -341,7 +445,6 @@ export default function AdminPage({ params }: { params: Promise<{ locale: string
               <div style={{ textAlign: "center", padding: 60, background: "white", borderRadius: 20, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
                 <Briefcase size={48} color="#e2eded" style={{ marginBottom: 16 }} />
                 <p style={{ color: "#94a3a3", fontSize: 15 }}>{tr("No partner accounts yet", "Партнёрских аккаунтов пока нет", "Hələ tərəfdaş hesabı yoxdur")}</p>
-                <p style={{ color: "#94a3a3", fontSize: 13, marginTop: 8 }}>{tr("Partners register via the /auth page with 'partner' role", "Партнёры регистрируются через /auth со ролью 'partner'", "Tərəfdaşlar /auth səhifəsindən 'partner' rolu ilə qeydiyyatdan keçirlər")}</p>
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
