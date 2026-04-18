@@ -274,6 +274,7 @@ function PartnerDashboard({ locale, tr }: { locale: string; tr: Function }) {
     { icon: Briefcase, title: tr("Partner Portal", "Партнёрский портал", "Tərəfdaş portalı"), desc: tr("Net prices & catalog", "Net-цены и каталог", "Net qiymətlər və kataloq"), href: `/${locale}/partner-portal`, color: "#c9a84c", bg: "rgba(201,168,76,0.08)" },
     { icon: MapPin, title: tr("Browse Routes", "Смотреть маршруты", "Marşrutlara bax"), desc: tr("All available routes", "Все доступные маршруты", "Bütün mövcud marşrutlar"), href: `/${locale}/routes`, color: "#0a7070", bg: "rgba(10,112,112,0.08)" },
     { icon: Users, title: tr("Available Guides", "Доступные гиды", "Mövcud bələdçilər"), desc: tr("Find guides for your clients", "Найдите гидов для клиентов", "Müştəriləriniz üçün bələdçi tapın"), href: `/${locale}/partner-portal`, color: "#065050", bg: "rgba(6,80,80,0.08)" },
+  { icon: Calendar, title: tr("My Requests", "Мои запросы", "Mənim sorğularım"), desc: tr("History & statuses", "История и статусы", "Tarix və statuslar"), href: `/${locale}/partner-dashboard`, color: "#065050", bg: "rgba(6,80,80,0.08)" },
   ];
 
   return (
