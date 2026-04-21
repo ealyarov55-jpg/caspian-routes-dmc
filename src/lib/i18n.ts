@@ -47,7 +47,7 @@ export const translations = {
     { icon: "🌍", title: "Full DMC Services", desc: "Guides, drivers, hotels, transfers, MICE and incentive tours — all in one place." },
     { icon: "⭐", title: "Verified Professionals", desc: "All guides and drivers are vetted, insured and rated by partner agencies." },
     { icon: "📊", title: "Partner Commission", desc: "Earn competitive commission on every booking you send us. No joining fee." },
-    { icon: "🛡️", title: "Reliable Ground Operations", desc: "10+ years of DMC experience in Azerbaijan. We guarantee quality execution." },
+    { icon: "🛡️", title: "Reliable Ground Operations", desc: "Local DMC expertise in Azerbaijan. We guarantee quality execution on every booking." },
   ],
 },
     footer: {
@@ -111,7 +111,7 @@ export const translations = {
     { icon: "🌍", title: "Полный спектр DMC", desc: "Гиды, водители, отели, трансферы, MICE — всё в одном месте." },
     { icon: "⭐", title: "Проверенные профессионалы", desc: "Все гиды и водители проверены и оценены партнёрскими агентствами." },
     { icon: "📊", title: "Комиссия партнёрам", desc: "Конкурентная комиссия с каждого бронирования. Без вступительных взносов." },
-    { icon: "🛡️", title: "Надёжные операции", desc: "10+ лет опыта DMC в Азербайджане. Гарантируем качество исполнения." },
+   { icon: "🛡️", title: "Надёжные операции", desc: "Местная DMC-экспертиза в Азербайджане. Гарантируем качество исполнения каждого заказа." },
   ],
 },
     footer: {
@@ -175,7 +175,7 @@ export const translations = {
     { icon: "🌍", title: "Tam DMC xidmətləri", desc: "Bələdçilər, sürücülər, otellər, transferlər, MICE — hamısı bir yerdə." },
     { icon: "⭐", title: "Yoxlanılmış mütəxəssislər", desc: "Bütün bələdçi və sürücülər tərəfdaş agentliklər tərəfindən qiymətləndirilir." },
     { icon: "📊", title: "Tərəfdaş komissiyası", desc: "Hər rezervasiyadan rəqabətli komissiya. Qoşulma haqqı yoxdur." },
-    { icon: "🛡️", title: "Etibarlı əməliyyatlar", desc: "Azərbaycanda 10+ il DMC təcrübəsi. Keyfiyyəti zəmanət veririk." },
+    { icon: "🛡️", title: "Etibarlı əməliyyatlar", desc: "Azərbaycanda yerli DMC təcrübəsi. Hər rezervasiyada keyfiyyəti zəmanət veririk." },
   ],
 },
     footer: {
