@@ -51,7 +51,7 @@ export const translations = {
   ],
 },
     footer: {
-      description: "Your trusted DMC partner for unforgettable journeys across Azerbaijan, Kazakhstan, Turkmenistan, Iran and Russia.",
+      description: "Your trusted DMC partner for unforgettable journeys across Azerbaijan.",
       company: "Company",
       routes: "Routes",
       stayUpdated: "Stay Updated",
@@ -115,7 +115,7 @@ export const translations = {
   ],
 },
     footer: {
-      description: "Ваш надёжный DMC-партнёр для незабываемых путешествий по Азербайджану, Казахстану, Туркменистану, Ирану и России.",
+     description: "Ваш надёжный DMC-партнёр для незабываемых путешествий по Азербайджану.",
       company: "Компания",
       routes: "Маршруты",
       stayUpdated: "Будьте в курсе",
@@ -179,7 +179,7 @@ export const translations = {
   ],
 },
     footer: {
-      description: "Azərbaycan, Qazaxıstan, Türkmənistan, İran və Rusiyada unudulmaz səyahətlər üçün etibarlı DMC tərəfdaşınız.",
+     description: "Azərbaycanda unudulmaz səyahətlər üçün etibarlı DMC tərəfdaşınız.",
       company: "Şirkət",
       routes: "Marşrutlar",
       stayUpdated: "Xəbərdar olun",
