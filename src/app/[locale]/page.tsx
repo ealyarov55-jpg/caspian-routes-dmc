@@ -4,7 +4,7 @@ import HowItWorks from "@/components/sections/HowItWorks";
 import CuratedSection from "@/components/sections/CuratedSection";
 import WhyChooseUs from "@/components/sections/WhyChooseUs";
 import Footer from "@/components/sections/Footer";
-
+import PartnerCTA from "@/components/sections/PartnerCTA";
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   return (
@@ -14,7 +14,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <HowItWorks locale={locale} />
       <CuratedSection locale={locale} />
       <WhyChooseUs locale={locale} />
-      <Footer locale={locale} />
+<PartnerCTA locale={locale} />
+<Footer locale={locale} />
     </main>
   );
 }
