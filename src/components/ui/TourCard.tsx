@@ -20,10 +20,14 @@ export interface Tour {
 
 export default function TourCard({ tour, locale = "en" }: { tour: Tour; locale?: string }) {
   const t = getT(locale);
+  const lang = (locale === "ru" || locale === "az") ? locale : "en";
   const { profile } = useAuth();
   const [saved, setSaved] = useState(false);
   const [savedId, setSavedId] = useState("");
   const [saving, setSaving] = useState(false);
+
+  const tr = (en: string, ru: string, az: string) =>
+    lang === "ru" ? ru : lang === "az" ? az : en;
 
   const toggleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -116,18 +120,32 @@ export default function TourCard({ tour, locale = "en" }: { tour: Tour; locale?:
         <h3 style={{
           fontFamily: "Cormorant Garamond, serif",
           color: "#0d1f1f", fontSize: 20, fontWeight: 600,
-          lineHeight: 1.2, marginBottom: 16,
+          lineHeight: 1.2, marginBottom: 12,
         }}>
           {tour.title}
         </h3>
 
-        <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div>
-            <span style={{ color: "#94a3a3", fontSize: 11, fontFamily: "DM Sans, sans-serif" }}>{t.curated.from}</span>
-            <p style={{ fontFamily: "Cormorant Garamond, serif", color: "#021a1a", fontSize: 24, fontWeight: 700 }}>
-              ${tour.price.toLocaleString()}
-            </p>
-          </div>
+        {/* Price — By request */}
+        <Link
+          href={`/${locale}/partners#apply`}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 6,
+            background: "rgba(10,112,112,0.08)", border: "1px solid rgba(10,112,112,0.2)",
+            borderRadius: 10, padding: "8px 14px", marginBottom: 8,
+            textDecoration: "none", width: "fit-content",
+          }}>
+          <span style={{ color: "#0a7070", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+            {tr("By request", "По запросу", "Sorğu ilə")}
+          </span>
+          <ArrowRight size={12} color="#0a7070" />
+        </Link>
+
+        {/* Net prices note */}
+        <p style={{ color: "#94a3a3", fontSize: 11, fontFamily: "DM Sans, sans-serif", marginBottom: 12 }}>
+          {tr("Net prices available for partners", "Net-цены по запросу для партнёров", "Tərəfdaşlar üçün net qiymətlər sorğu ilə")}
+        </p>
+
+        <div style={{ marginTop: "auto" }}>
           <Link
             href={`/${locale}/routes/${tour.id}`}
             className="flex items-center gap-1.5 text-white text-xs font-medium rounded-xl transition-colors duration-200 hover:bg-[#0a7070]"
@@ -136,6 +154,9 @@ export default function TourCard({ tour, locale = "en" }: { tour: Tour; locale?:
               padding: "10px 16px",
               textDecoration: "none",
               fontFamily: "DM Sans, sans-serif",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
             }}
           >
             {t.curated.explore} <ArrowRight size={14} />

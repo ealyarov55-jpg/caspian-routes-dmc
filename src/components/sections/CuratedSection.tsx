@@ -54,10 +54,7 @@ export default function CuratedSection({ locale = "en" }: { locale?: string }) {
               {t.curated.title}
             </h2>
           </div>
-          <div className="hidden md:flex items-center gap-3">
-            <button style={{ width: 40, height: 40, borderRadius: "50%", border: "1.5px solid #0a7070", color: "#0a7070", background: "transparent", cursor: "pointer", fontSize: 16 }}>←</button>
-            <button style={{ width: 40, height: 40, borderRadius: "50%", background: "#0a7070", color: "white", border: "none", cursor: "pointer", fontSize: 16 }}>→</button>
-          </div>
+          
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
