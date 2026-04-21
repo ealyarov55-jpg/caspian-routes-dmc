@@ -78,6 +78,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
+        <meta name="google-site-verification" content="R5qPPlNoG4TA-zvddXVnS47DsbLHO4oQ_yG-rr32RXw" />
         <link rel="preload" as="image" href="/images/maxxja-baku-1997163_1920.jpg" />
         <link rel="preload" as="image" href="/images/maxxja-baku-1997163_1920-opt.jpg" />
         <link rel="preload" as="image" href="/images/pexels-zulfugarkarimov-33085326-opt.jpg" />
