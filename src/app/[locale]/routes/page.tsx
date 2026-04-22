@@ -25,6 +25,7 @@ interface Provider {
   languages: string[];
   availableDates: string[];
   approved?: boolean;
+  photoURL?: string;
 }
 
 export default function RoutesPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -203,9 +204,15 @@ export default function RoutesPage({ params }: { params: Promise<{ locale: strin
                   {availableProviders.slice(0, 4).map(p => (
                     <div key={p.uid} style={{ padding: 16, borderRadius: 14, border: "1.5px solid #e2eded" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
-                        <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #042e2e, #0a7070)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: 16, flexShrink: 0 }}>
-                          {p.name ? p.name[0].toUpperCase() : "?"}
-                        </div>
+                        <div style={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
+  {(p as any).photoURL ? (
+    <img src={(p as any).photoURL} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+  ) : (
+    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #042e2e, #0a7070)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: 16 }}>
+      {p.name ? p.name[0].toUpperCase() : "?"}
+    </div>
+  )}
+</div>
                         <div style={{ flex: 1 }}>
                           <p style={{ fontWeight: 600, color: "#021a1a", fontSize: 14 }}>{p.name}</p>
                           <p style={{ color: "#94a3a3", fontSize: 12 }}>{p.carModel || "Guide"}</p>
