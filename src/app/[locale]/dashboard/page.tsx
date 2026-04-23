@@ -212,6 +212,7 @@ function ProviderDashboard({ locale, tr }: { locale: string; tr: Function }) {
     { icon: User, title: tr("My Profile", "Мой профиль", "Profilim"), desc: tr("Update your info & prices", "Обновите данные и цены", "Məlumat və qiymətləri yeniləyin"), href: `/${locale}/provider/profile`, color: "#0a7070", bg: "rgba(10,112,112,0.08)" },
     { icon: Calendar, title: tr("Availability", "Доступность", "Mövcudluq"), desc: tr("Set your schedule", "Настройте расписание", "Cədvəlinizi təyin edin"), href: `/${locale}/provider/calendar`, color: "#065050", bg: "rgba(6,80,80,0.08)" },
     { icon: Bell, title: tr("Requests", "Заявки", "Sorğular"), desc: tr("Incoming bookings", "Входящие бронирования", "Daxil olan rezervasiyalar"), href: `/${locale}/provider/requests`, color: "#c9a84c", bg: "rgba(201,168,76,0.08)" },
+  { icon: Calendar, title: tr("My Schedule", "Моё расписание", "Mənim cədvəlim"), desc: tr("Today & upcoming tours", "Сегодня и предстоящие туры", "Bu gün və gələcək turlar"), href: `/${locale}/provider/schedule`, color: "#2dd4bf", bg: "rgba(45,212,191,0.08)" },
   ];
 
   const tips = [
