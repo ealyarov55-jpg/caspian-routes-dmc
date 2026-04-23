@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
-import { ArrowLeft, Users, MapPin, Clock, ChevronRight, Lock, Briefcase } from "lucide-react";
+import { ArrowLeft, Users, MapPin, Clock, ChevronRight, Lock, Briefcase, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 
@@ -18,13 +18,15 @@ interface Provider {
   languages: string[];
   bio: string;
   availableDates: string[];
+  photoURL?: string;
+  approved?: boolean;
 }
 
 const ROUTES = [
-  { id: "baku-city-tour", title: { en: "Baku City Tour", ru: "Тур по Баку", az: "Bakı Şəhər Turu" }, duration: "3 days", netPrice: 800, retailPrice: 1000, tag: "Popular", image: "/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg" },
-  { id: "absheron-peninsula", title: { en: "Absheron Peninsula", ru: "Апшеронский полуостров", az: "Abşeron Yarımadası" }, duration: "2 days", netPrice: 350, retailPrice: 450, tag: "New", image: "/images/pexels-dnrgs-33587121-opt.jpg" },
-  { id: "sheki-silk-road", title: { en: "Sheki & Silk Road", ru: "Шеки и Шёлковый путь", az: "Şəki və İpək Yolu" }, duration: "4 days", netPrice: 560, retailPrice: 700, image: "/images/pexels-arzu-ibaeva-479643718-16976814-opt.jpg" },
-  { id: "caspian-sea-cruise", title: { en: "Caspian Sea Cruise", ru: "Круиз по Каспию", az: "Xəzər Dənizi Kruizi" }, duration: "5 days", netPrice: 960, retailPrice: 1200, tag: "Premium", image: "/images/pexels-zulfugarkarimov-34686330-opt.jpg" },
+  { id: "baku-city-tour", title: { en: "Baku City Tour", ru: "Тур по Баку", az: "Bakı Şəhər Turu" }, duration: "3 days", netPrice: 800, retailPrice: 1000, tag: "Popular", image: "/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg", includes: ["Guide", "Transport", "Entry fees"] },
+  { id: "absheron-peninsula", title: { en: "Absheron Peninsula", ru: "Апшеронский полуостров", az: "Abşeron Yarımadası" }, duration: "2 days", netPrice: 350, retailPrice: 450, tag: "New", image: "/images/pexels-dnrgs-33587121-opt.jpg", includes: ["Guide", "Transport"] },
+  { id: "sheki-silk-road", title: { en: "Sheki & Silk Road", ru: "Шеки и Шёлковый путь", az: "Şəki və İpək Yolu" }, duration: "4 days", netPrice: 560, retailPrice: 700, image: "/images/pexels-arzu-ibaeva-479643718-16976814-opt.jpg", includes: ["Guide", "Transport", "Hotel"] },
+  { id: "caspian-sea-cruise", title: { en: "Caspian Sea Cruise", ru: "Круиз по Каспию", az: "Xəzər Dənizi Kruizi" }, duration: "5 days", netPrice: 960, retailPrice: 1200, tag: "Premium", image: "/images/pexels-zulfugarkarimov-34686330-opt.jpg", includes: ["Guide", "Transport", "Hotel", "Cruise"] },
 ];
 
 export default function PartnerPortalPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -46,7 +48,7 @@ export default function PartnerPortalPage({ params }: { params: Promise<{ locale
 
   useEffect(() => {
     getDocs(collection(db, "providers")).then(snap => {
-      setProviders(snap.docs.map(d => d.data() as Provider));
+      setProviders(snap.docs.map(d => d.data() as Provider).filter(p => p.approved));
       setLoadingProviders(false);
     });
   }, []);
@@ -125,9 +127,9 @@ export default function PartnerPortalPage({ params }: { params: Promise<{ locale
           </h2>
           <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14 }}>
             {tr(
-              "Access net prices, available guides and ready-made routes for your clients.",
-              "Доступ к net-ценам, доступным гидам и готовым маршрутам для ваших клиентов.",
-              "Müştəriləriniz üçün net qiymətlərə, mövcud bələdçilərə və hazır marşrutlara çıxış."
+              "Net prices are exclusive to verified partners. Retail prices are suggested selling prices for your clients.",
+              "Net-цены доступны только верифицированным партнёрам. Розничные цены — рекомендуемые цены продажи для ваших клиентов.",
+              "Net qiymətlər yalnız yoxlanılmış tərəfdaşlar üçündür. Pərakəndə qiymətlər müştəriləriniz üçün tövsiyə olunan qiymətlərdir."
             )}
           </p>
         </div>
@@ -149,41 +151,78 @@ export default function PartnerPortalPage({ params }: { params: Promise<{ locale
         {/* Routes Tab */}
         {activeTab === "routes" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {ROUTES.map(route => (
-              <div key={route.id} style={{ background: "white", borderRadius: 20, overflow: "hidden", boxShadow: "0 4px 24px rgba(4,46,46,0.08)", display: "flex", flexDirection: "row" }}>
-                <div style={{ width: 180, flexShrink: 0, position: "relative" }}>
-                  <img src={route.image} alt={route.title[lang as keyof typeof route.title]} style={{ width: "100%", height: "100%", objectFit: "cover", minHeight: 140 }} />
-                  {route.tag && (
-                    <span style={{ position: "absolute", top: 10, left: 10, background: "#c9a84c", color: "white", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 999, textTransform: "uppercase" }}>{route.tag}</span>
-                  )}
-                </div>
-                <div style={{ padding: "20px 24px", flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-                  <div>
-                    <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, color: "#021a1a", fontWeight: 600, marginBottom: 8 }}>
-                      {route.title[lang as keyof typeof route.title]}
-                    </h3>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Clock size={13} color="#94a3a3" />
-                      <span style={{ fontSize: 13, color: "#4a6060" }}>{route.duration}</span>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
-                    <div style={{ background: "rgba(10,112,112,0.06)", borderRadius: 12, padding: "12px 20px", textAlign: "center" }}>
-                      <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{tr("Net Price", "Net-цена", "Net qiymət")}</p>
-                      <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, fontWeight: 700, color: "#0a7070" }}>${route.netPrice}</p>
-                    </div>
-                    <div style={{ background: "#f8fafa", borderRadius: 12, padding: "12px 20px", textAlign: "center" }}>
-                      <p style={{ color: "#94a3a3", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>{tr("Retail Price", "Розничная цена", "Pərakəndə qiymət")}</p>
-                      <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, fontWeight: 700, color: "#021a1a" }}>${route.retailPrice}</p>
-                    </div>
-                    <Link href={`/${locale}/partner-quote?route=${route.id}`}
-                      style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "12px 20px", borderRadius: 12, textDecoration: "none", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif", whiteSpace: "nowrap" }}>
-                      {tr("Request Quote", "Запросить цену", "Qiymət sorğusu")} <ChevronRight size={14} />
-                    </Link>
-                  </div>
-                </div>
+            {/* Price legend */}
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 8 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(10,112,112,0.08)", borderRadius: 10, padding: "8px 14px" }}>
+                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#0a7070" }} />
+                <span style={{ fontSize: 12, color: "#0a7070", fontWeight: 600 }}>{tr("Net Price", "Net-цена", "Net qiymət")} — {tr("your cost", "ваша стоимость", "sizin xərcləriniz")}</span>
               </div>
-            ))}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#f8fafa", borderRadius: 10, padding: "8px 14px", border: "1px solid #e2eded" }}>
+                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#021a1a" }} />
+                <span style={{ fontSize: 12, color: "#021a1a", fontWeight: 600 }}>{tr("Retail Price", "Розничная цена", "Pərakəndə qiymət")} — {tr("suggested client price", "рекомендуемая цена для клиента", "müştəri üçün tövsiyə qiyməti")}</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(201,168,76,0.08)", borderRadius: 10, padding: "8px 14px" }}>
+                <TrendingUp size={12} color="#c9a84c" />
+                <span style={{ fontSize: 12, color: "#c9a84c", fontWeight: 600 }}>{tr("Margin", "Маржа", "Marja")} — {tr("your profit", "ваша прибыль", "sizin mənfəətiniz")}</span>
+              </div>
+            </div>
+
+            {ROUTES.map(route => {
+              const margin = route.retailPrice - route.netPrice;
+              const marginPct = Math.round((margin / route.retailPrice) * 100);
+              return (
+                <div key={route.id} style={{ background: "white", borderRadius: 20, overflow: "hidden", boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
+                  <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div style={{ width: 160, flexShrink: 0, position: "relative" }}>
+                      <img src={route.image} alt={route.title[lang as keyof typeof route.title]} style={{ width: "100%", height: "100%", objectFit: "cover", minHeight: 160 }} />
+                      {route.tag && (
+                        <span style={{ position: "absolute", top: 10, left: 10, background: "#c9a84c", color: "white", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 999, textTransform: "uppercase" }}>{route.tag}</span>
+                      )}
+                    </div>
+                    <div style={{ padding: "20px 24px", flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
+                      <div>
+                        <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, color: "#021a1a", fontWeight: 600, marginBottom: 6 }}>
+                          {route.title[lang as keyof typeof route.title]}
+                        </h3>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+                          <Clock size={13} color="#94a3a3" />
+                          <span style={{ fontSize: 13, color: "#4a6060" }}>{route.duration}</span>
+                        </div>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                          {route.includes.map(inc => (
+                            <span key={inc} style={{ fontSize: 10, background: "#f0f7f7", color: "#4a6060", padding: "3px 8px", borderRadius: 999 }}>✓ {inc}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Price table */}
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                        <div style={{ background: "rgba(10,112,112,0.06)", borderRadius: 12, padding: "12px 16px", textAlign: "center", border: "1px solid rgba(10,112,112,0.15)" }}>
+                          <p style={{ color: "#0a7070", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4, fontWeight: 600 }}>{tr("Net Price", "Net-цена", "Net qiymət")}</p>
+                          <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 26, fontWeight: 700, color: "#0a7070" }}>${route.netPrice}</p>
+                          <p style={{ color: "#94a3a3", fontSize: 10, marginTop: 2 }}>{tr("your cost", "ваша стоимость", "sizin xərc")}</p>
+                        </div>
+                        <div style={{ background: "#f8fafa", borderRadius: 12, padding: "12px 16px", textAlign: "center", border: "1px solid #e2eded" }}>
+                          <p style={{ color: "#4a6060", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4, fontWeight: 600 }}>{tr("Retail Price", "Розничная цена", "Pərakəndə")}</p>
+                          <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 26, fontWeight: 700, color: "#021a1a" }}>${route.retailPrice}</p>
+                          <p style={{ color: "#94a3a3", fontSize: 10, marginTop: 2 }}>{tr("sell to client", "цена для клиента", "müştəri qiyməti")}</p>
+                        </div>
+                        <div style={{ background: "rgba(201,168,76,0.08)", borderRadius: 12, padding: "12px 16px", textAlign: "center", border: "1px solid rgba(201,168,76,0.2)" }}>
+                          <p style={{ color: "#c9a84c", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4, fontWeight: 600 }}>{tr("Your Margin", "Ваша маржа", "Sizin marja")}</p>
+                          <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 26, fontWeight: 700, color: "#c9a84c" }}>${margin}</p>
+                          <p style={{ color: "#94a3a3", fontSize: 10, marginTop: 2 }}>{marginPct}% {tr("profit", "прибыль", "mənfəət")}</p>
+                        </div>
+                      </div>
+
+                      <Link href={`/${locale}/partner-quote?route=${route.id}`}
+                        style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "11px 20px", borderRadius: 12, textDecoration: "none", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif", alignSelf: "flex-start" }}>
+                        {tr("Request Quote", "Запросить цену", "Qiymət sorğusu")} <ChevronRight size={14} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
 
@@ -198,37 +237,68 @@ export default function PartnerPortalPage({ params }: { params: Promise<{ locale
                 <p style={{ color: "#94a3a3", fontSize: 14 }}>{tr("No guides available yet", "Пока нет гидов", "Hələ bələdçi yoxdur")}</p>
               </div>
             ) : (
-              providers.map(p => (
-                <div key={p.uid} style={{ background: "white", borderRadius: 20, padding: 24, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-                    <div style={{ width: 52, height: 52, borderRadius: "50%", background: "linear-gradient(135deg, #042e2e, #0a7070)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: 20, flexShrink: 0 }}>
-                      {p.name ? p.name[0].toUpperCase() : "?"}
+              providers.map(p => {
+                const netPrice = Number(p.pricePerDay) || 0;
+                const retailPrice = Math.round(netPrice * 1.25);
+                const margin = retailPrice - netPrice;
+                return (
+                  <div key={p.uid} style={{ background: "white", borderRadius: 20, padding: 24, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                      <div style={{ width: 52, height: 52, borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
+                        {p.photoURL ? (
+                          <img src={p.photoURL} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        ) : (
+                          <div style={{ width: 52, height: 52, borderRadius: "50%", background: "linear-gradient(135deg, #042e2e, #0a7070)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: 20 }}>
+                            {p.name ? p.name[0].toUpperCase() : "?"}
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <p style={{ fontWeight: 600, color: "#021a1a", fontSize: 16 }}>{p.name}</p>
+                        <p style={{ color: "#94a3a3", fontSize: 12 }}>{p.carModel} {p.carYear}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p style={{ fontWeight: 600, color: "#021a1a", fontSize: 16 }}>{p.name}</p>
-                      <p style={{ color: "#94a3a3", fontSize: 12 }}>{p.carModel} {p.carYear}</p>
+
+                    {p.bio && <p style={{ fontSize: 13, color: "#4a6060", lineHeight: 1.6, marginBottom: 12 }}>{p.bio.slice(0, 100)}...</p>}
+
+                    {p.languages?.length > 0 && (
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 14 }}>
+                        {p.languages.map(l => (
+                          <span key={l} style={{ fontSize: 11, background: "rgba(10,112,112,0.08)", color: "#0a7070", padding: "3px 10px", borderRadius: 999 }}>{l}</span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Price table for guides */}
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, marginBottom: 14 }}>
+                      <div style={{ background: "rgba(10,112,112,0.06)", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
+                        <p style={{ color: "#0a7070", fontSize: 9, textTransform: "uppercase", marginBottom: 2, fontWeight: 600 }}>{tr("Net", "Net", "Net")}</p>
+                        <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 18, fontWeight: 700, color: "#0a7070" }}>
+                          {netPrice ? `$${netPrice}` : "—"}
+                        </p>
+                      </div>
+                      <div style={{ background: "#f8fafa", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
+                        <p style={{ color: "#4a6060", fontSize: 9, textTransform: "uppercase", marginBottom: 2, fontWeight: 600 }}>{tr("Retail", "Розница", "Pərakəndə")}</p>
+                        <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 18, fontWeight: 700, color: "#021a1a" }}>
+                          {retailPrice ? `$${retailPrice}` : "—"}
+                        </p>
+                      </div>
+                      <div style={{ background: "rgba(201,168,76,0.08)", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
+                        <p style={{ color: "#c9a84c", fontSize: 9, textTransform: "uppercase", marginBottom: 2, fontWeight: 600 }}>{tr("Margin", "Маржа", "Marja")}</p>
+                        <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 18, fontWeight: 700, color: "#c9a84c" }}>
+                          {margin ? `$${margin}` : "—"}
+                        </p>
+                      </div>
                     </div>
+                    <p style={{ color: "#94a3a3", fontSize: 10, marginBottom: 12, textAlign: "center" }}>{tr("per day", "в день", "gündə")}</p>
+
+                    <Link href={`/${locale}/partner-quote`}
+                      style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "10px", borderRadius: 12, textDecoration: "none", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+                      {tr("Book for Client", "Забронировать для клиента", "Müştəri üçün rezerv et")}
+                    </Link>
                   </div>
-                  {p.bio && <p style={{ fontSize: 13, color: "#4a6060", lineHeight: 1.6, marginBottom: 12 }}>{p.bio.slice(0, 100)}...</p>}
-                  {p.languages?.length > 0 && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 16 }}>
-                      {p.languages.map(l => (
-                        <span key={l} style={{ fontSize: 11, background: "rgba(10,112,112,0.08)", color: "#0a7070", padding: "3px 10px", borderRadius: 999 }}>{l}</span>
-                      ))}
-                    </div>
-                  )}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 16px", background: "rgba(10,112,112,0.06)", borderRadius: 12, marginBottom: 12 }}>
-                    <span style={{ color: "#4a6060", fontSize: 13 }}>{tr("Net price/day", "Net-цена/день", "Net qiymət/gün")}</span>
-                    <span style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, fontWeight: 700, color: "#0a7070" }}>
-                      {p.pricePerDay ? `$${p.pricePerDay}` : tr("On request", "По запросу", "Sorğu ilə")}
-                    </span>
-                  </div>
-                  <Link href={`/${locale}/partner-quote`}
-                    style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "10px", borderRadius: 12, textDecoration: "none", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
-                    {tr("Book for Client", "Забронировать для клиента", "Müştəri üçün rezerv et")}
-                  </Link>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         )}
