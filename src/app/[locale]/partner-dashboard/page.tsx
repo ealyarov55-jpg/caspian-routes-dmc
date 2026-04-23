@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
-import { ArrowLeft, Briefcase, Clock, Check, X, MapPin, Calendar, Users, ChevronRight } from "lucide-react";
+import { ArrowLeft, Briefcase, Clock, Check, X, MapPin, Calendar, Users, ChevronRight, Download, FileText } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 
@@ -22,6 +22,9 @@ interface PartnerQuote {
   transferRequired: boolean;
   specialRequests: string;
   createdAt: string;
+  clientName?: string;
+  type?: string;
+  items?: Array<{ name: string; quantity: number; netPrice: number }>;
 }
 
 export default function PartnerDashboardPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -36,6 +39,7 @@ export default function PartnerDashboardPage({ params }: { params: Promise<{ loc
   const [quotes, setQuotes] = useState<PartnerQuote[]>([]);
   const [loadingQuotes, setLoadingQuotes] = useState(true);
   const [filter, setFilter] = useState<"all" | "pending" | "confirmed" | "cancelled">("all");
+  const [generatingPdf, setGeneratingPdf] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !profile) router.push(`/${locale}/auth`);
@@ -56,6 +60,187 @@ export default function PartnerDashboardPage({ params }: { params: Promise<{ loc
     }
   }, [profile]);
 
+  const generatePDF = async (quote: PartnerQuote, type: "quote" | "voucher") => {
+    setGeneratingPdf(quote.id + type);
+    try {
+      const { jsPDF } = await import("jspdf");
+      const doc = new jsPDF();
+
+      const teal = [10, 112, 112] as [number, number, number];
+      const dark = [2, 26, 26] as [number, number, number];
+      const gold = [201, 168, 76] as [number, number, number];
+      const gray = [74, 96, 96] as [number, number, number];
+      const lightGray = [240, 247, 247] as [number, number, number];
+
+      // Header background
+      doc.setFillColor(...dark);
+      doc.rect(0, 0, 210, 40, "F");
+
+      // Company name
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+      doc.text("CASPIAN ROUTES DMC", 20, 18);
+
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(45, 212, 191);
+      doc.text("B2B TRAVEL PARTNER IN AZERBAIJAN", 20, 26);
+
+      // Document type badge
+      doc.setFillColor(...gold);
+      doc.roundedRect(140, 10, 55, 20, 3, 3, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text(type === "quote" ? "QUOTE" : "VOUCHER", 167.5, 23, { align: "center" });
+
+      // Document info
+      doc.setFillColor(...lightGray);
+      doc.rect(0, 40, 210, 20, "F");
+
+      doc.setTextColor(...gray);
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Document #: CR-${quote.id.slice(0, 8).toUpperCase()}`, 20, 52);
+      doc.text(`Date: ${new Date().toLocaleDateString("en-GB")}`, 90, 52);
+      doc.text(`Status: ${quote.status.toUpperCase()}`, 150, 52);
+
+      // Partner info
+      doc.setTextColor(...dark);
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text(type === "quote" ? "Quote For:" : "Voucher For:", 20, 78);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(...gray);
+      doc.text(profile?.name || "Partner", 20, 86);
+      doc.text(profile?.email || "", 20, 93);
+      if ((profile as any)?.companyName) doc.text((profile as any).companyName, 20, 100);
+
+      // Tour details box
+      doc.setFillColor(...lightGray);
+      doc.roundedRect(20, 108, 170, 60, 3, 3, "F");
+
+      doc.setTextColor(...teal);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text("TOUR DETAILS", 30, 120);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(...dark);
+
+      const details = [
+        [`Route:`, quote.routeName || "Custom Tour"],
+        [`Arrival:`, quote.arrivalDate || "—"],
+        [`Departure:`, quote.departureDate || "—"],
+        [`Passengers:`, `${quote.pax} pax`],
+        [`Guide Language:`, quote.guideLanguage || "Any"],
+      ];
+
+      details.forEach(([label, value], i) => {
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(...gray);
+        doc.text(label, 30, 130 + i * 8);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(...dark);
+        doc.text(value, 80, 130 + i * 8);
+      });
+
+      // Services included
+      let y = 178;
+      if (quote.hotelRequired || quote.transferRequired) {
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(...teal);
+        doc.text("SERVICES INCLUDED", 20, y);
+        y += 10;
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(...gray);
+        if (quote.hotelRequired) { doc.text("✓ Hotel Accommodation", 25, y); y += 7; }
+        if (quote.transferRequired) { doc.text("✓ Airport Transfer", 25, y); y += 7; }
+      }
+
+      // Items (for itinerary type)
+      if (quote.items && quote.items.length > 0) {
+        y += 5;
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(...teal);
+        doc.text("ITINERARY ITEMS", 20, y);
+        y += 8;
+
+        doc.setFillColor(...lightGray);
+        doc.rect(20, y, 170, 8, "F");
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(...gray);
+        doc.text("Service", 25, y + 6);
+        doc.text("Qty", 130, y + 6);
+        doc.text("Price", 160, y + 6);
+        y += 12;
+
+        quote.items.forEach(item => {
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(...dark);
+          doc.text(item.name, 25, y);
+          doc.text(`x${item.quantity}`, 130, y);
+          doc.text(`$${item.netPrice * item.quantity}`, 160, y);
+          y += 7;
+        });
+      }
+
+      // Special requests
+      if (quote.specialRequests) {
+        y += 5;
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(...teal);
+        doc.text("SPECIAL REQUESTS:", 20, y);
+        y += 7;
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(...gray);
+        doc.setFontSize(9);
+        const lines = doc.splitTextToSize(quote.specialRequests, 160);
+        doc.text(lines, 20, y);
+        y += lines.length * 6 + 5;
+      }
+
+      // Price box
+      y = Math.max(y + 10, 220);
+      doc.setFillColor(...teal);
+      doc.roundedRect(20, y, 170, 25, 3, 3, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text(type === "quote" ? "ESTIMATED NET TOTAL:" : "TOTAL:", 30, y + 10);
+      doc.setFontSize(16);
+      doc.text(`$${quote.estimatedNetTotal || 0}`, 30, y + 20);
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(45, 212, 191);
+      doc.text("Final price confirmed after review", 100, y + 15);
+
+      // Footer
+      doc.setFillColor(...dark);
+      doc.rect(0, 272, 210, 25, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      doc.text("Caspian Routes DMC | Baku, Azerbaijan", 20, 282);
+      doc.text("ealyarov55@gmail.com | caspian-routes.vercel.app", 20, 289);
+      doc.setTextColor(45, 212, 191);
+      doc.text(`Generated: ${new Date().toLocaleString()}`, 130, 285);
+
+      doc.save(`CaspianRoutes_${type === "quote" ? "Quote" : "Voucher"}_${quote.id.slice(0, 8)}.pdf`);
+    } catch (err) {
+      console.error("PDF error:", err);
+    }
+    setGeneratingPdf(null);
+  };
+
   if (loading || !profile) return null;
 
   const filtered = filter === "all" ? quotes : quotes.filter(q => q.status === filter);
@@ -66,10 +251,6 @@ export default function PartnerDashboardPage({ params }: { params: Promise<{ loc
     if (s === "pending") return tr("Pending", "Ожидает", "Gözləyir");
     if (s === "confirmed") return tr("Confirmed", "Подтверждено", "Təsdiqləndi");
     return tr("Cancelled", "Отменено", "Ləğv edildi");
-  };
-  const filterLabel = (f: string) => {
-    if (f === "all") return tr("All", "Все", "Hamısı");
-    return statusLabel(f);
   };
 
   const stats = [
@@ -141,7 +322,7 @@ export default function PartnerDashboardPage({ params }: { params: Promise<{ loc
           {(["all", "pending", "confirmed", "cancelled"] as const).map(f => (
             <button key={f} onClick={() => setFilter(f)}
               style={{ padding: "8px 16px", borderRadius: 999, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 500, fontFamily: "DM Sans, sans-serif", background: filter === f ? "#021a1a" : "white", color: filter === f ? "white" : "#4a6060", boxShadow: "0 2px 8px rgba(4,46,46,0.06)", transition: "all 0.2s" }}>
-              {filterLabel(f)} ({f === "all" ? quotes.length : quotes.filter(q => q.status === f).length})
+              {f === "all" ? tr("All", "Все", "Hamısı") : statusLabel(f)} ({f === "all" ? quotes.length : quotes.filter(q => q.status === f).length})
             </button>
           ))}
         </div>
@@ -212,20 +393,44 @@ export default function PartnerDashboardPage({ params }: { params: Promise<{ loc
                   </div>
                 </div>
 
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
                   {quote.hotelRequired && <span style={{ fontSize: 11, background: "rgba(10,112,112,0.08)", color: "#0a7070", padding: "4px 10px", borderRadius: 999 }}>🏨 {tr("Hotel", "Отель", "Otel")}</span>}
                   {quote.transferRequired && <span style={{ fontSize: 11, background: "rgba(10,112,112,0.08)", color: "#0a7070", padding: "4px 10px", borderRadius: 999 }}>✈️ {tr("Transfer", "Трансфер", "Transfer")}</span>}
                   {quote.guideLanguage && <span style={{ fontSize: 11, background: "rgba(10,112,112,0.08)", color: "#0a7070", padding: "4px 10px", borderRadius: 999 }}>🌐 {quote.guideLanguage}</span>}
                 </div>
 
                 {quote.status === "confirmed" && (
-                  <div style={{ background: "rgba(10,112,112,0.06)", border: "1px solid rgba(10,112,112,0.15)", borderRadius: 10, padding: "10px 14px", marginTop: 12, display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ background: "rgba(10,112,112,0.06)", border: "1px solid rgba(10,112,112,0.15)", borderRadius: 10, padding: "10px 14px", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
                     <Check size={14} color="#0a7070" />
                     <p style={{ color: "#065050", fontSize: 13 }}>
                       {tr("Quote confirmed! We will send you the full proposal shortly.", "Запрос подтверждён! Мы скоро пришлём полное КП.", "Sorğu təsdiqləndi! Tezliklə tam kommersiya təklifi göndərəcəyik.")}
                     </p>
                   </div>
                 )}
+
+                {/* PDF Buttons */}
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <button
+                    onClick={() => generatePDF(quote, "quote")}
+                    disabled={generatingPdf === quote.id + "quote"}
+                    style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", borderRadius: 10, border: "1.5px solid rgba(10,112,112,0.3)", background: "white", color: "#0a7070", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "DM Sans, sans-serif" }}>
+                    <FileText size={14} />
+                    {generatingPdf === quote.id + "quote"
+                      ? tr("Generating...", "Генерируем...", "Hazırlanır...")
+                      : tr("Download Quote PDF", "Скачать Quote PDF", "Quote PDF yüklə")}
+                  </button>
+                  {quote.status === "confirmed" && (
+                    <button
+                      onClick={() => generatePDF(quote, "voucher")}
+                      disabled={generatingPdf === quote.id + "voucher"}
+                      style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", borderRadius: 10, border: "none", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "DM Sans, sans-serif" }}>
+                      <Download size={14} />
+                      {generatingPdf === quote.id + "voucher"
+                        ? tr("Generating...", "Генерируем...", "Hazırlanır...")
+                        : tr("Download Voucher", "Скачать Ваучер", "Voucher yüklə")}
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
