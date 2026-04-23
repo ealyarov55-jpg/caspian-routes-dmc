@@ -120,7 +120,7 @@ export default function AdminPage({ params }: { params: Promise<{ locale: string
 
   if (loading || !profile) return null;
 
-  const partners = users.filter(u => u.role === "partner");
+  const partners = users.filter(u => u.role === "partner" || u.role === "pending_partner");
   const pendingProviders = providers.filter(p => !p.approved);
   const pendingQuotes = partnerQuotes.filter(q => q.status === "pending");
 
@@ -470,6 +470,12 @@ export default function AdminPage({ params }: { params: Promise<{ locale: string
                     </div>
                     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                       <span style={{ background: "rgba(201,168,76,0.1)", color: "#c9a84c", fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 999, textTransform: "uppercase" }}>Partner</span>
+                     {u.role === "pending_partner" && (
+  <button onClick={() => changeUserRole(u.uid, "partner")}
+    style={{ background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", border: "none", borderRadius: 10, padding: "6px 12px", cursor: "pointer", fontSize: 12, fontFamily: "DM Sans, sans-serif", fontWeight: 600 }}>
+    ✓ {tr("Approve", "Одобрить", "Təsdiq et")}
+  </button>
+)}
                       <button onClick={() => changeUserRole(u.uid, "client")}
                         style={{ background: "rgba(239,68,68,0.08)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 10, padding: "6px 12px", cursor: "pointer", fontSize: 12, fontFamily: "DM Sans, sans-serif" }}>
                         {tr("Revoke", "Отозвать", "Ləğv et")}

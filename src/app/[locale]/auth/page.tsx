@@ -3,7 +3,7 @@
 import { useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, UserRole } from "@/context/AuthContext";
-import { Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, ArrowRight, Clock } from "lucide-react";
 
 type Mode = "login" | "register";
 
@@ -21,6 +21,13 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [registered, setRegistered] = useState(false);
+
+  // Partner extra fields
+  const [companyName, setCompanyName] = useState("");
+  const [companyWebsite, setCompanyWebsite] = useState("");
+  const [companyCountry, setCompanyCountry] = useState("");
+  const [iataCode, setIataCode] = useState("");
 
   const tr = (en: string, ru: string, az: string) =>
     lang === "ru" ? ru : lang === "az" ? az : en;
@@ -35,14 +42,30 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
       setError(tr("Please enter your name", "Введите ваше имя", "Adınızı daxil edin"));
       return;
     }
+    if (mode === "register" && role === "partner" && !companyName) {
+      setError(tr("Please enter your company name", "Введите название компании", "Şirkətin adını daxil edin"));
+      return;
+    }
     setLoading(true);
     try {
       if (mode === "login") {
         await login(email, password);
+        router.push(`/${locale}/dashboard`);
       } else {
-        await register(email, password, name, role);
+        // Partners register with pending_partner role — wait for admin approval
+        const actualRole: UserRole = role === "partner" ? "pending_partner" as UserRole : role;
+        await register(email, password, name, actualRole, {
+          companyName,
+          companyWebsite,
+          companyCountry,
+          iataCode,
+        });
+        if (role === "partner") {
+          setRegistered(true);
+        } else {
+          router.push(`/${locale}/dashboard`);
+        }
       }
-      router.push(`/${locale}/dashboard`);
     } catch (e: any) {
       setError(e.message || tr("Something went wrong", "Что-то пошло не так", "Xəta baş verdi"));
       setLoading(false);
@@ -50,22 +73,69 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
   };
 
   const roles = [
-  {
-    value: "client",
-    label: tr("Tourist / Client", "Турист / Клиент", "Turist / Müştəri"),
-    desc: tr("Browse routes & book", "Смотреть маршруты и бронировать", "Marşrutlara bax və rezerv et"),
-  },
-  {
-    value: "provider",
-    label: tr("Driver / Guide", "Водитель / Гид", "Sürücü / Bələdçi"),
-    desc: tr("Offer your services", "Предложите свои услуги", "Xidmətlərinizi təklif edin"),
-  },
-  {
-    value: "partner",
-    label: tr("Travel Agency / Partner", "Турагентство / Партнёр", "Turizm agentliyi / Tərəfdaş"),
-    desc: tr("Book for your clients", "Бронирование для клиентов", "Müştəriləriniz üçün rezervasiya"),
-  },
-];
+    {
+      value: "client",
+      label: tr("Tourist / Client", "Турист / Клиент", "Turist / Müştəri"),
+      desc: tr("Browse routes & book", "Смотреть маршруты и бронировать", "Marşrutlara bax və rezerv et"),
+    },
+    {
+      value: "provider",
+      label: tr("Driver / Guide", "Водитель / Гид", "Sürücü / Bələdçi"),
+      desc: tr("Offer your services", "Предложите свои услуги", "Xidmətlərinizi təklif edin"),
+    },
+    {
+      value: "partner",
+      label: tr("Travel Agency / Partner", "Турагентство / Партнёр", "Turizm agentliyi / Tərəfdaş"),
+      desc: tr("B2B access & net prices", "B2B доступ и net-цены", "B2B giriş və net qiymətlər"),
+    },
+  ];
+
+  const inputStyle = {
+    width: "100%", padding: "12px 16px", borderRadius: 12,
+    background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+    color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif",
+    outline: "none", boxSizing: "border-box" as const,
+  };
+
+  const labelStyle = {
+    color: "rgba(255,255,255,0.6)", fontSize: 12, display: "block", marginBottom: 6,
+  };
+
+  // Success screen for partner registration
+  if (registered) {
+    return (
+      <div style={{ minHeight: "100vh", background: "linear-gradient(160deg, #021a1a 0%, #065050 50%, #0a5560 100%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "DM Sans, sans-serif" }}>
+        <div style={{ maxWidth: 460, width: "100%", textAlign: "center" }}>
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 24, padding: 40, backdropFilter: "blur(20px)" }}>
+            <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, #c9a84c, #d4a843)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}>
+              <Clock size={32} color="white" />
+            </div>
+            <h2 style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 28, marginBottom: 16 }}>
+              {tr("Application Received!", "Заявка получена!", "Müraciət qəbul edildi!")}
+            </h2>
+            <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 15, lineHeight: 1.7, marginBottom: 12 }}>
+              {tr(
+                "Thank you for applying to become a partner. We will review your application and contact you within 24 hours.",
+                "Спасибо за заявку на партнёрство. Мы рассмотрим её и свяжемся с вами в течение 24 часов.",
+                "Tərəfdaşlıq müraciətiniz üçün təşəkkür edirik. 24 saat ərzində nəzərdən keçirəcəyik."
+              )}
+            </p>
+            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 28 }}>
+              {tr(
+                "After approval you will receive full access to net prices and the partner portal.",
+                "После одобрения вы получите полный доступ к net-ценам и партнёрскому порталу.",
+                "Təsdiqləndikdən sonra net qiymətlərə və tərəfdaş portalına tam giriş əldə edəcəksiniz."
+              )}
+            </p>
+            <button onClick={() => router.push(`/${locale}`)}
+              style={{ background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "13px 28px", borderRadius: 12, border: "none", cursor: "pointer", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+              {tr("Back to Home", "На главную", "Ana səhifəyə qayıt")}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -74,7 +144,7 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: "24px", fontFamily: "DM Sans, sans-serif",
     }}>
-      <div style={{ width: "100%", maxWidth: 460, position: "relative", zIndex: 10 }}>
+      <div style={{ width: "100%", maxWidth: role === "partner" && mode === "register" ? 560 : 460, position: "relative", zIndex: 10 }}>
 
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 40 }}>
@@ -97,9 +167,7 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
             {(["login", "register"] as Mode[]).map((m) => (
               <button key={m} onClick={() => { setMode(m); setError(""); }}
                 style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", cursor: "pointer", fontSize: 14, fontWeight: 500, fontFamily: "DM Sans, sans-serif", background: mode === m ? "#0a7070" : "transparent", color: mode === m ? "white" : "rgba(255,255,255,0.5)", transition: "all 0.2s" }}>
-                {m === "login"
-                  ? tr("Sign In", "Войти", "Daxil ol")
-                  : tr("Sign Up", "Регистрация", "Qeydiyyat")}
+                {m === "login" ? tr("Sign In", "Войти", "Daxil ol") : tr("Sign Up", "Регистрация", "Qeydiyyat")}
               </button>
             ))}
           </div>
@@ -110,10 +178,10 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
               <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.1em" }}>
                 {tr("I am a...", "Я являюсь...", "Mən...")}
               </p>
-              <div style={{ display: "flex", gap: 10 }}>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                 {roles.map((r) => (
                   <button key={r.value} onClick={() => setRole(r.value as UserRole)}
-                    style={{ flex: 1, padding: "12px", borderRadius: 12, cursor: "pointer", border: role === r.value ? "1.5px solid #2dd4bf" : "1.5px solid rgba(255,255,255,0.1)", background: role === r.value ? "rgba(45,212,191,0.1)" : "rgba(255,255,255,0.03)", textAlign: "left", transition: "all 0.2s" }}>
+                    style={{ flex: 1, minWidth: 120, padding: "12px", borderRadius: 12, cursor: "pointer", border: role === r.value ? "1.5px solid #2dd4bf" : "1.5px solid rgba(255,255,255,0.1)", background: role === r.value ? "rgba(45,212,191,0.1)" : "rgba(255,255,255,0.03)", textAlign: "left", transition: "all 0.2s" }}>
                     <p style={{ color: role === r.value ? "#2dd4bf" : "white", fontSize: 13, fontWeight: 600, marginBottom: 2 }}>{r.label}</p>
                     <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>{r.desc}</p>
                   </button>
@@ -125,31 +193,74 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
           {/* Name */}
           {mode === "register" && (
             <div style={{ marginBottom: 16 }}>
-              <label style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, display: "block", marginBottom: 6 }}>
-                {tr("Full Name", "Полное имя", "Ad Soyad")}
-              </label>
+              <label style={labelStyle}>{tr("Full Name", "Полное имя", "Ad Soyad")}</label>
               <input value={name} onChange={e => setName(e.target.value)}
                 placeholder={tr("Your name", "Ваше имя", "Adınız")}
-                style={{ width: "100%", padding: "12px 16px", borderRadius: 12, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif", outline: "none", boxSizing: "border-box" }} />
+                style={inputStyle} />
             </div>
+          )}
+
+          {/* Partner extra fields */}
+          {mode === "register" && role === "partner" && (
+            <>
+              <div style={{ background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: 14, padding: "16px", marginBottom: 16 }}>
+                <p style={{ color: "#c9a84c", fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>
+                  {tr("Company Information", "Информация о компании", "Şirkət məlumatları")}
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div>
+                    <label style={labelStyle}>{tr("Company Name", "Название компании", "Şirkətin adı")} *</label>
+                    <input value={companyName} onChange={e => setCompanyName(e.target.value)}
+                      placeholder={tr("Your travel agency", "Ваше турагентство", "Turizm agentliyiniz")}
+                      style={inputStyle} />
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                    <div>
+                      <label style={labelStyle}>{tr("Country", "Страна", "Ölkə")}</label>
+                      <input value={companyCountry} onChange={e => setCompanyCountry(e.target.value)}
+                        placeholder={tr("Russia, UAE, Germany...", "Россия, ОАЭ...", "Rusiya, BƏƏ...")}
+                        style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>{tr("IATA Code (optional)", "Код IATA (необязательно)", "IATA kodu (isteğe bağlı)")}</label>
+                      <input value={iataCode} onChange={e => setIataCode(e.target.value)}
+                        placeholder="12345678"
+                        style={inputStyle} />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>{tr("Company Website", "Сайт компании", "Şirkətin veb saytı")}</label>
+                    <input value={companyWebsite} onChange={e => setCompanyWebsite(e.target.value)}
+                      placeholder="https://youragency.com"
+                      style={inputStyle} />
+                  </div>
+                </div>
+              </div>
+              <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "10px 14px", marginBottom: 16, display: "flex", gap: 8, alignItems: "flex-start" }}>
+                <Clock size={14} color="#c9a84c" style={{ flexShrink: 0, marginTop: 1 }} />
+                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, lineHeight: 1.5 }}>
+                  {tr(
+                    "Partner accounts are reviewed within 24 hours. After approval you get full access to net prices.",
+                    "Партнёрские аккаунты проверяются в течение 24 часов. После одобрения — полный доступ к net-ценам.",
+                    "Tərəfdaş hesabları 24 saat ərzində nəzərdən keçirilir. Təsdiqləndikdən sonra net qiymətlərə tam giriş."
+                  )}
+                </p>
+              </div>
+            </>
           )}
 
           {/* Email */}
           <div style={{ marginBottom: 16 }}>
-            <label style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, display: "block", marginBottom: 6 }}>
-              {tr("Email", "Электронная почта", "E-poçt")}
-            </label>
+            <label style={labelStyle}>{tr("Email", "Электронная почта", "E-poçt")}</label>
             <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="your@email.com"
-              style={{ width: "100%", padding: "12px 16px", borderRadius: 12, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif", outline: "none", boxSizing: "border-box" }} />
+              style={inputStyle} />
           </div>
 
           {/* Password */}
           <div style={{ marginBottom: 24, position: "relative" }}>
-            <label style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, display: "block", marginBottom: 6 }}>
-              {tr("Password", "Пароль", "Şifrə")}
-            </label>
+            <label style={labelStyle}>{tr("Password", "Пароль", "Şifrə")}</label>
             <input value={password} onChange={e => setPassword(e.target.value)} type={showPass ? "text" : "password"} placeholder="••••••••"
-              style={{ width: "100%", padding: "12px 48px 12px 16px", borderRadius: 12, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif", outline: "none", boxSizing: "border-box" }} />
+              style={{ ...inputStyle, padding: "12px 48px 12px 16px" }} />
             <button onClick={() => setShowPass(!showPass)}
               style={{ position: "absolute", right: 14, top: 36, background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.4)" }}>
               {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -170,7 +281,9 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
               ? tr("Please wait...", "Подождите...", "Gözləyin...")
               : mode === "login"
                 ? tr("Sign In", "Войти", "Daxil ol")
-                : tr("Create Account", "Создать аккаунт", "Hesab yarat")}
+                : role === "partner"
+                  ? tr("Submit Application", "Подать заявку", "Müraciət göndər")
+                  : tr("Create Account", "Создать аккаунт", "Hesab yarat")}
             {!loading && <ArrowRight size={16} />}
           </button>
 
@@ -188,7 +301,7 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
           </p>
         </div>
 
-        <p style={{ textAlign: "center", marginTop: 20, color: "rgba(255,255,255,0.3)", fontSize: 12 }}>© 2025 Caspian Routes DMC</p>
+        <p style={{ textAlign: "center", marginTop: 20, color: "rgba(255,255,255,0.3)", fontSize: 12 }}>© 2026 Caspian Routes DMC</p>
       </div>
     </div>
   );

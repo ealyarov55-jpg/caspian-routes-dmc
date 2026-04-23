@@ -11,7 +11,7 @@ import {
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 
-export type UserRole = "client" | "provider" | "admin" | "partner";
+export type UserRole = "client" | "provider" | "admin" | "partner" | "pending_partner";
 
 export interface UserProfile {
   uid: string;
@@ -19,6 +19,10 @@ export interface UserProfile {
   role: UserRole;
   name: string;
   createdAt: string;
+  companyName?: string;
+  companyWebsite?: string;
+  companyCountry?: string;
+  iataCode?: string;
 }
 
 interface AuthContextType {
@@ -26,7 +30,7 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string, role: UserRole) => Promise<void>;
+  register: (email: string, password: string, name: string, role: UserRole, extra?: Record<string, string>) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -66,7 +70,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (snap.exists()) setProfile(snap.data() as UserProfile);
   };
 
-  const register = async (email: string, password: string, name: string, role: UserRole) => {
+  const register = async (
+    email: string,
+    password: string,
+    name: string,
+    role: UserRole,
+    extra?: Record<string, string>
+  ) => {
     const result = await createUserWithEmailAndPassword(auth, email, password);
     const newProfile: UserProfile = {
       uid: result.user.uid,
@@ -74,6 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       role,
       name,
       createdAt: new Date().toISOString(),
+      ...(extra || {}),
     };
     await setDoc(doc(db, "users", result.user.uid), newProfile);
     setProfile(newProfile);
@@ -92,4 +103,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const useAuth = () => useContext(AuthContext);   
+export const useAuth = () => useContext(AuthContext);
