@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, ChevronDown, LogOut, User, LayoutDashboard, Briefcase } from "lucide-react";
+import { Menu, X, ChevronDown, LogOut, User, LayoutDashboard, Briefcase, DollarSign } from "lucide-react";
 import { getT } from "@/lib/i18n";
 import { useAuth } from "@/context/AuthContext";
+import { useCurrency } from "@/context/CurrencyContext";
+import { CURRENCIES } from "@/lib/currency";
 
 const localesList = [
   { code: "en", label: "EN", full: "English", flag: "🇬🇧" },
@@ -18,6 +20,7 @@ export default function Navbar({ locale }: { locale: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const { profile, logout } = useAuth();
+  const { currency, setCurrency } = useCurrency();
   const lang = (locale === "ru" || locale === "az") ? locale : "en";
 
   const tr = (en: string, ru: string, az: string) =>
@@ -27,6 +30,7 @@ export default function Navbar({ locale }: { locale: string }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(false);
+  const [currencyOpen, setCurrencyOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -54,6 +58,8 @@ export default function Navbar({ locale }: { locale: string }) {
     { label: t.nav.about, href: `/${locale}/about` },
     { label: t.nav.contact, href: `/${locale}/contact` },
   ];
+
+  const currentCurrency = CURRENCIES.find(c => c.code === currency) || CURRENCIES[0];
 
   return (
     <>
@@ -103,11 +109,35 @@ export default function Navbar({ locale }: { locale: string }) {
           </nav>
 
           {/* Desktop Right */}
-          <div className="nav-desktop" style={{ alignItems: "center", gap: 10 }}>
+          <div className="nav-desktop" style={{ alignItems: "center", gap: 8 }}>
+
+            {/* Currency switcher */}
+            <div style={{ position: "relative" }} onClick={e => e.stopPropagation()}>
+              <button onClick={() => { setCurrencyOpen(!currencyOpen); setLangOpen(false); setUserOpen(false); }}
+                style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "6px 10px", cursor: "pointer", color: "white", fontFamily: "DM Sans, sans-serif", fontSize: 13 }}>
+                <span>{currentCurrency.flag}</span>
+                <span>{currentCurrency.symbol} {currentCurrency.code}</span>
+                <ChevronDown size={12} color="rgba(255,255,255,0.6)" />
+              </button>
+              {currencyOpen && (
+                <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: "#042e2e", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, overflow: "hidden", minWidth: 150, boxShadow: "0 16px 40px rgba(0,0,0,0.3)", zIndex: 100 }}>
+                  {CURRENCIES.map((cur) => (
+                    <button key={cur.code} onClick={() => { setCurrency(cur.code); setCurrencyOpen(false); }}
+                      style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", padding: "10px 16px", background: cur.code === currency ? "rgba(45,212,191,0.1)" : "transparent", border: "none", cursor: "pointer", color: cur.code === currency ? "#2dd4bf" : "rgba(255,255,255,0.8)", fontFamily: "DM Sans, sans-serif", fontSize: 13 }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span>{cur.flag}</span>
+                        <span>{cur.code}</span>
+                      </span>
+                      <span style={{ fontSize: 12, opacity: 0.7 }}>{cur.symbol}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {/* Lang switcher */}
             <div style={{ position: "relative" }} onClick={e => e.stopPropagation()}>
-              <button onClick={() => { setLangOpen(!langOpen); setUserOpen(false); }}
+              <button onClick={() => { setLangOpen(!langOpen); setUserOpen(false); setCurrencyOpen(false); }}
                 style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "6px 12px", cursor: "pointer", color: "white", fontFamily: "DM Sans, sans-serif", fontSize: 13 }}>
                 <span>{localesList.find(l => l.code === locale)?.flag || "🇬🇧"}</span>
                 {locale?.toUpperCase() || "EN"}
@@ -141,7 +171,7 @@ export default function Navbar({ locale }: { locale: string }) {
             {/* Auth section */}
             {profile ? (
               <div style={{ position: "relative" }} onClick={e => e.stopPropagation()}>
-                <button onClick={() => { setUserOpen(!userOpen); setLangOpen(false); }}
+                <button onClick={() => { setUserOpen(!userOpen); setLangOpen(false); setCurrencyOpen(false); }}
                   style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "6px 12px", cursor: "pointer", fontFamily: "DM Sans, sans-serif" }}>
                   <div style={{ width: 28, height: 28, borderRadius: "50%", background: "linear-gradient(135deg, #0a7070, #2dd4bf)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <span style={{ color: "white", fontSize: 12, fontWeight: 700 }}>{profile.name ? profile.name[0].toUpperCase() : "?"}</span>
@@ -163,11 +193,14 @@ export default function Navbar({ locale }: { locale: string }) {
                       {tr("Dashboard", "Панель управления", "İdarə paneli")}
                     </Link>
                     {profile.role === "partner" && (
-  <Link href={`/${locale}/partner-dashboard`} onClick={() => setMobileOpen(false)}
-    style={{ display: "block", textAlign: "center", background: "rgba(201,168,76,0.15)", color: "#c9a84c", padding: "10px", borderRadius: 10, textDecoration: "none", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif", marginBottom: 8 }}>
-    {tr("My Requests", "Мои запросы", "Mənim sorğularım")}
-  </Link>
-)}
+                      <Link href={`/${locale}/partner-dashboard`} onClick={() => setUserOpen(false)}
+                        style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", color: "rgba(255,255,255,0.8)", textDecoration: "none", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}
+                        onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
+                        onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+                        <Briefcase size={14} color="#c9a84c" />
+                        {tr("My Requests", "Мои запросы", "Mənim sorğularım")}
+                      </Link>
+                    )}
                     {profile.role === "provider" && (
                       <Link href={`/${locale}/provider/profile`} onClick={() => setUserOpen(false)}
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", color: "rgba(255,255,255,0.8)", textDecoration: "none", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}
@@ -186,15 +219,6 @@ export default function Navbar({ locale }: { locale: string }) {
                         {tr("My Bookings", "Мои бронирования", "Rezervasiyalarım")}
                       </Link>
                     )}
-                    {profile.role === "partner" && (
-  <Link href={`/${locale}/partner-dashboard`} onClick={() => setUserOpen(false)}
-    style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", color: "rgba(255,255,255,0.8)", textDecoration: "none", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}
-    onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
-    onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
-    <Briefcase size={14} color="#c9a84c" />
-    {tr("My Requests", "Мои запросы", "Mənim sorğularım")}
-  </Link>
-)}
                     <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
                       <button onClick={handleLogout}
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", color: "rgba(239,68,68,0.8)", background: "none", border: "none", cursor: "pointer", fontSize: 13, fontFamily: "DM Sans, sans-serif", width: "100%" }}
@@ -242,6 +266,21 @@ export default function Navbar({ locale }: { locale: string }) {
               </Link>
             ))}
 
+            {/* Currency mobile */}
+            <div style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
+                {tr("Currency", "Валюта", "Valyuta")}
+              </p>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {CURRENCIES.map(cur => (
+                  <button key={cur.code} onClick={() => setCurrency(cur.code)}
+                    style={{ padding: "5px 10px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.15)", background: cur.code === currency ? "#0a7070" : "transparent", color: "white", fontFamily: "DM Sans, sans-serif", fontSize: 12, cursor: "pointer", fontWeight: 600 }}>
+                    {cur.flag} {cur.code}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Partners link mobile */}
             <Link href={`/${locale}/partners`} onClick={() => setMobileOpen(false)}
               style={{ display: "flex", alignItems: "center", gap: 8, color: "#c9a84c", fontFamily: "DM Sans, sans-serif", fontSize: 16, textDecoration: "none", padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
@@ -265,6 +304,12 @@ export default function Navbar({ locale }: { locale: string }) {
                     style={{ display: "block", textAlign: "center", background: "rgba(10,112,112,0.2)", color: "#2dd4bf", padding: "10px", borderRadius: 10, textDecoration: "none", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif", marginBottom: 8 }}>
                     {tr("Dashboard", "Панель управления", "İdarə paneli")}
                   </Link>
+                  {profile.role === "partner" && (
+                    <Link href={`/${locale}/partner-dashboard`} onClick={() => setMobileOpen(false)}
+                      style={{ display: "block", textAlign: "center", background: "rgba(201,168,76,0.15)", color: "#c9a84c", padding: "10px", borderRadius: 10, textDecoration: "none", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+                      {tr("My Requests", "Мои запросы", "Mənim sorğularım")}
+                    </Link>
+                  )}
                 </div>
                 <button onClick={handleLogout}
                   style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "#fca5a5", padding: "12px", borderRadius: 12, cursor: "pointer", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif", marginTop: 8 }}>
@@ -273,12 +318,10 @@ export default function Navbar({ locale }: { locale: string }) {
                 </button>
               </>
             ) : (
-              <>
-                <Link href={`/${locale}/auth`} onClick={() => setMobileOpen(false)}
-                  style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "14px", borderRadius: 12, textDecoration: "none", fontSize: 15, fontWeight: 600, fontFamily: "DM Sans, sans-serif", marginTop: 12 }}>
-                  {tr("Sign In", "Войти", "Daxil ol")}
-                </Link>
-              </>
+              <Link href={`/${locale}/auth`} onClick={() => setMobileOpen(false)}
+                style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "14px", borderRadius: 12, textDecoration: "none", fontSize: 15, fontWeight: 600, fontFamily: "DM Sans, sans-serif", marginTop: 12 }}>
+                {tr("Sign In", "Войти", "Daxil ol")}
+              </Link>
             )}
           </div>
         )}

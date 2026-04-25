@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/context/AuthContext";
+import { CurrencyProvider } from "@/context/CurrencyContext";
 import "../globals.css";
 
 const metadata_translations = {
@@ -96,7 +97,9 @@ export default async function LocaleLayout({
       </head>
       <body style={{ overflowX: "hidden", margin: 0, padding: 0, background: "#021a1a" }}>
         <AuthProvider>
-          {children}
+          <CurrencyProvider>
+            {children}
+          </CurrencyProvider>
         </AuthProvider>
         <a
           href="https://wa.me/994552793673"
