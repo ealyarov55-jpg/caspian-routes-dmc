@@ -2,6 +2,7 @@ export const CURRENCIES = [
   { code: "USD", symbol: "$", flag: "🇺🇸" },
   { code: "EUR", symbol: "€", flag: "🇪🇺" },
   { code: "RUB", symbol: "₽", flag: "🇷🇺" },
+  { code: "AZN", symbol: "₼", flag: "🇦🇿" },
   { code: "AED", symbol: "د.إ", flag: "🇦🇪" },
   { code: "GBP", symbol: "£", flag: "🇬🇧" },
 ];
@@ -38,6 +39,7 @@ export function convertPrice(amount: number, rates: Record<string, number>, curr
   const converted = Math.round(amount * rate);
   const sym = CURRENCIES.find(c => c.code === currency)?.symbol || "$";
   if (currency === "RUB") return `${converted.toLocaleString("ru-RU")} ${sym}`;
+  if (currency === "AZN") return `${converted.toLocaleString()} ${sym}`;
   if (currency === "AED") return `${sym} ${converted.toLocaleString()}`;
   return `${sym}${converted.toLocaleString()}`;
 }
