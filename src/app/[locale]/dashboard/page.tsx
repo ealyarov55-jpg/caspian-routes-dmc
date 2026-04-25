@@ -3,7 +3,7 @@
 import { useEffect, use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { LogOut, User, MapPin, Calendar, Star, Bell, ChevronRight, Users, BarChart3, Briefcase } from "lucide-react";
+import { LogOut, User, MapPin, Calendar, Star, Bell, ChevronRight, Users, BarChart3, Briefcase, Globe } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 
@@ -277,6 +277,7 @@ function PartnerDashboard({ locale, tr }: { locale: string; tr: Function }) {
     { icon: Users, title: tr("Available Guides", "Доступные гиды", "Mövcud bələdçilər"), desc: tr("Find guides for your clients", "Найдите гидов для клиентов", "Müştəriləriniz üçün bələdçi tapın"), href: `/${locale}/partner-portal`, color: "#065050", bg: "rgba(6,80,80,0.08)" },
   { icon: Calendar, title: tr("My Requests", "Мои запросы", "Mənim sorğularım"), desc: tr("History & statuses", "История и статусы", "Tarix və statuslar"), href: `/${locale}/partner-dashboard`, color: "#065050", bg: "rgba(6,80,80,0.08)" },
   { icon: MapPin, title: tr("Itinerary Builder", "Конструктор маршрутов", "Marşrut qurucusu"), desc: tr("Build custom tours", "Создайте индивидуальный тур", "Fərdi tur qurun"), href: `/${locale}/itinerary`, color: "#2dd4bf", bg: "rgba(45,212,191,0.08)" },
+{ icon: Globe, title: tr("Marketing Kit", "Маркетинг-кит", "Marketinq dəsti"), desc: tr("Photos, texts & materials", "Фото, тексты и материалы", "Foto, mətn və materiallar"), href: `/${locale}/marketing`, color: "#2dd4bf", bg: "rgba(45,212,191,0.08)" },
 ];
 
   return (
