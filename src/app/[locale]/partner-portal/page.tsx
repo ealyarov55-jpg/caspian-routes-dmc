@@ -1,5 +1,6 @@
 "use client";
-
+import { useCurrency } from "@/context/CurrencyContext";
+import { convertPrice } from "@/lib/currency";
 import { useState, use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
@@ -33,10 +34,13 @@ export default function PartnerPortalPage({ params }: { params: Promise<{ locale
   const { locale } = use(params);
   const { profile, loading } = useAuth();
   const router = useRouter();
+  const { currency, rates } = useCurrency();
   const lang = (locale === "ru" || locale === "az") ? locale : "en";
 
   const tr = (en: string, ru: string, az: string) =>
     lang === "ru" ? ru : lang === "az" ? az : en;
+
+  const cp = (amount: number) => convertPrice(amount, rates, currency);
 
   const [providers, setProviders] = useState<Provider[]>([]);
   const [loadingProviders, setLoadingProviders] = useState(true);
@@ -195,21 +199,21 @@ export default function PartnerPortalPage({ params }: { params: Promise<{ locale
                         </div>
                       </div>
 
-                      {/* Price table */}
+                      {/* Price table with currency conversion */}
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
                         <div style={{ background: "rgba(10,112,112,0.06)", borderRadius: 12, padding: "12px 16px", textAlign: "center", border: "1px solid rgba(10,112,112,0.15)" }}>
                           <p style={{ color: "#0a7070", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4, fontWeight: 600 }}>{tr("Net Price", "Net-цена", "Net qiymət")}</p>
-                          <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 26, fontWeight: 700, color: "#0a7070" }}>${route.netPrice}</p>
+                          <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, fontWeight: 700, color: "#0a7070" }}>{cp(route.netPrice)}</p>
                           <p style={{ color: "#94a3a3", fontSize: 10, marginTop: 2 }}>{tr("your cost", "ваша стоимость", "sizin xərc")}</p>
                         </div>
                         <div style={{ background: "#f8fafa", borderRadius: 12, padding: "12px 16px", textAlign: "center", border: "1px solid #e2eded" }}>
                           <p style={{ color: "#4a6060", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4, fontWeight: 600 }}>{tr("Retail Price", "Розничная цена", "Pərakəndə")}</p>
-                          <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 26, fontWeight: 700, color: "#021a1a" }}>${route.retailPrice}</p>
+                          <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, fontWeight: 700, color: "#021a1a" }}>{cp(route.retailPrice)}</p>
                           <p style={{ color: "#94a3a3", fontSize: 10, marginTop: 2 }}>{tr("sell to client", "цена для клиента", "müştəri qiyməti")}</p>
                         </div>
                         <div style={{ background: "rgba(201,168,76,0.08)", borderRadius: 12, padding: "12px 16px", textAlign: "center", border: "1px solid rgba(201,168,76,0.2)" }}>
                           <p style={{ color: "#c9a84c", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4, fontWeight: 600 }}>{tr("Your Margin", "Ваша маржа", "Sizin marja")}</p>
-                          <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 26, fontWeight: 700, color: "#c9a84c" }}>${margin}</p>
+                          <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, fontWeight: 700, color: "#c9a84c" }}>{cp(margin)}</p>
                           <p style={{ color: "#94a3a3", fontSize: 10, marginTop: 2 }}>{marginPct}% {tr("profit", "прибыль", "mənfəət")}</p>
                         </div>
                       </div>
@@ -269,24 +273,24 @@ export default function PartnerPortalPage({ params }: { params: Promise<{ locale
                       </div>
                     )}
 
-                    {/* Price table for guides */}
+                    {/* Price table with currency conversion */}
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, marginBottom: 14 }}>
                       <div style={{ background: "rgba(10,112,112,0.06)", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
                         <p style={{ color: "#0a7070", fontSize: 9, textTransform: "uppercase", marginBottom: 2, fontWeight: 600 }}>{tr("Net", "Net", "Net")}</p>
-                        <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 18, fontWeight: 700, color: "#0a7070" }}>
-                          {netPrice ? `$${netPrice}` : "—"}
+                        <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 16, fontWeight: 700, color: "#0a7070" }}>
+                          {netPrice ? cp(netPrice) : "—"}
                         </p>
                       </div>
                       <div style={{ background: "#f8fafa", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
                         <p style={{ color: "#4a6060", fontSize: 9, textTransform: "uppercase", marginBottom: 2, fontWeight: 600 }}>{tr("Retail", "Розница", "Pərakəndə")}</p>
-                        <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 18, fontWeight: 700, color: "#021a1a" }}>
-                          {retailPrice ? `$${retailPrice}` : "—"}
+                        <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 16, fontWeight: 700, color: "#021a1a" }}>
+                          {retailPrice ? cp(retailPrice) : "—"}
                         </p>
                       </div>
                       <div style={{ background: "rgba(201,168,76,0.08)", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
                         <p style={{ color: "#c9a84c", fontSize: 9, textTransform: "uppercase", marginBottom: 2, fontWeight: 600 }}>{tr("Margin", "Маржа", "Marja")}</p>
-                        <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 18, fontWeight: 700, color: "#c9a84c" }}>
-                          {margin ? `$${margin}` : "—"}
+                        <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 16, fontWeight: 700, color: "#c9a84c" }}>
+                          {margin ? cp(margin) : "—"}
                         </p>
                       </div>
                     </div>
