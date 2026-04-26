@@ -35,6 +35,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     creator: "Caspian Routes DMC",
     publisher: "Caspian Routes DMC",
     robots: "index, follow",
+    icons: {
+  icon: "/favicon.png",
+  shortcut: "/favicon.png",
+  apple: "/favicon.png",
+},
     openGraph: {
       type: "website",
       locale: locale === "ru" ? "ru_RU" : locale === "az" ? "az_AZ" : "en_US",
