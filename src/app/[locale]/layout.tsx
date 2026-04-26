@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/context/AuthContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
+import { ToastContainer } from "@/components/ui/Toast";
 import "../globals.css";
 
 const metadata_translations = {
@@ -99,6 +100,7 @@ export default async function LocaleLayout({
         <AuthProvider>
           <CurrencyProvider>
             {children}
+            <ToastContainer />
           </CurrencyProvider>
         </AuthProvider>
         <a
