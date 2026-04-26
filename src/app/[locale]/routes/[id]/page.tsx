@@ -3,9 +3,10 @@
 import { useState, use, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { ArrowLeft, Clock, Star, MapPin, Users, Check } from "lucide-react";
+import { ArrowLeft, Clock, Star, MapPin, Users, Check, Send, X } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import { useAuth } from "@/context/AuthContext";
 
 const ROUTES: Record<string, any> = {
   "baku-city-tour": {
@@ -138,21 +139,29 @@ interface Provider {
   languages: string[];
   bio: string;
   availableDates: string[];
+  approved?: boolean;
 }
 
 export default function RouteDetailPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { locale, id } = use(params);
   const route = ROUTES[id];
+  const { profile } = useAuth();
   const [providers, setProviders] = useState<Provider[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const [quoteForm, setQuoteForm] = useState({ name: "", email: "", company: "", pax: "2", date: "", message: "" });
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
   const lang = (locale === "ru" || locale === "az") ? locale : "en";
+
+  const isPartnerOrAdmin = profile?.role === "partner" || profile?.role === "admin";
 
   useEffect(() => {
     getDocs(collection(db, "providers")).then(snap => {
       const today = new Date().toISOString().split("T")[0];
       const data = snap.docs
         .map(d => d.data() as Provider)
-        .filter(p => p.availableDates?.some(d => d >= today));
+        .filter(p => p.availableDates?.some(d => d >= today) && p.approved);
       setProviders(data);
       setLoading(false);
     });
@@ -160,6 +169,32 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
 
   const tr = (en: string, ru: string, az: string) =>
     lang === "ru" ? ru : lang === "az" ? az : en;
+
+  const handleQuoteSubmit = async () => {
+    if (!quoteForm.name || !quoteForm.email) return;
+    setSending(true);
+    try {
+      await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...quoteForm,
+          routeName: route.title[lang],
+          routeId: id,
+        }),
+      });
+    } catch (e) {}
+    setSending(false);
+    setSent(true);
+    setTimeout(() => { setShowQuoteModal(false); setSent(false); setQuoteForm({ name: "", email: "", company: "", pax: "2", date: "", message: "" }); }, 3000);
+  };
+
+  const inputStyle = {
+    width: "100%", padding: "10px 14px", borderRadius: 10,
+    border: "1.5px solid #e2eded", background: "white",
+    color: "#021a1a", fontSize: 14, fontFamily: "DM Sans, sans-serif",
+    outline: "none", boxSizing: "border-box" as const,
+  };
 
   if (!route) return (
     <div style={{ minHeight: "100vh", background: "#f0f7f7", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "DM Sans, sans-serif" }}>
@@ -182,6 +217,93 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
         }
       `}</style>
 
+      {/* Quote Modal */}
+      {showQuoteModal && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(2,26,26,0.7)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, backdropFilter: "blur(4px)" }}
+          onClick={() => setShowQuoteModal(false)}>
+          <div style={{ background: "white", borderRadius: 24, padding: 32, maxWidth: 480, width: "100%", boxShadow: "0 24px 64px rgba(0,0,0,0.3)" }}
+            onClick={e => e.stopPropagation()}>
+
+            {sent ? (
+              <div style={{ textAlign: "center", padding: "20px 0" }}>
+                <div style={{ width: 64, height: 64, borderRadius: "50%", background: "linear-gradient(135deg, #0a7070, #2dd4bf)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+                  <Check size={28} color="white" />
+                </div>
+                <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", marginBottom: 8 }}>
+                  {tr("Request Sent!", "Запрос отправлен!", "Sorğu göndərildi!")}
+                </h3>
+                <p style={{ color: "#4a6060", fontSize: 14 }}>
+                  {tr("We'll get back to you within 24 hours.", "Мы свяжемся с вами в течение 24 часов.", "24 saat ərzində sizinlə əlaqə saxlayacağıq.")}
+                </p>
+              </div>
+            ) : (
+              <>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+                  <div>
+                    <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", marginBottom: 4 }}>
+                      {tr("Request a Quote", "Запросить цену", "Qiymət sorğusu")}
+                    </h3>
+                    <p style={{ color: "#0a7070", fontSize: 13, fontWeight: 600 }}>{route.title[lang]}</p>
+                  </div>
+                  <button onClick={() => setShowQuoteModal(false)}
+                    style={{ background: "#f0f7f7", border: "none", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                    <X size={16} color="#4a6060" />
+                  </button>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                    <div>
+                      <label style={{ color: "#4a6060", fontSize: 12, display: "block", marginBottom: 4 }}>{tr("Your Name", "Ваше имя", "Adınız")} *</label>
+                      <input value={quoteForm.name} onChange={e => setQuoteForm(p => ({ ...p, name: e.target.value }))}
+                        placeholder={tr("Full name", "Полное имя", "Ad Soyad")} style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={{ color: "#4a6060", fontSize: 12, display: "block", marginBottom: 4 }}>Email *</label>
+                      <input value={quoteForm.email} onChange={e => setQuoteForm(p => ({ ...p, email: e.target.value }))}
+                        type="email" placeholder="your@email.com" style={inputStyle} />
+                    </div>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                    <div>
+                      <label style={{ color: "#4a6060", fontSize: 12, display: "block", marginBottom: 4 }}>{tr("Company", "Компания", "Şirkət")}</label>
+                      <input value={quoteForm.company} onChange={e => setQuoteForm(p => ({ ...p, company: e.target.value }))}
+                        placeholder={tr("Travel agency", "Турагентство", "Turizm agentliyi")} style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={{ color: "#4a6060", fontSize: 12, display: "block", marginBottom: 4 }}>{tr("Pax", "Человек", "Nəfər")}</label>
+                      <input value={quoteForm.pax} onChange={e => setQuoteForm(p => ({ ...p, pax: e.target.value }))}
+                        type="number" min="1" placeholder="2" style={inputStyle} />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={{ color: "#4a6060", fontSize: 12, display: "block", marginBottom: 4 }}>{tr("Preferred Date", "Желаемая дата", "İstənilən tarix")}</label>
+                    <input value={quoteForm.date} onChange={e => setQuoteForm(p => ({ ...p, date: e.target.value }))}
+                      type="date" style={inputStyle} />
+                  </div>
+                  <div>
+                    <label style={{ color: "#4a6060", fontSize: 12, display: "block", marginBottom: 4 }}>{tr("Special Requests", "Особые пожелания", "Xüsusi istəklər")}</label>
+                    <textarea value={quoteForm.message} onChange={e => setQuoteForm(p => ({ ...p, message: e.target.value }))}
+                      placeholder={tr("Any special requirements...", "Особые пожелания...", "Xüsusi tələblər...")}
+                      rows={3}
+                      style={{ ...inputStyle, resize: "vertical" }} />
+                  </div>
+
+                  <button onClick={handleQuoteSubmit} disabled={sending || !quoteForm.name || !quoteForm.email}
+                    style={{ width: "100%", padding: "13px", borderRadius: 12, border: "none", background: (!quoteForm.name || !quoteForm.email) ? "rgba(10,112,112,0.4)" : "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", fontSize: 15, fontWeight: 600, cursor: (!quoteForm.name || !quoteForm.email) ? "not-allowed" : "pointer", fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                    <Send size={15} />
+                    {sending ? tr("Sending...", "Отправляем...", "Göndərilir...") : tr("Send Request", "Отправить запрос", "Sorğu göndər")}
+                  </button>
+                  <p style={{ color: "#94a3a3", fontSize: 11, textAlign: "center" }}>
+                    {tr("We respond within 24 hours", "Отвечаем в течение 24 часов", "24 saat ərzində cavab veririk")}
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Hero */}
       <div style={{ position: "relative", height: 420, overflow: "hidden", marginTop: 72 }}>
         <img src={route.image} alt={route.title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -194,11 +316,17 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
           <div>
             {route.tag && <span style={{ background: "#c9a84c", color: "white", fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 999, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12, display: "inline-block" }}>{route.tag}</span>}
             <h1 style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 500, marginBottom: 12 }}>{route.title[lang]}</h1>
-            <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: 20, flexWrap: "wrap", marginBottom: 20 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}><Clock size={14} color="#2dd4bf" /><span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>{route.duration}</span></div>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}><Star size={14} color="#2dd4bf" /><span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>{route.difficulty[lang]}</span></div>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}><MapPin size={14} color="#2dd4bf" /><span style={{ color: "rgba(255,255,255,0.8)", fontSize: 14 }}>{route.subtitle[lang]}</span></div>
             </div>
+            {/* Request Quote CTA in Hero */}
+            <button onClick={() => setShowQuoteModal(true)}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg, #c9a84c, #d4a843)", color: "white", padding: "12px 24px", borderRadius: 12, border: "none", cursor: "pointer", fontSize: 15, fontWeight: 600, fontFamily: "DM Sans, sans-serif", boxShadow: "0 8px 24px rgba(201,168,76,0.4)" }}>
+              <Send size={15} />
+              {tr("Request a Quote", "Запросить цену", "Qiymət sorğusu")}
+            </button>
           </div>
         </div>
       </div>
@@ -231,7 +359,7 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
               </div>
             </div>
 
-            <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
+            <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 4px 24px rgba(4,46,46,0.08)", marginBottom: 20 }}>
               <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 24, color: "#021a1a", marginBottom: 16 }}>
                 {tr("What's Included", "Что включено", "Nə daxildir")}
               </h2>
@@ -244,10 +372,60 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
                 ))}
               </div>
             </div>
+
+            {/* Bottom CTA */}
+            <div style={{ background: "linear-gradient(135deg, #021a1a, #042e2e)", borderRadius: 20, padding: 28 }}>
+              <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, color: "white", marginBottom: 8 }}>
+                {tr("Ready to book this tour?", "Готовы забронировать этот тур?", "Bu turu rezerv etməyə hazırsınız?")}
+              </h3>
+              <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, marginBottom: 16 }}>
+                {tr(
+                  "Send us a quote request and we'll get back to you within 24 hours with pricing and availability.",
+                  "Отправьте запрос на цену и мы свяжемся с вами в течение 24 часов с ценами и наличием.",
+                  "Qiymət sorğusu göndərin, 24 saat ərzində qiymət və mövcudluq barədə cavab veririk."
+                )}
+              </p>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                <button onClick={() => setShowQuoteModal(true)}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg, #c9a84c, #d4a843)", color: "white", padding: "12px 24px", borderRadius: 12, border: "none", cursor: "pointer", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+                  <Send size={14} />
+                  {tr("Request a Quote", "Запросить цену", "Qiymət sorğusu")}
+                </button>
+                {isPartnerOrAdmin && (
+                  <Link href={`/${locale}/partner-quote?route=${id}`}
+                    style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(45,212,191,0.1)", border: "1px solid rgba(45,212,191,0.3)", color: "#2dd4bf", padding: "12px 24px", borderRadius: 12, textDecoration: "none", fontSize: 14, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+                    {tr("Partner Quote (Net Price)", "Партнёрский запрос (Net-цена)", "Tərəfdaş sorğusu (Net qiymət)")}
+                  </Link>
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* Right - Providers */}
-          <div style={{ position: "sticky", top: 24 }}>
+          {/* Right - Sidebar */}
+          <div style={{ position: "sticky", top: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+
+            {/* Quick Quote box */}
+            <div style={{ background: "white", borderRadius: 20, padding: 24, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
+              <p style={{ color: "#0a7070", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 8 }}>
+                {tr("Price on request", "Цена по запросу", "Qiymət sorğu ilə")}
+              </p>
+              <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 22, color: "#021a1a", marginBottom: 4 }}>
+                {route.title[lang]}
+              </h3>
+              <p style={{ color: "#94a3a3", fontSize: 13, marginBottom: 16 }}>
+                {route.duration} · {route.difficulty[lang]}
+              </p>
+              <button onClick={() => setShowQuoteModal(true)}
+                style={{ width: "100%", padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg, #c9a84c, #d4a843)", color: "white", fontSize: 15, fontWeight: 600, cursor: "pointer", fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 12 }}>
+                <Send size={15} />
+                {tr("Request a Quote", "Запросить цену", "Qiymət sorğusu")}
+              </button>
+              <p style={{ color: "#94a3a3", fontSize: 11, textAlign: "center" }}>
+                {tr("Response within 24 hours", "Ответ в течение 24 часов", "24 saat ərzində cavab")}
+              </p>
+            </div>
+
+            {/* Guides */}
             <div style={{ background: "white", borderRadius: 20, padding: 24, boxShadow: "0 4px 24px rgba(4,46,46,0.08)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
                 <Users size={18} color="#0a7070" />
@@ -260,7 +438,11 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
               ) : providers.length === 0 ? (
                 <div style={{ textAlign: "center", padding: "24px 0" }}>
                   <Users size={32} color="#e2eded" style={{ marginBottom: 8 }} />
-                  <p style={{ color: "#94a3a3", fontSize: 14 }}>{tr("No guides available yet", "Пока нет гидов", "Hələ bələdçi yoxdur")}</p>
+                  <p style={{ color: "#94a3a3", fontSize: 14, marginBottom: 12 }}>{tr("No guides available yet", "Пока нет гидов", "Hələ bələdçi yoxdur")}</p>
+                  <button onClick={() => setShowQuoteModal(true)}
+                    style={{ background: "rgba(10,112,112,0.08)", color: "#0a7070", border: "1px solid rgba(10,112,112,0.2)", borderRadius: 10, padding: "8px 16px", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+                    {tr("Request anyway", "Запросить всё равно", "Yenə də sorğu göndər")}
+                  </button>
                 </div>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -274,12 +456,6 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
                           <p style={{ fontWeight: 600, color: "#021a1a", fontSize: 15 }}>{p.name}</p>
                           <p style={{ color: "#94a3a3", fontSize: 12 }}>{p.carModel} {p.carYear}</p>
                         </div>
-                        {p.pricePerDay && (
-                          <div style={{ textAlign: "right" }}>
-                            <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 20, fontWeight: 700, color: "#021a1a" }}>${p.pricePerDay}</p>
-                            <p style={{ fontSize: 10, color: "#94a3a3" }}>{tr("per day", "в день", "gündə")}</p>
-                          </div>
-                        )}
                       </div>
                       {p.bio && <p style={{ fontSize: 13, color: "#4a6060", marginBottom: 10, lineHeight: 1.5 }}>{p.bio.slice(0, 80)}...</p>}
                       {p.languages?.length > 0 && (
@@ -289,10 +465,10 @@ export default function RouteDetailPage({ params }: { params: Promise<{ locale: 
                           ))}
                         </div>
                       )}
-                      <Link href={`/${locale}/book/${p.uid}?route=${id}`}
-                        style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "10px", borderRadius: 10, textDecoration: "none", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
-                        {tr("Book This Guide", "Забронировать", "Rezerv et")}
-                      </Link>
+                      <button onClick={() => setShowQuoteModal(true)}
+                        style={{ display: "block", width: "100%", textAlign: "center", background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", padding: "10px", borderRadius: 10, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "DM Sans, sans-serif" }}>
+                        {tr("Request with this Guide", "Запросить с этим гидом", "Bu bələdçi ilə sorğu")}
+                      </button>
                     </div>
                   ))}
                 </div>
