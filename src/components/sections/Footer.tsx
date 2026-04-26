@@ -40,7 +40,7 @@ export default function Footer({ locale = "en" }: { locale?: string }) {
           <div>
             <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", marginBottom: 20 }}>
               <div style={{ flexShrink: 0 }}>
-                <img src="/favicon.png" alt="Caspian Routes" style={{ width: 90, height: 90, objectFit: "contain" }} />
+                <img src="/favicon.png" alt="Caspian Routes" style={{ width: 110, height: 110, objectFit: "contain" }} />
               </div>
               <div>
                 <p style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 20, fontWeight: 600, lineHeight: 1.2 }}>Caspian Routes</p>
