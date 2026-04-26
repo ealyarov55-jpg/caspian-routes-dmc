@@ -22,6 +22,7 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [registered, setRegistered] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   // Partner extra fields
   const [companyName, setCompanyName] = useState("");
@@ -46,13 +47,16 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
       setError(tr("Please enter your company name", "Введите название компании", "Şirkətin adını daxil edin"));
       return;
     }
+    if (mode === "register" && role === "partner" && !agreedToTerms) {
+      setError(tr("Please accept the Terms & Conditions", "Примите условия использования", "İstifadə şərtlərini qəbul edin"));
+      return;
+    }
     setLoading(true);
     try {
       if (mode === "login") {
         await login(email, password);
         router.push(`/${locale}/dashboard`);
       } else {
-        // Partners register with pending_partner role — wait for admin approval
         const actualRole: UserRole = role === "partner" ? "pending_partner" as UserRole : role;
         await register(email, password, name, actualRole, {
           companyName,
@@ -101,7 +105,6 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
     color: "rgba(255,255,255,0.6)", fontSize: 12, display: "block", marginBottom: 6,
   };
 
-  // Success screen for partner registration
   if (registered) {
     return (
       <div style={{ minHeight: "100vh", background: "linear-gradient(160deg, #021a1a 0%, #065050 50%, #0a5560 100%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "DM Sans, sans-serif" }}>
@@ -165,7 +168,7 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
           {/* Tabs */}
           <div style={{ display: "flex", background: "rgba(0,0,0,0.2)", borderRadius: 12, padding: 4, marginBottom: 28 }}>
             {(["login", "register"] as Mode[]).map((m) => (
-              <button key={m} onClick={() => { setMode(m); setError(""); }}
+              <button key={m} onClick={() => { setMode(m); setError(""); setAgreedToTerms(false); }}
                 style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", cursor: "pointer", fontSize: 14, fontWeight: 500, fontFamily: "DM Sans, sans-serif", background: mode === m ? "#0a7070" : "transparent", color: mode === m ? "white" : "rgba(255,255,255,0.5)", transition: "all 0.2s" }}>
                 {m === "login" ? tr("Sign In", "Войти", "Daxil ol") : tr("Sign Up", "Регистрация", "Qeydiyyat")}
               </button>
@@ -257,7 +260,7 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
           </div>
 
           {/* Password */}
-          <div style={{ marginBottom: 24, position: "relative" }}>
+          <div style={{ marginBottom: 16, position: "relative" }}>
             <label style={labelStyle}>{tr("Password", "Пароль", "Şifrə")}</label>
             <input value={password} onChange={e => setPassword(e.target.value)} type={showPass ? "text" : "password"} placeholder="••••••••"
               style={{ ...inputStyle, padding: "12px 48px 12px 16px" }} />
@@ -267,6 +270,31 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
             </button>
           </div>
 
+          {/* Terms checkbox — only for partner registration */}
+          {mode === "register" && role === "partner" && (
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer", marginBottom: 16, padding: "12px 14px", background: agreedToTerms ? "rgba(45,212,191,0.06)" : "rgba(255,255,255,0.03)", borderRadius: 10, border: agreedToTerms ? "1px solid rgba(45,212,191,0.2)" : "1px solid rgba(255,255,255,0.08)", transition: "all 0.2s" }}>
+              <input
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={e => setAgreedToTerms(e.target.checked)}
+                style={{ width: 16, height: 16, accentColor: "#0a7070", cursor: "pointer", marginTop: 2, flexShrink: 0 }}
+              />
+              <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, lineHeight: 1.6 }}>
+                {tr("I have read and agree to the ", "Я прочитал и принимаю ", "Oxudum və razılaşıram ")}
+                <a href={`/${locale}/terms`} target="_blank" rel="noopener noreferrer" style={{ color: "#2dd4bf", textDecoration: "none", fontWeight: 600 }}
+                  onClick={e => e.stopPropagation()}>
+                  {tr("Terms & Conditions", "Условия использования", "İstifadə şərtləri")}
+                </a>
+                {tr(" and ", " и ", " və ")}
+                <a href={`/${locale}/privacy`} target="_blank" rel="noopener noreferrer" style={{ color: "#2dd4bf", textDecoration: "none", fontWeight: 600 }}
+                  onClick={e => e.stopPropagation()}>
+                  {tr("Privacy Policy", "Политику конфиденциальности", "Məxfilik siyasəti")}
+                </a>
+                {tr(" of Caspian Routes DMC.", " Caspian Routes DMC.", " Caspian Routes DMC.")}
+              </span>
+            </label>
+          )}
+
           {/* Error */}
           {error && (
             <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 10, padding: "10px 14px", marginBottom: 16 }}>
@@ -275,8 +303,8 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
           )}
 
           {/* Submit */}
-          <button onClick={handleSubmit} disabled={loading}
-            style={{ width: "100%", padding: "14px", borderRadius: 12, border: "none", background: loading ? "rgba(10,112,112,0.5)" : "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", fontSize: 15, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer", fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: "0 8px 24px rgba(10,112,112,0.3)" }}>
+          <button onClick={handleSubmit} disabled={loading || (mode === "register" && role === "partner" && !agreedToTerms)}
+            style={{ width: "100%", padding: "14px", borderRadius: 12, border: "none", background: (loading || (mode === "register" && role === "partner" && !agreedToTerms)) ? "rgba(10,112,112,0.4)" : "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", fontSize: 15, fontWeight: 600, cursor: (loading || (mode === "register" && role === "partner" && !agreedToTerms)) ? "not-allowed" : "pointer", fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: "0 8px 24px rgba(10,112,112,0.3)", opacity: (mode === "register" && role === "partner" && !agreedToTerms) ? 0.6 : 1 }}>
             {loading
               ? tr("Please wait...", "Подождите...", "Gözləyin...")
               : mode === "login"
@@ -292,7 +320,7 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
             {mode === "login"
               ? tr("Don't have an account? ", "Нет аккаунта? ", "Hesabınız yoxdur? ")
               : tr("Already have an account? ", "Уже есть аккаунт? ", "Artıq hesabınız var? ")}
-            <button onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(""); }}
+            <button onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(""); setAgreedToTerms(false); }}
               style={{ background: "none", border: "none", color: "#2dd4bf", cursor: "pointer", fontSize: 13, fontFamily: "DM Sans, sans-serif", fontWeight: 600 }}>
               {mode === "login"
                 ? tr("Sign Up", "Зарегистрироваться", "Qeydiyyatdan keç")
