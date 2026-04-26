@@ -3,6 +3,7 @@
 import { use, useState } from "react";
 import { MapPin, Phone, Mail, Send, Check } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
+import { showToast } from "@/components/ui/Toast";
 export default function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
   const lang = (locale === "ru" || locale === "az") ? locale : "en";
@@ -15,12 +16,24 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
   const [sending, setSending] = useState(false);
 
   const handleSubmit = async () => {
-    if (!form.name || !form.email || !form.message) return;
-    setSending(true);
-    await new Promise(r => setTimeout(r, 1000));
-    setSending(false);
+  if (!form.name || !form.email || !form.message) {
+    showToast(tr("Please fill all required fields", "Заполните все обязательные поля", "Bütün sahələri doldurun"), "error");
+    return;
+  }
+  setSending(true);
+  try {
+    await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+    showToast(tr("Message sent! We'll reply within 24 hours.", "Сообщение отправлено! Ответим в течение 24 часов.", "Mesaj göndərildi! 24 saat ərzində cavab verəcəyik."), "success");
     setSubmitted(true);
-  };
+  } catch (e) {
+    showToast(tr("Something went wrong. Please try again.", "Что-то пошло не так. Попробуйте ещё раз.", "Xəta baş verdi. Yenidən cəhd edin."), "error");
+  }
+  setSending(false);
+};
 
   const contacts = [
     {
