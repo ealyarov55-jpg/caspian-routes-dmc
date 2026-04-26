@@ -151,7 +151,7 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
 
         {/* Logo */}
 <div style={{ textAlign: "center", marginBottom: 40, display: "flex", flexDirection: "column", alignItems: "center" }}>
-  <img src="/favicon.png" alt="Caspian Routes" style={{ width: 100, height: 100, objectFit: "contain", marginBottom: 16, display: "block" }} />
+<img src="/favicon.png" alt="Caspian Routes" style={{ width: 200, height: 200, objectFit: "contain", marginBottom: 16, display: "block" }} />
   <h1 style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 28, fontWeight: 600, marginBottom: 4 }}>Caspian Routes</h1>
   <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}>Travel Routes DMC</p>
 </div>
