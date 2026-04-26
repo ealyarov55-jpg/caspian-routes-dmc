@@ -150,17 +150,11 @@ export default function AuthPage({ params }: { params: Promise<{ locale: string 
       <div style={{ width: "100%", maxWidth: role === "partner" && mode === "register" ? 560 : 460, position: "relative", zIndex: 10 }}>
 
         {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, #042e2e, #0a7070)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", boxShadow: "0 8px 24px rgba(10,112,112,0.4)" }}>
-            <svg viewBox="0 0 40 40" style={{ width: 32, height: 32 }} fill="none">
-              <path d="M20 4 C10 4 4 12 4 20 C4 28 10 36 20 36 C30 36 36 28 36 20" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round"/>
-              <path d="M20 4 L24 14 L20 12 L16 14 Z" fill="#c9a84c"/>
-              <circle cx="20" cy="20" r="3" fill="#2dd4bf"/>
-            </svg>
-          </div>
-          <h1 style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 28, fontWeight: 600, marginBottom: 4 }}>Caspian Routes</h1>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}>Travel Routes DMC</p>
-        </div>
+<div style={{ textAlign: "center", marginBottom: 40 }}>
+  <img src="/favicon.png" alt="Caspian Routes" style={{ width: 100, height: 100, objectFit: "contain", marginBottom: 16 }} />
+  <h1 style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 28, fontWeight: 600, marginBottom: 4 }}>Caspian Routes</h1>
+  <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}>Travel Routes DMC</p>
+</div>
 
         {/* Card */}
         <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 24, padding: 32, backdropFilter: "blur(20px)" }}>
