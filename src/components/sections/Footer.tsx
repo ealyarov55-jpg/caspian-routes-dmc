@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import Link from "next/link";
 import { MapPin, Phone, Mail } from "lucide-react";
@@ -39,12 +39,8 @@ export default function Footer({ locale = "en" }: { locale?: string }) {
 
           <div>
             <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", marginBottom: 20 }}>
-              <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #042e2e, #0a7070)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <svg viewBox="0 0 40 40" style={{ width: 26, height: 26 }} fill="none">
-                  <path d="M20 4 C10 4 4 12 4 20 C4 28 10 36 20 36 C30 36 36 28 36 20" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round"/>
-                  <path d="M20 4 L24 14 L20 12 L16 14 Z" fill="#c9a84c"/>
-                  <circle cx="20" cy="20" r="3" fill="#2dd4bf"/>
-                </svg>
+              <div style={{ flexShrink: 0 }}>
+                <img src="/favicon.ico" alt="Caspian Routes" style={{ width: 44, height: 44, objectFit: "contain" }} />
               </div>
               <div>
                 <p style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 20, fontWeight: 600, lineHeight: 1.2 }}>Caspian Routes</p>
@@ -57,8 +53,8 @@ export default function Footer({ locale = "en" }: { locale?: string }) {
             <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24 }}>
               {[
                 { icon: MapPin, text: "Baku, Azerbaijan" },
-                { icon: Phone, text: "+994 XX XXX XX XX" },
-                { icon: Mail, text: "info@caspianroutes.az" },
+                { icon: Phone, text: "+994 55 279 36 73" },
+                { icon: Mail, text: "ealyarov55@gmail.com" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <Icon size={14} color="#2dd4bf" />
