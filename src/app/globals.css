@@ -91,3 +91,77 @@ h1, h2, h3, h4, h5 {
   transform: translateY(-4px);
   box-shadow: 0 20px 40px rgba(4, 46, 46, 0.2);
 }
+.prose-content h1,
+.prose-content h2,
+.prose-content h3 {
+  font-family: "Cormorant Garamond", serif;
+  color: white;
+  font-weight: 400;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.prose-content h1 { font-size: 2rem; }
+.prose-content h2 { font-size: 1.6rem; }
+.prose-content h3 { font-size: 1.3rem; }
+
+.prose-content p {
+  margin-bottom: 1.2rem;
+  color: rgba(255,255,255,0.8);
+}
+
+.prose-content a {
+  color: #2DD4BF;
+  text-decoration: underline;
+}
+
+.prose-content ul,
+.prose-content ol {
+  margin: 1rem 0 1.2rem 1.5rem;
+  color: rgba(255,255,255,0.8);
+}
+
+.prose-content li {
+  margin-bottom: 0.5rem;
+}
+
+.prose-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 15px;
+}
+
+.prose-content th,
+.prose-content td {
+  padding: 10px 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.8);
+  text-align: left;
+}
+
+.prose-content th {
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-weight: 500;
+}
+
+.prose-content blockquote {
+  border-left: 3px solid #2DD4BF;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+}
+
+.prose-content strong {
+  color: white;
+  font-weight: 500;
+}
+
+.prose-content hr {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  margin: 2rem 0;
+}
