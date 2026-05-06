@@ -4,8 +4,6 @@ module.exports = {
   generateRobotsTxt: true,
   defaultChangefreq: 'weekly',
   defaultPriority: 0.7,
-  locales: ['ru', 'en', 'az'],
-  defaultLocale: 'en',
   exclude: [
     '/admin',
     '/admin/*',
@@ -20,5 +18,12 @@ module.exports = {
     '/profile',
     '/auth',
     '/auth/*',
+    '/book',
+    '/book/*',
+    '/bookings',
+    '/bookings/*',
+    '/saved',
+    '/provider',
+    '/provider/*',
   ],
 }
