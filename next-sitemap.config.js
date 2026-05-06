@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://caspian-routes.com',
+  siteUrl: 'https://www.caspian-routes.com',
   generateRobotsTxt: true,
   defaultChangefreq: 'weekly',
   defaultPriority: 0.7,
