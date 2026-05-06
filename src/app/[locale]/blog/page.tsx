@@ -36,15 +36,26 @@ export default async function BlogPage({
   const { locale } = await params;
   const posts = getPosts(locale);
 
+  const title = locale === "ru"
+    ? "Путеводитель по Азербайджану"
+    : locale === "az"
+    ? "Azerbaycan Beledcisi"
+    : "Azerbaijan Travel Guide";
+
+  const subtitle = locale === "ru"
+    ? "Marshruty, sovety i rekomendacii dlya puteshestvennikov"
+    : "Routes, tips and recommendations for travelers";
+
+  const empty = locale === "ru" ? "Stati skoro poyavyatsya" : "Posts coming soon";
+
   return (
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "80px 24px" }}>
       <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2rem, 5vw, 3.5rem)", color: "white", fontWeight: 300, marginBottom: 16 }}>
-        {locale === "ru" ? "Путеводитель по Азербайджану" : locale === "az" ? "Azərbaycan Bələdçisi" : "Azerbaijan Travel Guide"}
+        {title}
       </h1>
       <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 16, marginBottom: 48 }}>
-        {locale === "ru" ? "Маршруты, советы и рекомендации для путешественников" : "Routes, tips and recommendations for travelers"}
+        {subtitle}
       </p>
-
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 }}>
         {posts.map((post) => (
           <Link key={post.slug} href={`/${locale}/blog/${post.slug}`} style={{ textDecoration: "none" }}>
@@ -75,9 +86,7 @@ export default async function BlogPage({
           </Link>
         ))}
         {posts.length === 0 && (
-          <p style={{ color: "rgba(255,255,255,0.4)" }}>
-            {locale === "ru" ? "Статьи скоро появятся" : "Posts coming soon"}
-          </p>
+          <p style={{ color: "rgba(255,255,255,0.4)" }}>{empty}</p>
         )}
       </div>
     </main>
