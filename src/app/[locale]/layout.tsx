@@ -38,13 +38,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     openGraph: {
       type: "website",
       locale: locale === "ru" ? "ru_RU" : locale === "az" ? "az_AZ" : "en_US",
-      url: `https://caspian-routes.vercel.app/${locale}`,
+      url: `https://caspian-routes.com/${locale}`,
       siteName: "Caspian Routes",
       title: meta.title,
       description: meta.description,
       images: [
         {
-          url: "https://caspian-routes.vercel.app/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg",
+          url: "https://caspian-routes.com/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg",
           width: 1200,
           height: 630,
           alt: "Caspian Routes - Azerbaijan Travel Planner",
@@ -55,14 +55,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       card: "summary_large_image",
       title: meta.title,
       description: meta.description,
-      images: ["https://caspian-routes.vercel.app/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg"],
+      images: ["https://caspian-routes.com/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg"],
     },
     alternates: {
-      canonical: `https://caspian-routes.vercel.app/${locale}`,
+      canonical: `https://caspian-routes.com/${locale}`,
       languages: {
-        "en": "https://caspian-routes.vercel.app/en",
-        "ru": "https://caspian-routes.vercel.app/ru",
-        "az": "https://caspian-routes.vercel.app/az",
+        "en": "https://caspian-routes.com/en",
+        "ru": "https://caspian-routes.com/ru",
+        "az": "https://caspian-routes.com/az",
       },
     },
   };
@@ -79,36 +79,34 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-    <head>
-  {/* Travelpayouts Drive */}
-  <script
-    dangerouslySetInnerHTML={{
-      __html: `(function(){var s=document.createElement("script");s.async=1;s.src='https://tpembars.com/NTI0ODE4.js?t=524818';document.head.appendChild(s);})();`,
-    }}
-  />
-  {/* GetYourGuide Analytics */}
-  <script
-    async
-    defer
-    src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
-    data-gyg-partner-id="YNRQ0A3"
-  />
-  <meta name="google-site-verification" content="R5qPPlNoG4TA-zvddXVnS47DsbLHO4oQ_yG-rr32RXw" />
-  <link rel="preload" as="image" href="/images/maxxja-baku-1997163_1920.jpg" />
-  <link rel="preload" as="image" href="/images/maxxja-baku-1997163_1920-opt.jpg" />
-  <link rel="preload" as="image" href="/images/pexels-zulfugarkarimov-33085326-opt.jpg" />
-  <link rel="preload" as="image" href="/images/pozziss-azerbaijan-4856054_1920-opt.jpg" />
-  <link rel="preload" as="image" href="/images/pexels-arzu-ibaeva-479643718-16976814-opt.jpg" />
-  <link rel="preload" as="image" href="/images/pexels-rahibyaqubov-17050728-opt.jpg" />
-  <link rel="preload" as="image" href="/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg" />
-  <link rel="preload" as="image" href="/images/pexels-zulfugarkarimov-34686330-opt.jpg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
-    rel="stylesheet"
-  />
-</head>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var s=document.createElement("script");s.async=1;s.src='https://tpembars.com/NTI0ODE4.js?t=524818';document.head.appendChild(s);})();`,
+          }}
+        />
+        <script
+          async
+          defer
+          src="https://widget.getyourguide.com/dist/pa.umd.production.min.js"
+          data-gyg-partner-id="YNRQ0A3"
+        />
+        <meta name="google-site-verification" content="R5qPPlNoG4TA-zvddXVnS47DsbLHO4oQ_yG-rr32RXw" />
+        <link rel="preload" as="image" href="/images/maxxja-baku-1997163_1920.jpg" />
+        <link rel="preload" as="image" href="/images/maxxja-baku-1997163_1920-opt.jpg" />
+        <link rel="preload" as="image" href="/images/pexels-zulfugarkarimov-33085326-opt.jpg" />
+        <link rel="preload" as="image" href="/images/pozziss-azerbaijan-4856054_1920-opt.jpg" />
+        <link rel="preload" as="image" href="/images/pexels-arzu-ibaeva-479643718-16976814-opt.jpg" />
+        <link rel="preload" as="image" href="/images/pexels-rahibyaqubov-17050728-opt.jpg" />
+        <link rel="preload" as="image" href="/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg" />
+        <link rel="preload" as="image" href="/images/pexels-zulfugarkarimov-34686330-opt.jpg" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body style={{ overflowX: "hidden", margin: 0, padding: 0, background: "#021a1a" }}>
         <AuthProvider>
           <CurrencyProvider>
@@ -117,7 +115,6 @@ export default async function LocaleLayout({
           </CurrencyProvider>
         </AuthProvider>
 
-        {/* WhatsApp кнопка */}
         
           href="https://wa.me/994552793673"
           target="_blank"
