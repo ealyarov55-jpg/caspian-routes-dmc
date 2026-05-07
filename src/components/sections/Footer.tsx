@@ -1,89 +1,94 @@
- "use client";
+"use client";
 
 import Link from "next/link";
-import { MapPin, Phone, Mail } from "lucide-react";
-import { getT } from "@/lib/i18n";
+
+const content = {
+  ru: {
+    description: "AI-планировщик путешествий по Азербайджану и Кавказу.",
+    guide: "Путеводитель",
+    links: [
+      { label: "Маршрут по Баку на 1 день", href: "/ru/blog/marshrut-baku-1-den" },
+      { label: "Маршрут по Баку на 3 дня", href: "/ru/blog/marshrut-baku-3-dnya" },
+      { label: "Гобустан из Баку", href: "/ru/blog/gobustan-kak-dobratsa" },
+      { label: "Шеки за 1 день", href: "/ru/blog/sheki-za-1-den" },
+    ],
+    planner: "Планировщик",
+    plannerLinks: [
+      { label: "Создать маршрут", href: "/ru/planner" },
+      { label: "Все статьи", href: "/ru/blog" },
+      { label: "Контакт", href: "/ru/contact" },
+    ],
+    copyright: "© 2026 Caspian Routes. Все права защищены.",
+    privacy: "Политика конфиденциальности",
+    terms: "Условия использования",
+  },
+  en: {
+    description: "AI travel planner for Azerbaijan and the Caucasus.",
+    guide: "Travel Guide",
+    links: [
+      { label: "Baku in 1 Day", href: "/en/blog/marshrut-baku-1-den" },
+      { label: "Baku in 3 Days", href: "/en/blog/marshrut-baku-3-dnya" },
+      { label: "Gobustan from Baku", href: "/en/blog/gobustan-kak-dobratsa" },
+      { label: "Sheki Day Trip", href: "/en/blog/sheki-za-1-den" },
+    ],
+    planner: "Planner",
+    plannerLinks: [
+      { label: "Create Itinerary", href: "/en/planner" },
+      { label: "All Articles", href: "/en/blog" },
+      { label: "Contact", href: "/en/contact" },
+    ],
+    copyright: "© 2026 Caspian Routes. All rights reserved.",
+    privacy: "Privacy Policy",
+    terms: "Terms of Service",
+  },
+  az: {
+    description: "Azərbaycan və Qafqaz üçün AI səyahət planlayıcısı.",
+    guide: "Bələdçi",
+    links: [
+      { label: "Bakı 1 gündə", href: "/az/blog/marshrut-baku-1-den" },
+      { label: "Bakı 3 gündə", href: "/az/blog/marshrut-baku-3-dnya" },
+      { label: "Qobustan", href: "/az/blog/gobustan-kak-dobratsa" },
+      { label: "Şəki 1 gündə", href: "/az/blog/sheki-za-1-den" },
+    ],
+    planner: "Planlayıcı",
+    plannerLinks: [
+      { label: "Marşrut Yarat", href: "/az/planner" },
+      { label: "Bütün məqalələr", href: "/az/blog" },
+      { label: "Əlaqə", href: "/az/contact" },
+    ],
+    copyright: "© 2026 Caspian Routes. Bütün hüquqlar qorunur.",
+    privacy: "Məxfilik Siyasəti",
+    terms: "İstifadə Şərtləri",
+  },
+};
 
 export default function Footer({ locale = "en" }: { locale?: string }) {
-  const t = getT(locale);
-
-  const links = {
-    company: [
-      { label: t.footer.about, href: `/${locale}/about` },
-      { label: t.footer.howItWorks, href: `/${locale}/#how-it-works` },
-      { label: t.footer.becomeGuide, href: `/${locale}/auth` },
-      { label: t.footer.contact, href: `/${locale}/contact` },
-    ],
-    routes: [
-      { label: "Baku City Tour", href: `/${locale}/routes/baku-city-tour` },
-      { label: "Absheron Peninsula", href: `/${locale}/routes/absheron-peninsula` },
-      { label: "Sheki & Silk Road", href: `/${locale}/routes/sheki-silk-road` },
-      { label: "Caspian Sea Cruise", href: `/${locale}/routes/caspian-sea-cruise` },
-    ],
-    legal: [
-      { label: t.footer.privacy, href: `/${locale}/privacy` },
-      { label: t.footer.terms, href: `/${locale}/terms` },
-    ],
-  };
-
-  const socials = [
-    { href: "https://instagram.com", svg: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg> },
-    { href: "https://facebook.com", svg: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> },
-    { href: "https://linkedin.com", svg: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg> },
-  ];
+  const lang = (locale === "ru" || locale === "az") ? locale : "en";
+  const t = content[lang];
 
   return (
-    <footer style={{ background: "#021a1a", fontFamily: "DM Sans, sans-serif" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 24px 48px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 32 }}>
+    <footer style={{ background: "#021a1a", borderTop: "1px solid rgba(255,255,255,0.06)", fontFamily: "DM Sans, sans-serif" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "64px 24px 48px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 40 }}>
 
           <div>
-            <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", marginBottom: 20 }}>
-              <div style={{ flexShrink: 0 }}>
-                <img src="/favicon.png" alt="Caspian Routes" style={{ width: 110, height: 110, objectFit: "contain" }} />
-              </div>
+            <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", marginBottom: 16 }}>
+              <img src="/favicon.png" alt="Caspian Routes" style={{ width: 40, height: 40, objectFit: "contain" }} />
               <div>
-                <p style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 20, fontWeight: 600, lineHeight: 1.2 }}>Caspian Routes</p>
-                <p style={{ color: "#2dd4bf", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.2em" }}>Travel Routes DMC</p>
+                <p style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>Caspian Routes</p>
+                <p style={{ color: "#2dd4bf", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.15em" }}>AI Travel Planner</p>
               </div>
             </Link>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.8, marginBottom: 24, maxWidth: 280 }}>
-              {t.footer.description}
+            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, lineHeight: 1.7, maxWidth: 240 }}>
+              {t.description}
             </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24 }}>
-              {[
-                { icon: MapPin, text: "Baku, Azerbaijan" },
-                { icon: Phone, text: "+994 55 279 36 73" },
-                { icon: Mail, text: "ealyarov55@gmail.com" },
-              ].map(({ icon: Icon, text }) => (
-                <div key={text} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <Icon size={14} color="#2dd4bf" />
-                  <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}>{text}</span>
-                </div>
-              ))}
-            </div>
-            <div style={{ display: "flex", gap: 12 }}>
-              {socials.map(({ href, svg }) => (
-                <a key={href} href={href} target="_blank" rel="noopener noreferrer"
-                  style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "rgba(45,212,191,0.15)")}
-                  onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
-                >
-                  {svg}
-                </a>
-              ))}
-            </div>
           </div>
 
           <div>
-            <h4 style={{ color: "white", fontSize: 14, fontWeight: 600, marginBottom: 20 }}>{t.footer.company}</h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {links.company.map(link => (
-                <Link key={link.label} href={link.href}
-                  style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textDecoration: "none" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "#2dd4bf")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.5)")}
-                >
+            <h4 style={{ color: "white", fontSize: 13, fontWeight: 500, marginBottom: 16, textTransform: "uppercase", letterSpacing: "0.05em" }}>{t.guide}</h4>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {t.links.map(link => (
+                <Link key={link.href} href={link.href} style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textDecoration: "none" }}>
                   {link.label}
                 </Link>
               ))}
@@ -91,29 +96,13 @@ export default function Footer({ locale = "en" }: { locale?: string }) {
           </div>
 
           <div>
-            <h4 style={{ color: "white", fontSize: 14, fontWeight: 600, marginBottom: 20 }}>{t.footer.routes}</h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {links.routes.map(link => (
-                <Link key={link.label} href={link.href}
-                  style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textDecoration: "none" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "#2dd4bf")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.5)")}
-                >
+            <h4 style={{ color: "white", fontSize: 13, fontWeight: 500, marginBottom: 16, textTransform: "uppercase", letterSpacing: "0.05em" }}>{t.planner}</h4>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {t.plannerLinks.map(link => (
+                <Link key={link.href} href={link.href} style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textDecoration: "none" }}>
                   {link.label}
                 </Link>
               ))}
-            </div>
-          </div>
-
-          <div>
-            <h4 style={{ color: "white", fontSize: 14, fontWeight: 600, marginBottom: 20 }}>{t.footer.stayUpdated}</h4>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>{t.footer.newsletter}</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <input type="email" placeholder="your@email.com"
-                style={{ padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "white", fontSize: 13, fontFamily: "DM Sans, sans-serif", outline: "none" }} />
-              <button style={{ padding: "10px 14px", borderRadius: 10, background: "linear-gradient(135deg, #0a7070, #0d9090)", color: "white", border: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "DM Sans, sans-serif" }}>
-                {t.footer.subscribe}
-              </button>
             </div>
           </div>
 
@@ -122,13 +111,10 @@ export default function Footer({ locale = "en" }: { locale?: string }) {
 
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "20px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>{t.footer.copyright}</p>
+          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>{t.copyright}</p>
           <div style={{ display: "flex", gap: 20 }}>
-            {links.legal.map(link => (
-              <Link key={link.label} href={link.href} style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textDecoration: "none" }}>
-                {link.label}
-              </Link>
-            ))}
+            <Link href={`/${locale}/privacy`} style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textDecoration: "none" }}>{t.privacy}</Link>
+            <Link href={`/${locale}/terms`} style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textDecoration: "none" }}>{t.terms}</Link>
           </div>
         </div>
       </div>
