@@ -72,7 +72,8 @@ export async function POST(req: NextRequest) {
     });
 
     const text = message.content[0].type === "text" ? message.content[0].text : "";
-    const plan = JSON.parse(text);
+    const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+const plan = JSON.parse(clean);
 
     return NextResponse.json({ plan });
   } catch (error) {
