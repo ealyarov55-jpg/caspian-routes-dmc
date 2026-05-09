@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
         <!DOCTYPE html>
         <html>
         <head><meta charset="utf-8"></head>
-        <body style="margin:0;padding:0;background:#021a1a;font-family:Arial,sans-serif;">
+        <body style="margin:0;padding:0;background:#f0f4f4;font-family:Arial,sans-serif;">
           <div style="max-width:560px;margin:40px auto;background:#042e2e;border-radius:20px;overflow:hidden;">
             
             <div style="background:linear-gradient(135deg,#042e2e 0%,#0a7070 100%);padding:40px;text-align:center;">
