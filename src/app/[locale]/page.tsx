@@ -93,31 +93,103 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <Navbar locale={locale} />
 
       {/* Hero */}
-      <section style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/images/maxxja-baku-1997163_1920-opt.jpg')", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.4 }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(2,26,26,0.95) 0%, rgba(4,46,46,0.75) 50%, rgba(2,26,26,0.3) 100%)" }} />
-        <div style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "96px 24px 64px", width: "100%" }}>
-          <div style={{ maxWidth: 680 }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(45,212,191,0.15)", border: "1px solid rgba(45,212,191,0.4)", borderRadius: 999, padding: "6px 16px", marginBottom: 24 }}>
-              <span style={{ color: "#2DD4BF", fontSize: 13, fontWeight: 500 }}>{t.badge}</span>
-            </div>
-            <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2.8rem, 6vw, 5rem)", color: "white", fontWeight: 300, lineHeight: 1.1, marginBottom: 24, whiteSpace: "pre-line" }}>
-              {t.headline}
-            </h1>
-            <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 18, lineHeight: 1.7, marginBottom: 40, maxWidth: 520 }}>
-              {t.sub}
-            </p>
-            <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-              <Link href={`/${locale}/planner`} style={{ background: "#0a7070", color: "white", padding: "14px 32px", borderRadius: 8, fontWeight: 500, fontSize: 15, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8 }}>
-                {t.cta} →
-              </Link>
-              <Link href={`/${locale}/blog`} style={{ background: "transparent", color: "white", border: "1.5px solid rgba(255,255,255,0.5)", padding: "14px 32px", borderRadius: 8, fontWeight: 500, fontSize: 15, textDecoration: "none" }}>
-                {t.cta2}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+<section style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
+  <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/images/baku-hero.jpg')", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.5 }} />
+  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(2,26,26,0.97) 0%, rgba(2,26,26,0.85) 40%, rgba(2,26,26,0.3) 100%)" }} />
+  <div style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "96px 24px 64px", width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
+    
+    {/* Left: Text */}
+    <div>
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(45,212,191,0.15)", border: "1px solid rgba(45,212,191,0.4)", borderRadius: 999, padding: "6px 16px", marginBottom: 24 }}>
+        <span style={{ color: "#2DD4BF", fontSize: 13, fontWeight: 500 }}>{t.badge}</span>
+      </div>
+      <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2.5rem, 5vw, 4.5rem)", color: "white", fontWeight: 300, lineHeight: 1.1, marginBottom: 24, whiteSpace: "pre-line" }}>
+        {t.headline}
+      </h1>
+      <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 18, lineHeight: 1.7, marginBottom: 40, maxWidth: 480 }}>
+        {t.sub}
+      </p>
+    </div>
+
+    {/* Right: Card with animated buttons */}
+    <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "40px 36px", backdropFilter: "blur(12px)" }}>
+      <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
+        {locale === "ru" ? "Начни прямо сейчас" : "Start right now"}
+      </p>
+      <p style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: "1.6rem", fontWeight: 300, lineHeight: 1.3, marginBottom: 32 }}>
+        {locale === "ru" ? "Куда хочешь\nотправиться?" : "Where do you\nwant to go?"}
+      </p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <style>{`
+          .hero-btn-primary {
+            padding: 16px 28px;
+            background: linear-gradient(135deg, #0a7070, #0d9090);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: DM Sans, sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+          }
+          .hero-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(10,112,112,0.5);
+            background: linear-gradient(135deg, #0d9090, #10b0b0);
+          }
+          .hero-btn-primary:active {
+            transform: translateY(-1px);
+          }
+          .hero-btn-secondary {
+            padding: 16px 28px;
+            background: transparent;
+            color: white;
+            border: 1.5px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: DM Sans, sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+          }
+          .hero-btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.08);
+          }
+          .hero-btn-secondary:active {
+            transform: translateY(-1px);
+          }
+          @media (max-width: 767px) {
+            .hero-grid { grid-template-columns: 1fr !important; }
+            .hero-card { display: none !important; }
+          }
+        `}</style>
+        <Link href={`/${locale}/planner`} className="hero-btn-primary">
+          ✨ {t.cta}
+        </Link>
+        <Link href={`/${locale}/blog`} className="hero-btn-secondary">
+          📖 {t.cta2}
+        </Link>
+      </div>
+      <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textAlign: "center", marginTop: 20 }}>
+        {locale === "ru" ? "Бесплатно · Без регистрации · За 2 минуты" : "Free · No signup · 2 minutes"}
+      </p>
+    </div>
+  </div>
+</section>
 
       {/* Why us */}
       <section style={{ maxWidth: 1280, margin: "0 auto", padding: "80px 24px" }}>
