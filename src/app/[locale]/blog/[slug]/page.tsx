@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
-
+import remarkGfm from "remark-gfm";
 const BASE_URL = "https://www.caspian-routes.com";
 
 function getPost(locale: string, slug: string) {
@@ -220,7 +220,7 @@ export default async function PostPage({
 
         {/* Контент */}
         <div className="prose-content">
-          <MDXRemote source={content} components={mdxComponents} />
+          <MDXRemote source={content} components={mdxComponents} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
         </div>
 
         {/* CTA в конце статьи всегда */}
