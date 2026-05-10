@@ -161,12 +161,14 @@ export default async function PostPage({
 
       {/* Hero фото */}
       {data.image && (
-        <div style={{ width: "100%", height: 420, overflow: "hidden", marginTop: 64 }}>
-          <img
-            src={data.image}
-            alt={data.title}
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-          />
+        <div style={{ maxWidth: 780, margin: "80px auto 0", padding: "0 24px" }}>
+          <div style={{ borderRadius: 12, overflow: "hidden", height: 400 }}>
+            <img
+              src={data.image}
+              alt={data.title}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
+          </div>
         </div>
       )}
 
