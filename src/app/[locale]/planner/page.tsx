@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
 
@@ -107,8 +107,8 @@ type Plan = {
   car_rental: { tip: string; url: string };
 };
 
-export default function PlannerPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function PlannerPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = use(params);
   const lang = (locale === "ru" || locale === "az") ? locale : "en";
   const t = content[lang];
 
