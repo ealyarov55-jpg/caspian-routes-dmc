@@ -66,9 +66,21 @@ const content = {
 };
 
 const blogPosts = [
-  { slug: "marshrut-baku-3-dnya", title: { ru: "Маршрут по Баку на 3 дня", en: "Baku 3-Day Itinerary", az: "Bakı 3 günlük marşrut" }, image: "/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg" },
-  { slug: "gobustan-kak-dobratsa", title: { ru: "Гобустан из Баку", en: "Gobustan from Baku", az: "Bakıdan Qobustan" }, image: "/images/pozziss-azerbaijan-4856054_1920-opt.jpg" },
-  { slug: "baku-letom", title: { ru: "Баку летом", en: "Baku in Summer", az: "Yay Bakısı" }, image: "/images/pexels-zulfugarkarimov-33085326-opt.jpg" },
+  {
+    slug: { ru: "marshrut-baku-3-dnya", en: "baku-3-days", az: "marshrut-baku-3-dnya" },
+    title: { ru: "Маршрут по Баку на 3 дня", en: "Baku 3-Day Itinerary", az: "Bakı 3 günlük marşrut" },
+    image: "/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg"
+  },
+  {
+    slug: { ru: "gobustan-kak-dobratsa", en: "gobustan-from-baku", az: "gobustan-kak-dobratsa" },
+    title: { ru: "Гобустан из Баку", en: "Gobustan from Baku", az: "Bakıdan Qobustan" },
+    image: "/images/pozziss-azerbaijan-4856054_1920-opt.jpg"
+  },
+  {
+    slug: { ru: "baku-letom", en: "baku-summer", az: "baku-letom" },
+    title: { ru: "Баку летом", en: "Baku in Summer", az: "Yay Bakısı" },
+    image: "/images/pexels-zulfugarkarimov-33085326-opt.jpg"
+  },
 ];
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
@@ -235,7 +247,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
           {blogPosts.map((post) => (
-            <Link key={post.slug} href={`/${locale}/blog/${post.slug}`} style={{ textDecoration: "none" }}>
+            <Link key={post.slug[lang]} href={`/${locale}/blog/${post.slug[lang]}`} style={{ textDecoration: "none" }}>
               <article style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, overflow: "hidden" }}>
                 <div style={{ height: 200, overflow: "hidden" }}>
                   <img src={post.image} alt={post.title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
