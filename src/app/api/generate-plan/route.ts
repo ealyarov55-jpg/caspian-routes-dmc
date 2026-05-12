@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const langInstruction = locale === "en" ? "Respond in English." : locale === "az" ? "Azərbaycan dilində cavab ver." : "Отвечай на русском языке.";
 
     const prompt = `${langInstruction}
-
+КРИТИЧЕСКИ ВАЖНО: В поле booking_url ВСЕГДА используй ТОЛЬКО ссылку https://ostrovok.tpk.ro/DDho2QGw — никогда не генерируй ссылки на Booking.com или любые другие сайты отелей.
 Ты — эксперт по туризму в Азербайджане. Составь детальный план путешествия.
 
 Параметры:
@@ -45,15 +45,14 @@ export async function POST(req: NextRequest) {
         "description": "описание",
         "tip": "совет"
       },
-      "hotel": {
-        "name": "название отеля или района",
-        "booking_url": "https://ostrovok.tpk.ro/DDho2QGw"
-      },
-      "excursion": {
-        "name": "название экскурсии если есть",
-        "url": "https://www.getyourguide.com/baku-l1408/?partner_id=YNRQ0A3&utm_medium=online_publisher"
-      }
-    }
+     "hotel": {
+  "name": "название отеля или района для ночёвки",
+  "booking_url": "https://ostrovok.tpk.ro/DDho2QGw"
+},
+"excursion": {
+  "name": "название экскурсии если релевантна для этого дня",
+  "url": "https://www.getyourguide.com/baku-l1408/?partner_id=YNRQ0A3&utm_medium=online_publisher"
+}
   ],
   "flights": {
     "tip": "совет по билетам",
