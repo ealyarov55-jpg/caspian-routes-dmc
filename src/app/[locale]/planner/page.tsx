@@ -273,9 +273,9 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
   };
 
   const getFromString = () => {
-    const countryData = GEO_DATA.countries[continent]?.find(c => c.id === country);
-    return `${countryData?.flag || ""} ${countryData?.label[lang] || country} — ${city}`;
-  };
+  const countryData = GEO_DATA.countries[continent]?.find(c => c.id === country);
+  return `${countryData?.label[lang] || country} — ${city}`;
+};
 
   const generatePlan = async () => {
     setLoading(true);
@@ -405,7 +405,13 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                     <span style={labelStyle}>{t.selectCountry}</span>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                       {GEO_DATA.countries[continent].map(c => (
-                        <button key={c.id} className="planner-btn" onClick={() => setCountry(c.id)}>{c.flag} {c.label[lang]}</button>
+                        <button key={c.id} className="planner-btn" onClick={() => setCountry(c.id)} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+  {c.id.length === 2 && !["asia_other", "eu_other", "am_other", "other"].includes(c.id)
+    ? <img src={`https://flagcdn.com/20x15/${c.id}.png`} width={20} height={15} alt={c.id} style={{ borderRadius: 2 }} />
+    : <span>{c.flag}</span>
+  }
+  {c.label[lang]}
+</button>
                       ))}
                     </div>
                   </>
