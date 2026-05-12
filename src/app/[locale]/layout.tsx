@@ -22,10 +22,15 @@ const metadata_translations = {
   },
 };
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
   const { locale } = await params;
   const lang = (locale === "ru" || locale === "az") ? locale : "en";
   const meta = metadata_translations[lang as keyof typeof metadata_translations];
+  const BASE_URL = "https://www.caspian-routes.com";
 
   return {
     title: meta.title,
@@ -38,13 +43,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     openGraph: {
       type: "website",
       locale: locale === "ru" ? "ru_RU" : locale === "az" ? "az_AZ" : "en_US",
-      url: `https://caspian-routes.com/${locale}`,
+      url: `${BASE_URL}/${locale}`,
       siteName: "Caspian Routes",
       title: meta.title,
       description: meta.description,
       images: [
         {
-          url: "https://caspian-routes.com/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg",
+          url: `${BASE_URL}/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg`,
           width: 1200,
           height: 630,
           alt: "Caspian Routes - Azerbaijan Travel Planner",
@@ -55,14 +60,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       card: "summary_large_image",
       title: meta.title,
       description: meta.description,
-      images: ["https://caspian-routes.com/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg"],
+      images: [`${BASE_URL}/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg`],
     },
     alternates: {
-      canonical: `https://caspian-routes.com/${locale}`,
+      canonical: `${BASE_URL}/${locale}`,
       languages: {
-        "en": "https://caspian-routes.com/en",
-        "ru": "https://caspian-routes.com/ru",
-        "az": "https://caspian-routes.com/az",
+        en: `${BASE_URL}/en`,
+        ru: `${BASE_URL}/ru`,
+        az: `${BASE_URL}/az`,
       },
     },
   };
@@ -77,31 +82,10 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
 
-  const whatsappStyle = {
-    position: "fixed" as const,
-    bottom: 24,
-    right: 24,
-    zIndex: 999,
-    width: 56,
-    height: 56,
-    borderRadius: "50%",
-    background: "#25D366",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    boxShadow: "0 8px 24px rgba(37,211,102,0.4)",
-    textDecoration: "none",
-    transition: "all 0.3s",
-  };
-
   return (
     <html lang={locale}>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){var s=document.createElement("script");s.async=1;s.src='https://tpembars.com/NTI0ODE4.js?t=524818';document.head.appendChild(s);})();`,
-          }}
-        />
+        {/* Travelpayouts виджет удалён */}
         <script
           async
           defer
