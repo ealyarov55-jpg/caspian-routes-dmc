@@ -447,54 +447,109 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
         )}
 
         {!loading && step === 5 && plan && (
-          <div>
-            <div style={{ textAlign: "center", marginBottom: 40 }}>
-              <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 4vw, 2.8rem)", color: "white", fontWeight: 300, marginBottom: 12 }}>{plan.plan_title}</h1>
-              <p style={{ color: "#2DD4BF", fontSize: 16 }}>{plan.total_budget_estimate}</p>
-            </div>
+  <div>
+    <div style={{ textAlign: "center", marginBottom: 48 }}>
+      <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(45,212,191,0.1)", border: "2px solid rgba(45,212,191,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 28 }}>
+        🗺️
+      </div>
+      <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 4vw, 2.8rem)", color: "white", fontWeight: 300, marginBottom: 12 }}>{plan.plan_title}</h1>
+      <p style={{ color: "#2DD4BF", fontSize: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.total_budget_estimate}</p>
+    </div>
 
-            {plan.days.map((day) => (
-              <div key={day.day} style={{ ...cardStyle, marginBottom: 24 }}>
-                <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.5rem", color: "white", fontWeight: 400, marginBottom: 20 }}>
-                  {lang === "ru" ? `День ${day.day}` : lang === "az" ? `Gün ${day.day}` : `Day ${day.day}`}: {day.title}
-                </h2>
-                {[{ label: t.morning, data: day.morning }, { label: t.afternoon, data: day.afternoon }, { label: t.evening, data: day.evening }].map(({ label, data }) => (
-                  <div key={label} style={{ marginBottom: 16, paddingBottom: 16, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                    <p style={{ color: "#2DD4BF", fontSize: 12, fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>{label}</p>
-                    <p style={{ color: "white", fontSize: 15, fontWeight: 500, marginBottom: 4 }}>{data.activity}</p>
-                    <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, lineHeight: 1.6, marginBottom: 4 }}>{data.description}</p>
-                    {data.tip && <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, fontStyle: "italic" }}>💡 {data.tip}</p>}
+    {plan.days.map((day) => (
+      <div key={day.day} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, marginBottom: 24, overflow: "hidden" }}>
+
+        {/* Заголовок дня */}
+        <div style={{ background: "linear-gradient(135deg, rgba(10,112,112,0.3), rgba(13,144,144,0.15))", borderBottom: "1px solid rgba(255,255,255,0.08)", padding: "18px 28px", display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(45,212,191,0.2)", border: "1px solid rgba(45,212,191,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 600, color: "#2DD4BF", fontFamily: "DM Sans, sans-serif", flexShrink: 0 }}>
+            {day.day}
+          </div>
+          <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.4rem", color: "white", fontWeight: 400, margin: 0 }}>
+            {lang === "ru" ? `День ${day.day}` : lang === "az" ? `Gün ${day.day}` : `Day ${day.day}`}: {day.title}
+          </h2>
+        </div>
+
+        <div style={{ padding: "20px 28px" }}>
+          {[
+            { label: t.morning, data: day.morning, icon: "🌅", color: "#f59e0b" },
+            { label: t.afternoon, data: day.afternoon, icon: "☀️", color: "#10b981" },
+            { label: t.evening, data: day.evening, icon: "🌙", color: "#818cf8" },
+          ].map(({ label, data, icon, color }, idx, arr) => (
+            <div key={label} style={{ marginBottom: idx < arr.length - 1 ? 0 : 0 }}>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 14, paddingBottom: 20 }}>
+                {/* Иконка + линия */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: `rgba(255,255,255,0.06)`, border: `1px solid rgba(255,255,255,0.1)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>
+                    {icon}
                   </div>
-                ))}
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
-                  {day.hotel?.name && <a href={day.hotel.booking_url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">🏨 {day.hotel.name} — {t.bookHotel}</a>}
-                  {day.excursion?.name && <a href={day.excursion.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">🗺️ {day.excursion.name} — {t.bookExcursion}</a>}
+                  {idx < arr.length - 1 && (
+                    <div style={{ width: 1, flex: 1, minHeight: 20, background: "rgba(255,255,255,0.08)", marginTop: 6 }} />
+                  )}
+                </div>
+
+                {/* Контент */}
+                <div style={{ flex: 1, paddingBottom: idx < arr.length - 1 ? 16 : 0 }}>
+                  <p style={{ color, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, fontFamily: "DM Sans, sans-serif" }}>{label}</p>
+                  <p style={{ color: "white", fontSize: 15, fontWeight: 500, marginBottom: 6, fontFamily: "DM Sans, sans-serif" }}>{data.activity}</p>
+                  <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, lineHeight: 1.7, marginBottom: data.tip ? 8 : 0, fontFamily: "DM Sans, sans-serif" }}>{data.description}</p>
+                  {data.tip && (
+                    <div style={{ display: "inline-flex", alignItems: "flex-start", gap: 6, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "6px 12px" }}>
+                      <span style={{ fontSize: 13 }}>💡</span>
+                      <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13, fontStyle: "italic", margin: 0, fontFamily: "DM Sans, sans-serif", lineHeight: 1.5 }}>{data.tip}</p>
+                    </div>
+                  )}
                 </div>
               </div>
-            ))}
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 32 }}>
-              {plan.flights && (
-                <div style={cardStyle}>
-                  <p style={{ color: "#2DD4BF", fontSize: 13, fontWeight: 500, marginBottom: 8 }}>✈️ {t.flights}</p>
-                  <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.6, marginBottom: 12 }}>{plan.flights.tip}</p>
-                  <a href={plan.flights.url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">{t.bookFlight}</a>
-                </div>
-              )}
-              {plan.car_rental && (
-                <div style={cardStyle}>
-                  <p style={{ color: "#c9a84c", fontSize: 13, fontWeight: 500, marginBottom: 8 }}>🚗 {t.carRental}</p>
-                  <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.6, marginBottom: 12 }}>{plan.car_rental.tip}</p>
-                  <a href={plan.car_rental.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">{t.bookCar}</a>
-                </div>
+              {/* Разделитель */}
+              {idx < arr.length - 1 && (
+                <div style={{ height: 1, background: "rgba(255,255,255,0.05)", margin: "0 0 20px 50px" }} />
               )}
             </div>
+          ))}
 
-            <div style={{ textAlign: "center" }}>
-              <button className="restart-btn" onClick={resetAll}>{t.restart}</button>
+          {/* Партнёрские кнопки */}
+          {(day.hotel?.name || day.excursion?.name) && (
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8, paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              {day.hotel?.name && (
+                <a href={day.hotel.booking_url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">
+                  🏨 {day.hotel.name} — {t.bookHotel}
+                </a>
+              )}
+              {day.excursion?.name && (
+                <a href={day.excursion.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">
+                  🗺️ {day.excursion.name} — {t.bookExcursion}
+                </a>
+              )}
             </div>
-          </div>
-        )}
+          )}
+        </div>
+      </div>
+    ))}
+
+    {/* Авиабилеты и аренда */}
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 32 }}>
+      {plan.flights && (
+        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "20px 24px" }}>
+          <p style={{ color: "#2DD4BF", fontSize: 13, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>✈️ {t.flights}</p>
+          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.6, marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>{plan.flights.tip}</p>
+          <a href={plan.flights.url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">{t.bookFlight}</a>
+        </div>
+      )}
+      {plan.car_rental && (
+        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "20px 24px" }}>
+          <p style={{ color: "#c9a84c", fontSize: 13, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>🚗 {t.carRental}</p>
+          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.6, marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>{plan.car_rental.tip}</p>
+          <a href={plan.car_rental.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">{t.bookCar}</a>
+        </div>
+      )}
+    </div>
+
+    <div style={{ textAlign: "center" }}>
+      <button className="restart-btn" onClick={resetAll}>{t.restart}</button>
+    </div>
+  </div>
+)}
       </div>
       <Footer locale={locale} />
     </main>
