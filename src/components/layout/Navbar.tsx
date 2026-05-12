@@ -20,9 +20,9 @@ const navContent = {
 function FlagImg({ code, size = 20 }: { code: string; size?: number }) {
   return (
     <img
-      src={`https://flagcdn.com/${Math.round(size * 1.33)}x${size}/${code}.png`}
-      width={Math.round(size * 1.33)}
-      height={size}
+      src={`https://flagcdn.com/w20/${code}.png`}
+      width={20}
+      height={15}
       alt={code}
       style={{ borderRadius: 2, display: "inline-block", verticalAlign: "middle" }}
     />
