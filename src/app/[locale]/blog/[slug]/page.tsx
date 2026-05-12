@@ -8,6 +8,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
 import remarkGfm from "remark-gfm";
+
 const BASE_URL = "https://www.caspian-routes.com";
 
 function getPost(locale: string, slug: string) {
@@ -17,6 +18,32 @@ function getPost(locale: string, slug: string) {
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
   return { data, content };
+}
+
+// Извлекает H2 заголовки и следующий за ними абзац для FAQPage schema
+function extractFAQ(content: string): Array<{ question: string; answer: string }> {
+  const lines = content.split("\n");
+  const faq: Array<{ question: string; answer: string }> = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line.startsWith("## ")) {
+      const question = line.replace(/^## /, "").trim();
+      // Ищем следующий непустой абзац
+      let answer = "";
+      for (let j = i + 1; j < lines.length && j < i + 8; j++) {
+        const next = lines[j].trim();
+        if (next && !next.startsWith("#") && !next.startsWith(">") && !next.startsWith("-") && !next.startsWith("|")) {
+          answer = next.replace(/\*\*/g, "").replace(/\*/g, "").slice(0, 200);
+          break;
+        }
+      }
+      if (question && answer) {
+        faq.push({ question, answer });
+      }
+    }
+  }
+  return faq.slice(0, 8); // максимум 8 вопросов
 }
 
 export async function generateMetadata({
@@ -52,21 +79,8 @@ export async function generateMetadata({
   };
 }
 
-// MDX компоненты — партнёрские карточки и CTA вставляются прямо в .mdx файлы
-function PartnerCard({
-  icon,
-  label,
-  title,
-  desc,
-  btnText,
-  href,
-}: {
-  icon: string;
-  label: string;
-  title: string;
-  desc: string;
-  btnText: string;
-  href: string;
+function PartnerCard({ icon, label, title, desc, btnText, href }: {
+  icon: string; label: string; title: string; desc: string; btnText: string; href: string;
 }) {
   return (
     <div className="partner-card">
@@ -89,10 +103,7 @@ function CTABlock({
   btnText = "Создать маршрут с ИИ",
   locale = "ru",
 }: {
-  title?: string;
-  desc?: string;
-  btnText?: string;
-  locale?: string;
+  title?: string; desc?: string; btnText?: string; locale?: string;
 }) {
   return (
     <div className="cta-block">
@@ -113,20 +124,13 @@ function Checklist({ items }: { items: string[] }) {
   return (
     <div className="checklist">
       {items.map((item, i) => (
-        <div key={i} className="checklist-item">
-          {item}
-        </div>
+        <div key={i} className="checklist-item">{item}</div>
       ))}
     </div>
   );
 }
 
-const mdxComponents = {
-  PartnerCard,
-  CTABlock,
-  InfoBar,
-  Checklist,
-};
+const mdxComponents = { PartnerCard, CTABlock, InfoBar, Checklist };
 
 export default async function PostPage({
   params,
@@ -138,7 +142,7 @@ export default async function PostPage({
   if (!post) notFound();
   const { data, content } = post;
 
-  const jsonLd = {
+  const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: data.title,
@@ -151,13 +155,34 @@ export default async function PostPage({
     url: `${BASE_URL}/${locale}/blog/${slug}`,
   };
 
+  const faqItems = extractFAQ(content);
+  const faqSchema = faqItems.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ question, answer }) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: answer,
+      },
+    })),
+  } : null;
+
   return (
     <main style={{ background: "#021a1a", minHeight: "100vh" }}>
       <Navbar locale={locale} />
+
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
 
       {/* Hero фото */}
       {data.image && (
@@ -174,7 +199,6 @@ export default async function PostPage({
 
       <article style={{ maxWidth: 780, margin: "0 auto", padding: "48px 24px 80px" }}>
 
-        {/* Мета */}
         <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginBottom: 12 }}>
           <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, margin: 0 }}>
             {new Date(data.date).toLocaleDateString(
@@ -184,32 +208,17 @@ export default async function PostPage({
           </p>
           {data.tag && <span className="meta-badge">{data.tag}</span>}
           {data.updated && (
-            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>
-              · Обновлено: {data.updated}
-            </span>
+            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>· Обновлено: {data.updated}</span>
           )}
           {data.currency && (
-            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>
-              · {data.currency}
-            </span>
+            <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>· {data.currency}</span>
           )}
         </div>
 
-        {/* Заголовок */}
-        <h1
-          style={{
-            fontFamily: "Cormorant Garamond, serif",
-            fontSize: "clamp(2rem, 5vw, 3rem)",
-            color: "white",
-            fontWeight: 300,
-            marginBottom: 24,
-            lineHeight: 1.2,
-          }}
-        >
+        <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2rem, 5vw, 3rem)", color: "white", fontWeight: 300, marginBottom: 24, lineHeight: 1.2 }}>
           {data.title}
         </h1>
 
-        {/* Info bar из frontmatter если есть */}
         {data.infobar && (
           <div className="info-bar">
             {data.infobar.map((item: string, i: number) => (
@@ -218,14 +227,11 @@ export default async function PostPage({
           </div>
         )}
 
-        {/* Контент */}
         <div className="prose-content">
           <MDXRemote source={content} components={mdxComponents} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
         </div>
 
-        {/* CTA в конце статьи всегда */}
         <CTABlock locale={locale} />
-
       </article>
 
       <Footer locale={locale} />
