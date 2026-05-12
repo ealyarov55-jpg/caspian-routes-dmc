@@ -1,24 +1,32 @@
 "use client";
 
-import { useState, use, useEffect } from "react";
+import { useState, use, useEffect, useRef } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
 
 const content = {
   ru: {
     title: "AI-планировщик маршрутов",
-    subtitle: "Ответь на 5 вопросов — получи готовый маршрут по Азербайджану",
+    subtitle: "Ответь на 7 вопросов — получи готовый маршрут по Азербайджану",
     step1: "Сколько дней?",
     step2: "Состав группы",
     step3: "Бюджет на человека",
     step4: "Интересы",
-    step5: "Откуда летишь?",
+    step5: "Питание и аллергии",
+    step6: "Темп поездки",
+    step7: "Откуда летишь?",
     generate: "Создать маршрут →",
     generating: "Создаём маршрут...",
     days: ["3 дня", "5 дней", "7 дней", "10+ дней"],
     groups: ["Один", "Пара", "Семья с детьми", "Друзья"],
     budgets: ["$300-500", "$500-1000", "$1000-2000", "$2000+"],
     interests: ["История и культура", "Природа", "Гастрономия", "Фото", "Активный отдых", "Шопинг"],
+    diets: ["Нет ограничений", "Вегетарианец", "Веган", "Халяль", "Без глютена", "Без лактозы", "Аллергия на морепродукты", "Аллергия на орехи"],
+    paces: [
+      { id: "relaxed", label: "🌿 Расслабленный", desc: "2-3 активности в день, много отдыха" },
+      { id: "medium", label: "⚡ Средний", desc: "Баланс активностей и отдыха" },
+      { id: "intensive", label: "🔥 Насыщенный", desc: "Максимум впечатлений, ранние подъёмы" },
+    ],
     morning: "Утро",
     afternoon: "День",
     evening: "Вечер",
@@ -29,12 +37,14 @@ const content = {
     carRental: "Аренда авто",
     bookCar: "Найти авто →",
     restart: "Создать новый маршрут",
+    downloadPdf: "Скачать маршрут PDF",
     selectRegion: "Выбери регион:",
     selectCountry: "Выбери страну:",
     selectCity: "Выбери город:",
     back: "← Назад",
     change: "Изменить",
     next: "Далее →",
+    skip: "Пропустить →",
     loadingSteps: [
       "🗺️ Анализируем твои интересы...",
       "🏨 Подбираем лучшие отели...",
@@ -46,18 +56,26 @@ const content = {
   },
   en: {
     title: "AI Trip Planner",
-    subtitle: "Answer 5 questions — get a personalized Azerbaijan itinerary",
+    subtitle: "Answer 7 questions — get a personalized Azerbaijan itinerary",
     step1: "How many days?",
     step2: "Group type",
     step3: "Budget per person",
     step4: "Interests",
-    step5: "Flying from?",
+    step5: "Diet & Allergies",
+    step6: "Travel pace",
+    step7: "Flying from?",
     generate: "Create Itinerary →",
     generating: "Creating itinerary...",
     days: ["3 days", "5 days", "7 days", "10+ days"],
     groups: ["Solo", "Couple", "Family with kids", "Friends"],
     budgets: ["$300-500", "$500-1000", "$1000-2000", "$2000+"],
     interests: ["History & Culture", "Nature", "Food", "Photography", "Adventure", "Shopping"],
+    diets: ["No restrictions", "Vegetarian", "Vegan", "Halal", "Gluten-free", "Lactose-free", "Seafood allergy", "Nut allergy"],
+    paces: [
+      { id: "relaxed", label: "🌿 Relaxed", desc: "2-3 activities per day, lots of rest" },
+      { id: "medium", label: "⚡ Moderate", desc: "Balance of activities and rest" },
+      { id: "intensive", label: "🔥 Intensive", desc: "Maximum experiences, early starts" },
+    ],
     morning: "Morning",
     afternoon: "Afternoon",
     evening: "Evening",
@@ -68,12 +86,14 @@ const content = {
     carRental: "Car rental",
     bookCar: "Find car →",
     restart: "Create new itinerary",
+    downloadPdf: "Download PDF itinerary",
     selectRegion: "Select region:",
     selectCountry: "Select country:",
     selectCity: "Select city:",
     back: "← Back",
     change: "Change",
     next: "Next →",
+    skip: "Skip →",
     loadingSteps: [
       "🗺️ Analyzing your interests...",
       "🏨 Finding the best hotels...",
@@ -85,18 +105,26 @@ const content = {
   },
   az: {
     title: "AI Marşrut Planlayıcısı",
-    subtitle: "5 suala cavab ver — Azərbaycana fərdi marşrut al",
+    subtitle: "7 suala cavab ver — Azərbaycana fərdi marşrut al",
     step1: "Neçə gün?",
     step2: "Qrup növü",
     step3: "Adam başına büdcə",
     step4: "Maraqlar",
-    step5: "Haradan uçursunuz?",
+    step5: "Qida və allergiyalar",
+    step6: "Səyahət tempi",
+    step7: "Haradan uçursunuz?",
     generate: "Marşrut Yarat →",
     generating: "Marşrut yaradılır...",
     days: ["3 gün", "5 gün", "7 gün", "10+ gün"],
     groups: ["Tək", "Cütlük", "Uşaqlı ailə", "Dostlar"],
     budgets: ["$300-500", "$500-1000", "$1000-2000", "$2000+"],
     interests: ["Tarix və mədəniyyət", "Təbiət", "Qastronomiya", "Foto", "Aktiv istirahət", "Alış-veriş"],
+    diets: ["Məhdudiyyət yoxdur", "Vegetarian", "Vegan", "Halal", "Qlütensiz", "Laktosasız", "Dəniz məhsulları allergiyası", "Qoz allergiyası"],
+    paces: [
+      { id: "relaxed", label: "🌿 Rahat", desc: "Gündə 2-3 fəaliyyət, çox istirahət" },
+      { id: "medium", label: "⚡ Orta", desc: "Fəaliyyət və istirahət balansı" },
+      { id: "intensive", label: "🔥 Intensiv", desc: "Maksimum təəssürat, erkən oyanış" },
+    ],
     morning: "Səhər",
     afternoon: "Gündüz",
     evening: "Axşam",
@@ -107,12 +135,14 @@ const content = {
     carRental: "Avtomobil icarəsi",
     bookCar: "Avtomobil tap →",
     restart: "Yeni marşrut yarat",
+    downloadPdf: "PDF marşrut yüklə",
     selectRegion: "Region seç:",
     selectCountry: "Ölkə seç:",
     selectCity: "Şəhər seç:",
     back: "← Geri",
     change: "Dəyiş",
     next: "Növbəti →",
+    skip: "Keç →",
     loadingSteps: [
       "🗺️ Maraqlarınız analiz edilir...",
       "🏨 Ən yaxşı otellər axtarılır...",
@@ -261,21 +291,29 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
   const [group, setGroup] = useState("");
   const [budget, setBudget] = useState("");
   const [interests, setInterests] = useState<string[]>([]);
+  const [diet, setDiet] = useState<string[]>([]);
+  const [pace, setPace] = useState("");
   const [continent, setContinent] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState<Plan | null>(null);
   const [error, setError] = useState("");
+  const planRef = useRef<HTMLDivElement>(null);
 
-  const toggleInterest = (interest: string) => {
-    setInterests(prev => prev.includes(interest) ? prev.filter(i => i !== interest) : [...prev, interest]);
+  const toggleInterest = (i: string) => setInterests(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]);
+  const toggleDiet = (d: string) => {
+    if (d === t.diets[0]) { setDiet([d]); return; }
+    setDiet(prev => {
+      const without = prev.filter(x => x !== t.diets[0]);
+      return without.includes(d) ? without.filter(x => x !== d) : [...without, d];
+    });
   };
 
   const getFromString = () => {
-  const countryData = GEO_DATA.countries[continent]?.find(c => c.id === country);
-  return `${countryData?.label[lang] || country} — ${city}`;
-};
+    const countryData = GEO_DATA.countries[continent]?.find(c => c.id === country);
+    return `${countryData?.label[lang] || country} — ${city}`;
+  };
 
   const generatePlan = async () => {
     setLoading(true);
@@ -284,10 +322,10 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
       const res = await fetch("/api/generate-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ days, group, budget, interests, from: getFromString(), locale }),
+        body: JSON.stringify({ days, group, budget, interests, from: getFromString(), locale, diet, pace }),
       });
       const data = await res.json();
-      if (data.plan) { setPlan(data.plan); setStep(5); }
+      if (data.plan) { setPlan(data.plan); setStep(7); }
       else { setError(lang === "ru" ? "Ошибка генерации. Попробуй ещё раз." : "Generation error. Please try again."); }
     } catch {
       setError(lang === "ru" ? "Ошибка сети. Попробуй ещё раз." : "Network error. Please try again.");
@@ -295,11 +333,90 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
     setLoading(false);
   };
 
-  const resetAll = () => { setStep(0); setPlan(null); setDays(""); setGroup(""); setBudget(""); setInterests([]); setContinent(""); setCountry(""); setCity(""); };
+  const resetAll = () => {
+    setStep(0); setPlan(null); setDays(""); setGroup(""); setBudget("");
+    setInterests([]); setDiet([]); setPace(""); setContinent(""); setCountry(""); setCity("");
+  };
+
+  const downloadPdf = () => {
+    if (!plan) return;
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+
+    const dayRows = plan.days.map(day => `
+      <div class="day">
+        <div class="day-header">День ${day.day}: ${day.title}</div>
+        <div class="time-block">
+          <div class="time-label">🌅 ${t.morning}</div>
+          <div class="activity">${day.morning.activity}</div>
+          <div class="desc">${day.morning.description}</div>
+          ${day.morning.tip ? `<div class="tip">💡 ${day.morning.tip}</div>` : ""}
+        </div>
+        <div class="time-block">
+          <div class="time-label">☀️ ${t.afternoon}</div>
+          <div class="activity">${day.afternoon.activity}</div>
+          <div class="desc">${day.afternoon.description}</div>
+          ${day.afternoon.tip ? `<div class="tip">💡 ${day.afternoon.tip}</div>` : ""}
+        </div>
+        <div class="time-block">
+          <div class="time-label">🌙 ${t.evening}</div>
+          <div class="activity">${day.evening.activity}</div>
+          <div class="desc">${day.evening.description}</div>
+          ${day.evening.tip ? `<div class="tip">💡 ${day.evening.tip}</div>` : ""}
+        </div>
+        ${day.hotel?.name ? `<div class="hotel">🏨 ${day.hotel.name}</div>` : ""}
+      </div>
+    `).join("");
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${plan.plan_title}</title>
+        <style>
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: Georgia, serif; color: #1a1a1a; background: white; padding: 40px; max-width: 800px; margin: 0 auto; }
+          .header { text-align: center; border-bottom: 2px solid #0a7070; padding-bottom: 24px; margin-bottom: 32px; }
+          .logo { font-size: 13px; color: #0a7070; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+          h1 { font-size: 28px; font-weight: 400; color: #1a1a1a; margin-bottom: 8px; }
+          .budget { font-size: 16px; color: #0a7070; font-family: sans-serif; }
+          .day { margin-bottom: 32px; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; }
+          .day-header { background: #0a7070; color: white; padding: 12px 20px; font-size: 16px; font-weight: 500; font-family: sans-serif; }
+          .time-block { padding: 14px 20px; border-bottom: 1px solid #f0f0f0; }
+          .time-block:last-of-type { border-bottom: none; }
+          .time-label { font-size: 11px; color: #0a7070; font-family: sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+          .activity { font-size: 15px; font-weight: 600; color: #1a1a1a; font-family: sans-serif; margin-bottom: 4px; }
+          .desc { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 4px; font-family: sans-serif; }
+          .tip { font-size: 12px; color: #888; font-style: italic; font-family: sans-serif; }
+          .hotel { padding: 10px 20px; background: #f8fffe; border-top: 1px solid #e5f7f5; font-size: 13px; color: #0a7070; font-family: sans-serif; }
+          .footer { text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid #e5e5e5; font-size: 12px; color: #999; font-family: sans-serif; }
+          @media print { body { padding: 20px; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo">Caspian Routes · AI Travel Planner</div>
+          <h1>${plan.plan_title}</h1>
+          <div class="budget">${plan.total_budget_estimate}</div>
+        </div>
+        ${dayRows}
+        <div class="footer">
+          Создано на caspian-routes.com · ${new Date().toLocaleDateString()}
+        </div>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => { printWindow.print(); }, 500);
+  };
 
   const cardStyle = { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 28px", marginBottom: 24 };
   const backBtnStyle = { background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: 13, fontFamily: "DM Sans, sans-serif", padding: 0, marginBottom: 16, display: "block" };
   const labelStyle = { color: "rgba(255,255,255,0.5)", fontSize: 13, marginBottom: 16, fontFamily: "DM Sans, sans-serif", display: "block" };
+
+  const TOTAL_STEPS = 7;
 
   return (
     <main style={{ background: "#021a1a", minHeight: "100vh" }}>
@@ -308,35 +425,43 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
         .planner-btn { padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; font-weight: 400; transition: all 0.2s ease; }
         .planner-btn:hover { border-color: rgba(45,212,191,0.5); background: rgba(45,212,191,0.08); color: white; transform: translateY(-1px); }
         .planner-btn.selected { border: 2px solid #2DD4BF; background: rgba(45,212,191,0.15); color: #2DD4BF; font-weight: 500; }
+        .pace-btn { padding: 16px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); cursor: pointer; font-family: DM Sans, sans-serif; text-align: left; width: 100%; transition: all 0.2s ease; margin-bottom: 10px; }
+        .pace-btn:hover { border-color: rgba(45,212,191,0.5); background: rgba(45,212,191,0.06); }
+        .pace-btn.selected { border: 2px solid #2DD4BF; background: rgba(45,212,191,0.12); }
         .generate-btn { padding: 14px 32px; border-radius: 10px; background: linear-gradient(135deg, #0a7070, #0d9090); color: white; border: none; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 15px; font-weight: 600; transition: all 0.25s ease; box-shadow: 0 4px 16px rgba(10,112,112,0.3); }
         .generate-btn:hover:not(:disabled) { background: linear-gradient(135deg, #0d9090, #2DD4BF); box-shadow: 0 8px 28px rgba(10,112,112,0.5); transform: translateY(-2px); }
         .generate-btn:disabled { background: rgba(255,255,255,0.1); box-shadow: none; cursor: not-allowed; }
-        .next-btn { padding: 12px 28px; border-radius: 10px; background: #0a7070; color: white; border: none; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 15px; font-weight: 500; transition: all 0.2s ease; }
+        .next-btn { padding: 12px 28px; border-radius: 10px; background: #0a7070; color: white; border: none; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 15px; font-weight: 500; transition: all 0.2s ease; margin-right: 10px; }
         .next-btn:hover:not(:disabled) { background: #0d9090; transform: translateY(-1px); }
         .next-btn:disabled { background: rgba(255,255,255,0.1); cursor: not-allowed; }
+        .skip-btn { padding: 12px 20px; border-radius: 10px; background: transparent; color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; transition: all 0.2s ease; }
+        .skip-btn:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.2); }
         .partner-btn-teal { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(45,212,191,0.1); border: 1px solid rgba(45,212,191,0.3); border-radius: 8px; color: #2DD4BF; text-decoration: none; font-size: 13px; font-family: DM Sans, sans-serif; transition: all 0.2s ease; }
         .partner-btn-teal:hover { background: rgba(45,212,191,0.2); border-color: rgba(45,212,191,0.6); transform: translateY(-1px); }
         .partner-btn-gold { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); border-radius: 8px; color: #c9a84c; text-decoration: none; font-size: 13px; font-family: DM Sans, sans-serif; transition: all 0.2s ease; }
         .partner-btn-gold:hover { background: rgba(201,168,76,0.2); border-color: rgba(201,168,76,0.6); transform: translateY(-1px); }
-        .restart-btn { padding: 12px 28px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: white; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; transition: all 0.2s ease; }
+        .restart-btn { padding: 12px 28px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: white; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; transition: all 0.2s ease; margin-right: 12px; }
         .restart-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
-        @media (max-width: 767px) { .planner-btn { padding: 10px 16px; font-size: 13px; } .generate-btn { width: 100%; } .next-btn { width: 100%; } }
+        .pdf-btn { padding: 12px 28px; border-radius: 10px; background: linear-gradient(135deg, #0a7070, #0d9090); border: none; color: white; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; font-weight: 500; transition: all 0.25s ease; box-shadow: 0 4px 16px rgba(10,112,112,0.3); }
+        .pdf-btn:hover { background: linear-gradient(135deg, #0d9090, #2DD4BF); box-shadow: 0 8px 28px rgba(10,112,112,0.5); transform: translateY(-2px); }
+        @media (max-width: 767px) { .planner-btn { padding: 10px 16px; font-size: 13px; } .generate-btn { width: 100%; } .next-btn { width: 100%; margin-right: 0; margin-bottom: 10px; } .skip-btn { width: 100%; } }
       `}</style>
 
       <div style={{ maxWidth: 780, margin: "0 auto", padding: "100px 24px 80px" }}>
 
         {loading && <LoadingScreen steps={t.loadingSteps} />}
 
-        {!loading && step < 5 && (
+        {!loading && step < TOTAL_STEPS && (
           <>
             <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2rem, 5vw, 3rem)", color: "white", fontWeight: 300, marginBottom: 12, textAlign: "center" }}>{t.title}</h1>
             <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 16, textAlign: "center", marginBottom: 48 }}>{t.subtitle}</p>
             <div style={{ display: "flex", gap: 8, marginBottom: 40 }}>
-              {[0,1,2,3,4].map(i => (
+              {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                 <div key={i} style={{ flex: 1, height: 4, borderRadius: 99, background: i <= step ? "#2DD4BF" : "rgba(255,255,255,0.1)", transition: "background 0.3s ease" }} />
               ))}
             </div>
 
+            {/* Step 0: Days */}
             {step === 0 && (
               <div style={cardStyle}>
                 <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step1}</h2>
@@ -348,6 +473,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
               </div>
             )}
 
+            {/* Step 1: Group */}
             {step === 1 && (
               <div style={cardStyle}>
                 <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step2}</h2>
@@ -359,6 +485,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
               </div>
             )}
 
+            {/* Step 2: Budget */}
             {step === 2 && (
               <div style={cardStyle}>
                 <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step3}</h2>
@@ -370,6 +497,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
               </div>
             )}
 
+            {/* Step 3: Interests */}
             {step === 3 && (
               <div style={cardStyle}>
                 <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step4}</h2>
@@ -382,11 +510,45 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
               </div>
             )}
 
+            {/* Step 4: Diet */}
             {step === 4 && (
               <div style={cardStyle}>
-                <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step5}</h2>
+                <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>{t.step5}</h2>
+                <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>
+                  {lang === "ru" ? "Можно выбрать несколько" : lang === "az" ? "Bir neçə seçə bilərsiniz" : "You can select multiple"}
+                </p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
+                  {t.diets.map(d => (
+                    <button key={d} className={`planner-btn${diet.includes(d) ? " selected" : ""}`} onClick={() => toggleDiet(d)}>{d}</button>
+                  ))}
+                </div>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <button className="next-btn" onClick={() => setStep(5)} disabled={diet.length === 0}>{t.next}</button>
+                  <button className="skip-btn" onClick={() => { setDiet([t.diets[0]]); setStep(5); }}>{t.skip}</button>
+                </div>
+              </div>
+            )}
 
-                {/* Выбор континента */}
+            {/* Step 5: Pace */}
+            {step === 5 && (
+              <div style={cardStyle}>
+                <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step6}</h2>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 8 }}>
+                  {t.paces.map(p => (
+                    <button key={p.id} className={`pace-btn${pace === p.label ? " selected" : ""}`} onClick={() => { setPace(p.label); setStep(6); }}>
+                      <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 4 }}>{p.label}</div>
+                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>{p.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Step 6: Location */}
+            {step === 6 && (
+              <div style={cardStyle}>
+                <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step7}</h2>
+
                 {!continent && (
                   <>
                     <span style={labelStyle}>{t.selectRegion}</span>
@@ -398,7 +560,6 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                   </>
                 )}
 
-                {/* Выбор страны */}
                 {continent && !country && (
                   <>
                     <button style={backBtnStyle} onClick={() => setContinent("")}>{t.back}</button>
@@ -406,18 +567,17 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                       {GEO_DATA.countries[continent].map(c => (
                         <button key={c.id} className="planner-btn" onClick={() => setCountry(c.id)} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-  {c.id.length === 2 && !["asia_other", "eu_other", "am_other", "other"].includes(c.id)
-    ? <img src={`https://flagcdn.com/20x15/${c.id}.png`} width={20} height={15} alt={c.id} style={{ borderRadius: 2 }} />
-    : <span>{c.flag}</span>
-  }
-  {c.label[lang]}
-</button>
+                          {!["asia_other", "eu_other", "am_other", "other"].includes(c.id)
+                            ? <img src={`https://flagcdn.com/w20/${c.id}.png`} width={20} height={15} alt={c.id} style={{ borderRadius: 2 }} />
+                            : <span>{c.flag}</span>
+                          }
+                          {c.label[lang]}
+                        </button>
                       ))}
                     </div>
                   </>
                 )}
 
-                {/* Выбор города */}
                 {continent && country && !city && (
                   <>
                     <button style={backBtnStyle} onClick={() => setCountry("")}>{t.back}</button>
@@ -430,7 +590,6 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                   </>
                 )}
 
-                {/* Итог + генерация */}
                 {continent && country && city && (
                   <>
                     <div style={{ background: "rgba(45,212,191,0.08)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -446,110 +605,85 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
           </>
         )}
 
-        {!loading && step === 5 && plan && (
-  <div>
-    <div style={{ textAlign: "center", marginBottom: 48 }}>
-      <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(45,212,191,0.1)", border: "2px solid rgba(45,212,191,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 28 }}>
-        🗺️
-      </div>
-      <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 4vw, 2.8rem)", color: "white", fontWeight: 300, marginBottom: 12 }}>{plan.plan_title}</h1>
-      <p style={{ color: "#2DD4BF", fontSize: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.total_budget_estimate}</p>
-    </div>
+        {/* Результат */}
+        {!loading && step === TOTAL_STEPS && plan && (
+          <div ref={planRef}>
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
+              <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(45,212,191,0.1)", border: "2px solid rgba(45,212,191,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 28 }}>🗺️</div>
+              <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 4vw, 2.8rem)", color: "white", fontWeight: 300, marginBottom: 12 }}>{plan.plan_title}</h1>
+              <p style={{ color: "#2DD4BF", fontSize: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.total_budget_estimate}</p>
+            </div>
 
-    {plan.days.map((day) => (
-      <div key={day.day} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, marginBottom: 24, overflow: "hidden" }}>
-
-        {/* Заголовок дня */}
-        <div style={{ background: "linear-gradient(135deg, rgba(10,112,112,0.3), rgba(13,144,144,0.15))", borderBottom: "1px solid rgba(255,255,255,0.08)", padding: "18px 28px", display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(45,212,191,0.2)", border: "1px solid rgba(45,212,191,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 600, color: "#2DD4BF", fontFamily: "DM Sans, sans-serif", flexShrink: 0 }}>
-            {day.day}
-          </div>
-          <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.4rem", color: "white", fontWeight: 400, margin: 0 }}>
-            {lang === "ru" ? `День ${day.day}` : lang === "az" ? `Gün ${day.day}` : `Day ${day.day}`}: {day.title}
-          </h2>
-        </div>
-
-        <div style={{ padding: "20px 28px" }}>
-          {[
-            { label: t.morning, data: day.morning, icon: "🌅", color: "#f59e0b" },
-            { label: t.afternoon, data: day.afternoon, icon: "☀️", color: "#10b981" },
-            { label: t.evening, data: day.evening, icon: "🌙", color: "#818cf8" },
-          ].map(({ label, data, icon, color }, idx, arr) => (
-            <div key={label} style={{ marginBottom: idx < arr.length - 1 ? 0 : 0 }}>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 14, paddingBottom: 20 }}>
-                {/* Иконка + линия */}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: `rgba(255,255,255,0.06)`, border: `1px solid rgba(255,255,255,0.1)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>
-                    {icon}
-                  </div>
-                  {idx < arr.length - 1 && (
-                    <div style={{ width: 1, flex: 1, minHeight: 20, background: "rgba(255,255,255,0.08)", marginTop: 6 }} />
-                  )}
+            {plan.days.map((day) => (
+              <div key={day.day} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, marginBottom: 24, overflow: "hidden" }}>
+                <div style={{ background: "linear-gradient(135deg, rgba(10,112,112,0.3), rgba(13,144,144,0.15))", borderBottom: "1px solid rgba(255,255,255,0.08)", padding: "18px 28px", display: "flex", alignItems: "center", gap: 14 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(45,212,191,0.2)", border: "1px solid rgba(45,212,191,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 600, color: "#2DD4BF", fontFamily: "DM Sans, sans-serif", flexShrink: 0 }}>{day.day}</div>
+                  <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.4rem", color: "white", fontWeight: 400, margin: 0 }}>
+                    {lang === "ru" ? `День ${day.day}` : lang === "az" ? `Gün ${day.day}` : `Day ${day.day}`}: {day.title}
+                  </h2>
                 </div>
 
-                {/* Контент */}
-                <div style={{ flex: 1, paddingBottom: idx < arr.length - 1 ? 16 : 0 }}>
-                  <p style={{ color, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, fontFamily: "DM Sans, sans-serif" }}>{label}</p>
-                  <p style={{ color: "white", fontSize: 15, fontWeight: 500, marginBottom: 6, fontFamily: "DM Sans, sans-serif" }}>{data.activity}</p>
-                  <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, lineHeight: 1.7, marginBottom: data.tip ? 8 : 0, fontFamily: "DM Sans, sans-serif" }}>{data.description}</p>
-                  {data.tip && (
-                    <div style={{ display: "inline-flex", alignItems: "flex-start", gap: 6, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "6px 12px" }}>
-                      <span style={{ fontSize: 13 }}>💡</span>
-                      <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13, fontStyle: "italic", margin: 0, fontFamily: "DM Sans, sans-serif", lineHeight: 1.5 }}>{data.tip}</p>
+                <div style={{ padding: "20px 28px" }}>
+                  {[
+                    { label: t.morning, data: day.morning, icon: "🌅", color: "#f59e0b" },
+                    { label: t.afternoon, data: day.afternoon, icon: "☀️", color: "#10b981" },
+                    { label: t.evening, data: day.evening, icon: "🌙", color: "#818cf8" },
+                  ].map(({ label, data, icon, color }, idx, arr) => (
+                    <div key={label}>
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: 14, paddingBottom: 20 }}>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
+                          <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>{icon}</div>
+                          {idx < arr.length - 1 && <div style={{ width: 1, flex: 1, minHeight: 20, background: "rgba(255,255,255,0.08)", marginTop: 6 }} />}
+                        </div>
+                        <div style={{ flex: 1, paddingBottom: idx < arr.length - 1 ? 16 : 0 }}>
+                          <p style={{ color, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, fontFamily: "DM Sans, sans-serif" }}>{label}</p>
+                          <p style={{ color: "white", fontSize: 15, fontWeight: 500, marginBottom: 6, fontFamily: "DM Sans, sans-serif" }}>{data.activity}</p>
+                          <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, lineHeight: 1.7, marginBottom: data.tip ? 8 : 0, fontFamily: "DM Sans, sans-serif" }}>{data.description}</p>
+                          {data.tip && (
+                            <div style={{ display: "inline-flex", alignItems: "flex-start", gap: 6, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "6px 12px" }}>
+                              <span style={{ fontSize: 13 }}>💡</span>
+                              <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13, fontStyle: "italic", margin: 0, fontFamily: "DM Sans, sans-serif", lineHeight: 1.5 }}>{data.tip}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      {idx < arr.length - 1 && <div style={{ height: 1, background: "rgba(255,255,255,0.05)", margin: "0 0 20px 50px" }} />}
+                    </div>
+                  ))}
+
+                  {(day.hotel?.name || day.excursion?.name) && (
+                    <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8, paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                      {day.hotel?.name && <a href={day.hotel.booking_url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">🏨 {day.hotel.name} — {t.bookHotel}</a>}
+                      {day.excursion?.name && <a href={day.excursion.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">🗺️ {day.excursion.name} — {t.bookExcursion}</a>}
                     </div>
                   )}
                 </div>
               </div>
+            ))}
 
-              {/* Разделитель */}
-              {idx < arr.length - 1 && (
-                <div style={{ height: 1, background: "rgba(255,255,255,0.05)", margin: "0 0 20px 50px" }} />
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 32 }}>
+              {plan.flights && (
+                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "20px 24px" }}>
+                  <p style={{ color: "#2DD4BF", fontSize: 13, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>✈️ {t.flights}</p>
+                  <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.6, marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>{plan.flights.tip}</p>
+                  <a href={plan.flights.url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">{t.bookFlight}</a>
+                </div>
+              )}
+              {plan.car_rental && (
+                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "20px 24px" }}>
+                  <p style={{ color: "#c9a84c", fontSize: 13, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>🚗 {t.carRental}</p>
+                  <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.6, marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>{plan.car_rental.tip}</p>
+                  <a href={plan.car_rental.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">{t.bookCar}</a>
+                </div>
               )}
             </div>
-          ))}
 
-          {/* Партнёрские кнопки */}
-          {(day.hotel?.name || day.excursion?.name) && (
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8, paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-              {day.hotel?.name && (
-                <a href={day.hotel.booking_url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">
-                  🏨 {day.hotel.name} — {t.bookHotel}
-                </a>
-              )}
-              {day.excursion?.name && (
-                <a href={day.excursion.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">
-                  🗺️ {day.excursion.name} — {t.bookExcursion}
-                </a>
-              )}
+            <div style={{ textAlign: "center" }}>
+              <button className="restart-btn" onClick={resetAll}>{t.restart}</button>
+              <button className="pdf-btn" onClick={downloadPdf}>📄 {t.downloadPdf}</button>
             </div>
-          )}
-        </div>
-      </div>
-    ))}
-
-    {/* Авиабилеты и аренда */}
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 32 }}>
-      {plan.flights && (
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "20px 24px" }}>
-          <p style={{ color: "#2DD4BF", fontSize: 13, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>✈️ {t.flights}</p>
-          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.6, marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>{plan.flights.tip}</p>
-          <a href={plan.flights.url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">{t.bookFlight}</a>
-        </div>
-      )}
-      {plan.car_rental && (
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "20px 24px" }}>
-          <p style={{ color: "#c9a84c", fontSize: 13, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>🚗 {t.carRental}</p>
-          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.6, marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>{plan.car_rental.tip}</p>
-          <a href={plan.car_rental.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">{t.bookCar}</a>
-        </div>
-      )}
-    </div>
-
-    <div style={{ textAlign: "center" }}>
-      <button className="restart-btn" onClick={resetAll}>{t.restart}</button>
-    </div>
-  </div>
-)}
+          </div>
+        )}
       </div>
       <Footer locale={locale} />
     </main>

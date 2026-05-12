@@ -5,13 +5,16 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(req: NextRequest) {
   try {
-    const { days, group, budget, interests, from, locale } = await req.json();
+    const { days, group, budget, interests, from, locale, diet, pace } = await req.json();
 
-    const lang = locale === "ru" ? "русском" : locale === "az" ? "азербайджанском" : "English";
     const langInstruction = locale === "en" ? "Respond in English." : locale === "az" ? "Azərbaycan dilində cavab ver." : "Отвечай на русском языке.";
+
+    const dietLine = diet && diet.length > 0 ? `- Питание/аллергии: ${diet.join(", ")}` : "";
+    const paceLine = pace ? `- Темп поездки: ${pace}` : "";
 
     const prompt = `${langInstruction}
 КРИТИЧЕСКИ ВАЖНО: В поле booking_url ВСЕГДА используй ТОЛЬКО ссылку https://ostrovok.tpk.ro/DDho2QGw — никогда не генерируй ссылки на Booking.com или любые другие сайты отелей.
+
 Ты — эксперт по туризму в Азербайджане. Составь детальный план путешествия.
 
 Параметры:
@@ -20,6 +23,12 @@ export async function POST(req: NextRequest) {
 - Бюджет на человека: ${budget}
 - Интересы: ${interests.join(", ")}
 - Откуда летят: ${from}
+${dietLine}
+${paceLine}
+
+${diet && diet.length > 0 ? `ВАЖНО: Учти ограничения питания (${diet.join(", ")}) при рекомендации ресторанов и блюд.` : ""}
+${pace === "Расслабленный" || pace === "Relaxed" ? "ВАЖНО: Расслабленный темп — не более 2-3 активностей в день, обязательно время для отдыха." : ""}
+${pace === "Насыщенный" || pace === "Intensive" ? "ВАЖНО: Насыщенный темп — максимум активностей, эффективные переезды, ранние подъёмы." : ""}
 
 Верни ТОЛЬКО валидный JSON без markdown, без блоков кода, без пояснений. Структура:
 
@@ -45,14 +54,15 @@ export async function POST(req: NextRequest) {
         "description": "описание",
         "tip": "совет"
       },
-     "hotel": {
-  "name": "название отеля или района для ночёвки",
-  "booking_url": "https://ostrovok.tpk.ro/DDho2QGw"
-},
-"excursion": {
-  "name": "название экскурсии если релевантна для этого дня",
-  "url": "https://www.getyourguide.com/baku-l1408/?partner_id=YNRQ0A3&utm_medium=online_publisher"
-}
+      "hotel": {
+        "name": "название отеля или района для ночёвки",
+        "booking_url": "https://ostrovok.tpk.ro/DDho2QGw"
+      },
+      "excursion": {
+        "name": "название экскурсии если релевантна для этого дня",
+        "url": "https://www.getyourguide.com/baku-l1408/?partner_id=YNRQ0A3&utm_medium=online_publisher"
+      }
+    }
   ],
   "flights": {
     "tip": "совет по билетам",
@@ -72,7 +82,7 @@ export async function POST(req: NextRequest) {
 
     const text = message.content[0].type === "text" ? message.content[0].text : "";
     const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-const plan = JSON.parse(clean);
+    const plan = JSON.parse(clean);
 
     return NextResponse.json({ plan });
   } catch (error) {
