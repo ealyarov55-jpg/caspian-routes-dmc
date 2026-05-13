@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
 import Link from "next/link";
+import { FadeIn, StatsSection, WhyCards, BlogCards } from "@/components/sections/HomeAnimations";
 
 const content = {
   ru: {
@@ -18,6 +19,12 @@ const content = {
       { icon: "💰", title: "Лучшие цены на отели", desc: "Партнёрские ссылки на Booking, Ostrovok и локальные варианты" },
       { icon: "🗺️", title: "Экскурсии с гидами", desc: "Проверенные туры через GetYourGuide с отзывами туристов" },
       { icon: "✈️", title: "Дешёвые билеты", desc: "Поиск авиабилетов через Aviasales — без наценок" },
+    ],
+    stats: [
+      { value: 34, suffix: "", label: "статьи о маршрутах" },
+      { value: 3, suffix: "", label: "языка" },
+      { value: 4, suffix: "", label: "партнёра" },
+      { value: 2, suffix: " мин", label: "на маршрут" },
     ],
     blogTitle: "Путеводитель по Азербайджану",
     readMore: "Читать",
@@ -39,6 +46,12 @@ const content = {
       { icon: "🗺️", title: "Guided tours", desc: "Verified tours via GetYourGuide with traveler reviews" },
       { icon: "✈️", title: "Cheap flights", desc: "Flight search via Aviasales — no markups" },
     ],
+    stats: [
+      { value: 34, suffix: "", label: "travel articles" },
+      { value: 3, suffix: "", label: "languages" },
+      { value: 4, suffix: "", label: "partners" },
+      { value: 2, suffix: " min", label: "to your itinerary" },
+    ],
     blogTitle: "Azerbaijan Travel Guide",
     readMore: "Read",
     allArticles: "All articles →",
@@ -58,6 +71,12 @@ const content = {
       { icon: "💰", title: "Ən yaxşı otel qiymətləri", desc: "Booking, Ostrovok üzrə tərəfdaş linklər" },
       { icon: "🗺️", title: "Bələdçi turları", desc: "GetYourGuide vasitəsilə yoxlanmış turlar" },
       { icon: "✈️", title: "Ucuz aviabiletlər", desc: "Aviasales ilə uçuş axtarışı" },
+    ],
+    stats: [
+      { value: 34, suffix: "", label: "məqalə" },
+      { value: 3, suffix: "", label: "dil" },
+      { value: 4, suffix: "", label: "tərəfdaş" },
+      { value: 2, suffix: " dəq", label: "marşruta" },
     ],
     blogTitle: "Azərbaycan Bələdçisi",
     readMore: "Oxu",
@@ -138,23 +157,23 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           border-color: rgba(255,255,255,0.7);
           background: rgba(255,255,255,0.08);
         }
-
-        /* Desktop: grid 2 колонки, мобильные кнопки скрыты */
-        .hero-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 48px;
-          align-items: center;
-        }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
         .hero-card { display: block; }
         .hero-mobile-btns { display: none; }
-
-        /* Mobile */
+        .blog-card {
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 12px;
+          overflow: hidden;
+          transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .blog-card:hover {
+          transform: translateY(-4px);
+          border-color: rgba(45,212,191,0.3);
+          box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+        }
         @media (max-width: 767px) {
-          .hero-grid {
-            grid-template-columns: 1fr;
-            gap: 32px;
-          }
+          .hero-grid { grid-template-columns: 1fr; gap: 32px; }
           .hero-card { display: none; }
           .hero-mobile-btns { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
         }
@@ -167,88 +186,73 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
         <div style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "96px 24px 64px", width: "100%" }}>
           <div className="hero-grid">
-
-            {/* Left: Text */}
             <div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(45,212,191,0.15)", border: "1px solid rgba(45,212,191,0.4)", borderRadius: 999, padding: "6px 16px", marginBottom: 24 }}>
-                <span style={{ color: "#2DD4BF", fontSize: 13, fontWeight: 500 }}>{t.badge}</span>
-              </div>
-              <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2.5rem, 5vw, 4.5rem)", color: "white", fontWeight: 300, lineHeight: 1.1, marginBottom: 24, whiteSpace: "pre-line" }}>
-                {t.headline}
-              </h1>
-              <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 18, lineHeight: 1.7, maxWidth: 480 }}>
-                {t.sub}
-              </p>
-
-              {/* Кнопки только на мобильном */}
-              <div className="hero-mobile-btns">
-                <Link href={`/${locale}/planner`} className="hero-btn-primary">
-                  ✨ {t.cta}
-                </Link>
-                <Link href={`/${locale}/blog`} className="hero-btn-secondary">
-                  📖 {t.cta2}
-                </Link>
-                <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textAlign: "center", margin: 0 }}>
-                  {t.free}
+              <FadeIn delay={0}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(45,212,191,0.15)", border: "1px solid rgba(45,212,191,0.4)", borderRadius: 999, padding: "6px 16px", marginBottom: 24 }}>
+                  <span style={{ color: "#2DD4BF", fontSize: 13, fontWeight: 500 }}>{t.badge}</span>
+                </div>
+              </FadeIn>
+              <FadeIn delay={150}>
+                <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2.5rem, 5vw, 4.5rem)", color: "white", fontWeight: 300, lineHeight: 1.1, marginBottom: 24, whiteSpace: "pre-line" }}>
+                  {t.headline}
+                </h1>
+              </FadeIn>
+              <FadeIn delay={300}>
+                <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 18, lineHeight: 1.7, maxWidth: 480 }}>
+                  {t.sub}
                 </p>
+              </FadeIn>
+              <div className="hero-mobile-btns">
+                <Link href={`/${locale}/planner`} className="hero-btn-primary">✨ {t.cta}</Link>
+                <Link href={`/${locale}/blog`} className="hero-btn-secondary">📖 {t.cta2}</Link>
+                <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textAlign: "center", margin: 0 }}>{t.free}</p>
               </div>
             </div>
 
-            {/* Right: Card — только на десктопе */}
-            <div className="hero-card" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "40px 36px", backdropFilter: "blur(12px)" }}>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
-                {t.cardSub}
-              </p>
-              <p style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: "1.6rem", fontWeight: 300, lineHeight: 1.3, marginBottom: 32, whiteSpace: "pre-line" }}>
-                {t.cardTitle}
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                <Link href={`/${locale}/planner`} className="hero-btn-primary">
-                  ✨ {t.cta}
-                </Link>
-                <Link href={`/${locale}/blog`} className="hero-btn-secondary">
-                  📖 {t.cta2}
-                </Link>
+            <FadeIn delay={400}>
+              <div className="hero-card" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "40px 36px", backdropFilter: "blur(12px)" }}>
+                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>{t.cardSub}</p>
+                <p style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: "1.6rem", fontWeight: 300, lineHeight: 1.3, marginBottom: 32, whiteSpace: "pre-line" }}>{t.cardTitle}</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <Link href={`/${locale}/planner`} className="hero-btn-primary">✨ {t.cta}</Link>
+                  <Link href={`/${locale}/blog`} className="hero-btn-secondary">📖 {t.cta2}</Link>
+                </div>
+                <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textAlign: "center", marginTop: 20 }}>{t.free}</p>
               </div>
-              <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textAlign: "center", marginTop: 20 }}>
-                {t.free}
-              </p>
-            </div>
-
+            </FadeIn>
           </div>
         </div>
       </section>
 
+      {/* Stats */}
+      <section style={{ maxWidth: 1280, margin: "0 auto", padding: "80px 24px 0" }}>
+        <StatsSection stats={t.stats} />
+      </section>
+
       {/* Why us */}
-      <section style={{ maxWidth: 1280, margin: "0 auto", padding: "80px 24px" }}>
-        <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: "white", fontWeight: 300, marginBottom: 48, textAlign: "center" }}>
-          {t.whyTitle}
-        </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 24 }}>
-          {t.why.map((item, i) => (
-            <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "28px 24px" }}>
-              <div style={{ fontSize: 32, marginBottom: 16 }}>{item.icon}</div>
-              <h3 style={{ color: "white", fontSize: 17, fontWeight: 500, marginBottom: 10 }}>{item.title}</h3>
-              <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 14, lineHeight: 1.6 }}>{item.desc}</p>
-            </div>
-          ))}
-        </div>
+      <section style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px 80px" }}>
+        <FadeIn>
+          <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: "white", fontWeight: 300, marginBottom: 48, textAlign: "center" }}>
+            {t.whyTitle}
+          </h2>
+        </FadeIn>
+        <WhyCards items={t.why} />
       </section>
 
       {/* Blog */}
       <section style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px 80px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 40 }}>
-          <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 3vw, 2.5rem)", color: "white", fontWeight: 300 }}>
-            {t.blogTitle}
-          </h2>
-          <Link href={`/${locale}/blog`} style={{ color: "#2DD4BF", fontSize: 14, textDecoration: "none" }}>
-            {t.allArticles}
-          </Link>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
+        <FadeIn>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 40 }}>
+            <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 3vw, 2.5rem)", color: "white", fontWeight: 300 }}>
+              {t.blogTitle}
+            </h2>
+            <Link href={`/${locale}/blog`} style={{ color: "#2DD4BF", fontSize: 14, textDecoration: "none" }}>{t.allArticles}</Link>
+          </div>
+        </FadeIn>
+        <BlogCards>
           {blogPosts.map((post) => (
             <Link key={post.slug[lang]} href={`/${locale}/blog/${post.slug[lang]}`} style={{ textDecoration: "none" }}>
-              <article style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, overflow: "hidden" }}>
+              <article className="blog-card">
                 <div style={{ height: 200, overflow: "hidden" }}>
                   <img src={post.image} alt={post.title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
@@ -261,7 +265,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </article>
             </Link>
           ))}
-        </div>
+        </BlogCards>
       </section>
 
       <Footer locale={locale} />
