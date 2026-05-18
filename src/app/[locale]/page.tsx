@@ -82,29 +82,55 @@ const content = {
     readMore: "Oxu",
     allArticles: "Bütün məqalələr →",
   },
+  tr: {
+  badge: "AI Seyahat Planlayıcısı",
+  headline: "Azerbaycan'a Seyahatini\nYapay Zeka ile Planla",
+  sub: "Bütçene ve ilgi alanlarına göre kişisel rota — 2 dakikada. Ücretsiz.",
+  cta: "Rota Oluştur",
+  cta2: "Seyahat Rehberini Oku",
+  cardTitle: "Nereye gitmek\nistiyorsun?",
+  cardSub: "Hemen başla",
+  free: "Ücretsiz · Kayıt yok · 2 dakikada",
+  whyTitle: "Neden Caspian Routes",
+  why: [
+    { icon: "🤖", title: "2 dakikada AI rotası", desc: "5 soruya cevap ver — günlük hazır plan al" },
+    { icon: "💰", title: "En iyi otel fiyatları", desc: "Booking, Ostrovok ve yerel seçeneklere ortak linkler" },
+    { icon: "🗺️", title: "Rehberli turlar", desc: "GetYourGuide üzerinden doğrulanmış turlar" },
+    { icon: "✈️", title: "Ucuz uçuşlar", desc: "Aviasales ile uçuş arama — ek ücret yok" },
+  ],
+  stats: [
+    { value: 34, suffix: "", label: "seyahat makalesi" },
+    { value: 4, suffix: "", label: "dil" },
+    { value: 4, suffix: "", label: "ortak" },
+    { value: 2, suffix: " dk", label: "rotanıza" },
+  ],
+  blogTitle: "Azerbaycan Seyahat Rehberi",
+  readMore: "Oku",
+  allArticles: "Tüm makaleler →",
+},
 };
 
 const blogPosts = [
   {
-    slug: { ru: "marshrut-baku-3-dnya", en: "baku-3-days", az: "marshrut-baku-3-dnya" },
-    title: { ru: "Маршрут по Баку на 3 дня", en: "Baku 3-Day Itinerary", az: "Bakı 3 günlük marşrut" },
+    slug: { ru: "marshrut-baku-3-dnya", en: "baku-3-days", az: "marshrut-baku-3-dnya", tr: "baku-3-days" },
+    title: { ru: "Маршрут по Баку на 3 дня", en: "Baku 3-Day Itinerary", az: "Bakı 3 günlük marşrut", tr: "Bakü 3 Günlük Rota" },
     image: "/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg"
   },
   {
-    slug: { ru: "gobustan-kak-dobratsa", en: "gobustan-from-baku", az: "gobustan-kak-dobratsa" },
-    title: { ru: "Гобустан из Баку", en: "Gobustan from Baku", az: "Bakıdan Qobustan" },
+    slug: { ru: "gobustan-kak-dobratsa", en: "gobustan-from-baku", az: "gobustan-kak-dobratsa", tr: "gobustan-from-baku" },
+    title: { ru: "Гобустан из Баку", en: "Gobustan from Baku", az: "Bakıdan Qobustan", tr: "Bakü'den Gobustan" },
     image: "/images/pozziss-azerbaijan-4856054_1920-opt.jpg"
   },
   {
-    slug: { ru: "baku-letom", en: "baku-summer", az: "baku-letom" },
-    title: { ru: "Баку летом", en: "Baku in Summer", az: "Yay Bakısı" },
+    slug: { ru: "baku-letom", en: "baku-summer", az: "baku-letom", tr: "baku-summer" },
+    title: { ru: "Баку летом", en: "Baku in Summer", az: "Yay Bakısı", tr: "Yazın Bakü" },
     image: "/images/pexels-zulfugarkarimov-33085326-opt.jpg"
   },
 ];
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const lang = (locale === "ru" || locale === "az") ? locale : "en";
+  const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
   const t = content[lang];
 
   return (
