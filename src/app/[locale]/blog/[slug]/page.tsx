@@ -8,7 +8,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
 import remarkGfm from "remark-gfm";
-
+import LeadMagnet from "@/components/sections/LeadMagnet";
 const BASE_URL = "https://www.caspian-routes.com";
 
 function getPost(locale: string, slug: string) {
@@ -231,7 +231,8 @@ dateModified: data.date ? new Date(data.date).toISOString() : new Date().toISOSt
           <MDXRemote source={content} components={mdxComponents} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
         </div>
 
-        <CTABlock locale={locale} />
+       <CTABlock locale={locale} />
+        <LeadMagnet locale={locale} />
       </article>
 
       <Footer locale={locale} />
