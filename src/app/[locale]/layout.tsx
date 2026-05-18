@@ -20,6 +20,11 @@ const metadata_translations = {
     description: "AI ilə Azərbaycana mükəmməl səyahətinizi planlaşdırın. Fərdi marşrutlar, otellər və turlar 2 dəqiqəyə.",
     keywords: "Azərbaycan səyahət planlayıcısı, Bakı gəzinti, Azərbaycan turizmi, AI marşrut",
   },
+  tr: {
+    title: "Caspian Routes | Azerbaycan AI Seyahat Planlayıcısı",
+    description: "Azerbaycan'a mükemmel seyahatinizi yapay zeka ile planlayın. Kişisel rotalar, oteller ve turlar 2 dakikada.",
+    keywords: "Azerbaycan seyahat planlayıcısı, Bakü gezi rehberi, Azerbaycan turizmi, AI rota Kafkasya",
+  },
 };
 
 export async function generateMetadata({
@@ -28,7 +33,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const lang = (locale === "ru" || locale === "az") ? locale : "en";
+  const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
   const meta = metadata_translations[lang as keyof typeof metadata_translations];
   const BASE_URL = "https://www.caspian-routes.com";
 
@@ -42,7 +47,7 @@ export async function generateMetadata({
     robots: "index, follow",
     openGraph: {
       type: "website",
-      locale: locale === "ru" ? "ru_RU" : locale === "az" ? "az_AZ" : "en_US",
+      locale: locale === "ru" ? "ru_RU" : locale === "az" ? "az_AZ" : locale === "tr" ? "tr_TR" : "en_US",
       url: `${BASE_URL}/${locale}`,
       siteName: "Caspian Routes",
       title: meta.title,
@@ -68,6 +73,7 @@ export async function generateMetadata({
         en: `${BASE_URL}/en`,
         ru: `${BASE_URL}/ru`,
         az: `${BASE_URL}/az`,
+        tr: `${BASE_URL}/tr`,
       },
     },
   };
@@ -85,7 +91,6 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
-        {/* Travelpayouts виджет удалён */}
         <script
           async
           defer

@@ -9,12 +9,14 @@ const localesList = [
   { code: "en", label: "EN", full: "English", flagCode: "gb" },
   { code: "ru", label: "RU", full: "Русский", flagCode: "ru" },
   { code: "az", label: "AZ", full: "Azərbaycan", flagCode: "az" },
+  { code: "tr", label: "TR", full: "Türkçe", flagCode: "tr" },
 ];
 
 const navContent = {
   ru: { blog: "Путеводитель", planner: "Создать маршрут", contact: "Контакт" },
   en: { blog: "Travel Guide", planner: "Create Itinerary", contact: "Contact" },
   az: { blog: "Bələdçi", planner: "Marşrut Yarat", contact: "Əlaqə" },
+  tr: { blog: "Seyahat Rehberi", planner: "Rota Oluştur", contact: "İletişim" },
 };
 
 function FlagImg({ code, size = 20 }: { code: string; size?: number }) {
@@ -32,7 +34,7 @@ function FlagImg({ code, size = 20 }: { code: string; size?: number }) {
 export default function Navbar({ locale }: { locale: string }) {
   const pathname = usePathname();
   const router = useRouter();
-  const lang = (locale === "ru" || locale === "az") ? locale : "en";
+  const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
   const t = navContent[lang];
 
   const [scrolled, setScrolled] = useState(false);
