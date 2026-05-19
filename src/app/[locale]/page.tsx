@@ -22,7 +22,7 @@ const content = {
     ],
     stats: [
       { value: 34, suffix: "", label: "статьи о маршрутах" },
-      { value: 3, suffix: "", label: "языка" },
+      { value: 4, suffix: "", label: "языка" },
       { value: 4, suffix: "", label: "партнёра" },
       { value: 2, suffix: " мин", label: "на маршрут" },
     ],
