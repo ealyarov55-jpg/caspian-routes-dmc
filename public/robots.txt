@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+Disallow: /*/partners
+Disallow: /*/partner-dashboard
+Disallow: /*/auth
+Disallow: /*/about
+Disallow: /*/provider
+Disallow: /*/bookings
+Disallow: /*/routes
+Disallow: /*/admin
+
+Sitemap: https://www.caspian-routes.com/sitemap.xml
