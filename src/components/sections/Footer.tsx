@@ -27,9 +27,9 @@ const content = {
     guide: "Travel Guide",
     links: [
       { label: "Baku in 1 Day", href: "/en/blog/marshrut-baku-1-den" },
-      { label: "Baku in 3 Days", href: "/en/blog/marshrut-baku-3-dnya" },
-      { label: "Gobustan from Baku", href: "/en/blog/gobustan-kak-dobratsa" },
-      { label: "Sheki Day Trip", href: "/en/blog/sheki-za-1-den" },
+      { label: "Baku in 3 Days", href: "/en/blog/baku-3-days" },
+      { label: "Gobustan from Baku", href: "/en/blog/gobustan-from-baku" },
+      { label: "Sheki Day Trip", href: "/en/blog/sheki-day-trip" },
     ],
     planner: "Planner",
     plannerLinks: [
@@ -60,11 +60,30 @@ const content = {
     privacy: "Məxfilik Siyasəti",
     terms: "İstifadə Şərtləri",
   },
+  tr: {
+    description: "Azerbaycan ve Kafkasya için AI seyahat planlayıcısı.",
+    guide: "Seyahat Rehberi",
+    links: [
+      { label: "Bakü'de 1 Gün", href: "/tr/blog/baku-1-day" },
+      { label: "Bakü'de 3 Gün", href: "/tr/blog/baku-3-days" },
+      { label: "Bakü'den Gobustan", href: "/tr/blog/gobustan-from-baku" },
+      { label: "Şeki Gezi Turu", href: "/tr/blog/sheki-day-trip" },
+    ],
+    planner: "Planlayıcı",
+    plannerLinks: [
+      { label: "Rota Oluştur", href: "/tr/planner" },
+      { label: "Tüm Makaleler", href: "/tr/blog" },
+      { label: "İletişim", href: "/tr/contact" },
+    ],
+    copyright: "© 2026 Caspian Routes. Tüm hakları saklıdır.",
+    privacy: "Gizlilik Politikası",
+    terms: "Kullanım Koşulları",
+  },
 };
 
 export default function Footer({ locale = "en" }: { locale?: string }) {
-  const lang = (locale === "ru" || locale === "az") ? locale : "en";
-  const t = content[lang];
+  const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
+  const t = content[lang as keyof typeof content];
 
   return (
     <footer style={{ background: "#021a1a", borderTop: "1px solid rgba(255,255,255,0.06)", fontFamily: "DM Sans, sans-serif" }}>
