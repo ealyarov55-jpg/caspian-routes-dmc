@@ -152,43 +152,92 @@ const content = {
       "✅ Yekun yoxlama...",
     ],
   },
+  tr: {
+  title: "AI Rota Planlayıcısı",
+  subtitle: "7 soruyu yanıtla — Azerbaycan için kişisel rota al",
+  step1: "Kaç gün?",
+  step2: "Grup türü",
+  step3: "Kişi başı bütçe",
+  step4: "İlgi alanları",
+  step5: "Diyet ve alerjiler",
+  step6: "Seyahat temposu",
+  step7: "Nereden uçuyorsunuz?",
+  generate: "Rota Oluştur →",
+  generating: "Rota oluşturuluyor...",
+  days: ["3 gün", "5 gün", "7 gün", "10+ gün"],
+  groups: ["Yalnız", "Çift", "Çocuklu aile", "Arkadaşlar"],
+  budgets: ["$300-500", "$500-1000", "$1000-2000", "$2000+"],
+  interests: ["Tarih ve kültür", "Doğa", "Gastronomi", "Fotoğraf", "Macera", "Alışveriş"],
+  diets: ["Kısıtlama yok", "Vejetaryen", "Vegan", "Helal", "Glutensiz", "Laktozsuz", "Deniz ürünleri alerjisi", "Fındık alerjisi"],
+  paces: [
+    { id: "relaxed", label: "🌿 Rahat", desc: "Günde 2-3 aktivite, çok dinlenme" },
+    { id: "medium", label: "⚡ Orta", desc: "Aktivite ve dinlenme dengesi" },
+    { id: "intensive", label: "🔥 Yoğun", desc: "Maksimum deneyim, erken başlangıç" },
+  ],
+  morning: "Sabah",
+  afternoon: "Öğleden sonra",
+  evening: "Akşam",
+  bookHotel: "Otel bul →",
+  bookExcursion: "Rezervasyon yap →",
+  flights: "Uçuşlar",
+  bookFlight: "Uçuş bul →",
+  carRental: "Araba kiralama",
+  bookCar: "Araba bul →",
+  restart: "Yeni rota oluştur",
+  downloadPdf: "PDF rotayı indir",
+  selectRegion: "Bölge seç:",
+  selectCountry: "Ülke seç:",
+  selectCity: "Şehir seç:",
+  back: "← Geri",
+  change: "Değiştir",
+  next: "İleri →",
+  skip: "Atla →",
+  loadingSteps: [
+    "🗺️ İlgi alanlarınız analiz ediliyor...",
+    "🏨 En iyi oteller aranıyor...",
+    "✈️ Uçuşlar ve rotalar kontrol ediliyor...",
+    "🎯 Günlük plan hazırlanıyor...",
+    "💡 İpuçları ekleniyor...",
+    "✅ Son rota kontrolü...",
+  ],
+},
 };
 
 const GEO_DATA = {
-  continents: [
-    { id: "asia", label: { ru: "🌏 Азия", en: "🌏 Asia", az: "🌏 Asiya" } },
-    { id: "europe", label: { ru: "🌍 Европа", en: "🌍 Europe", az: "🌍 Avropa" } },
-    { id: "america", label: { ru: "🌎 Америка", en: "🌎 America", az: "🌎 Amerika" } },
-    { id: "other", label: { ru: "🌐 Другой регион", en: "🌐 Other region", az: "🌐 Digər region" } },
-  ],
+ continents: [
+  { id: "asia", label: { ru: "🌏 Азия", en: "🌏 Asia", az: "🌏 Asiya", tr: "🌏 Asya" } },
+  { id: "europe", label: { ru: "🌍 Европа", en: "🌍 Europe", az: "🌍 Avropa", tr: "🌍 Avrupa" } },
+  { id: "america", label: { ru: "🌎 Америка", en: "🌎 America", az: "🌎 Amerika", tr: "🌎 Amerika" } },
+  { id: "other", label: { ru: "🌐 Другой регион", en: "🌐 Other region", az: "🌐 Digər region", tr: "🌐 Diğer bölge" } },
+],
   countries: {
-    asia: [
-      { id: "ru", flag: "🇷🇺", label: { ru: "Россия", en: "Russia", az: "Rusiya" } },
-      { id: "kz", flag: "🇰🇿", label: { ru: "Казахстан", en: "Kazakhstan", az: "Qazaxıstan" } },
-      { id: "uz", flag: "🇺🇿", label: { ru: "Узбекистан", en: "Uzbekistan", az: "Özbəkistan" } },
-      { id: "tr", flag: "🇹🇷", label: { ru: "Турция", en: "Turkey", az: "Türkiyə" } },
-      { id: "ae", flag: "🇦🇪", label: { ru: "ОАЭ", en: "UAE", az: "BƏƏ" } },
-      { id: "cn", flag: "🇨🇳", label: { ru: "Китай", en: "China", az: "Çin" } },
-      { id: "pk", flag: "🇵🇰", label: { ru: "Пакистан", en: "Pakistan", az: "Pakistan" } },
-      { id: "asia_other", flag: "🌏", label: { ru: "Другая страна Азии", en: "Other Asian country", az: "Asiyada başqa ölkə" } },
-    ],
-    europe: [
-      { id: "by", flag: "🇧🇾", label: { ru: "Беларусь", en: "Belarus", az: "Belarus" } },
-      { id: "ua", flag: "🇺🇦", label: { ru: "Украина", en: "Ukraine", az: "Ukrayna" } },
-      { id: "de", flag: "🇩🇪", label: { ru: "Германия", en: "Germany", az: "Almaniya" } },
-      { id: "fr", flag: "🇫🇷", label: { ru: "Франция", en: "France", az: "Fransa" } },
-      { id: "gb", flag: "🇬🇧", label: { ru: "Великобритания", en: "United Kingdom", az: "Böyük Britaniya" } },
-      { id: "eu_other", flag: "🌍", label: { ru: "Другая страна Европы", en: "Other European country", az: "Avropada başqa ölkə" } },
-    ],
-    america: [
-      { id: "us", flag: "🇺🇸", label: { ru: "США", en: "USA", az: "ABŞ" } },
-      { id: "ca", flag: "🇨🇦", label: { ru: "Канада", en: "Canada", az: "Kanada" } },
-      { id: "am_other", flag: "🌎", label: { ru: "Другая страна Америки", en: "Other American country", az: "Amerikada başqa ölkə" } },
-    ],
-    other: [
-      { id: "other", flag: "🌐", label: { ru: "Другой регион", en: "Other region", az: "Digər region" } },
-    ],
-  } as Record<string, { id: string; flag: string; label: { ru: string; en: string; az: string } }[]>,
+   asia: [
+  { id: "ru", flag: "🇷🇺", label: { ru: "Россия", en: "Russia", az: "Rusiya", tr: "Rusya" } },
+  { id: "kz", flag: "🇰🇿", label: { ru: "Казахстан", en: "Kazakhstan", az: "Qazaxıstan", tr: "Kazakistan" } },
+  { id: "uz", flag: "🇺🇿", label: { ru: "Узбекистан", en: "Uzbekistan", az: "Özbəkistan", tr: "Özbekistan" } },
+  { id: "tr", flag: "🇹🇷", label: { ru: "Турция", en: "Turkey", az: "Türkiyə", tr: "Türkiye" } },
+  { id: "ae", flag: "🇦🇪", label: { ru: "ОАЭ", en: "UAE", az: "BƏƏ", tr: "BAE" } },
+  { id: "cn", flag: "🇨🇳", label: { ru: "Китай", en: "China", az: "Çin", tr: "Çin" } },
+  { id: "pk", flag: "🇵🇰", label: { ru: "Пакистан", en: "Pakistan", az: "Pakistan", tr: "Pakistan" } },
+  { id: "asia_other", flag: "🌏", label: { ru: "Другая страна Азии", en: "Other Asian country", az: "Asiyada başqa ölkə", tr: "Diğer Asya ülkesi" } },
+],
+europe: [
+  { id: "by", flag: "🇧🇾", label: { ru: "Беларусь", en: "Belarus", az: "Belarus", tr: "Belarus" } },
+  { id: "ua", flag: "🇺🇦", label: { ru: "Украина", en: "Ukraine", az: "Ukrayna", tr: "Ukrayna" } },
+  { id: "de", flag: "🇩🇪", label: { ru: "Германия", en: "Germany", az: "Almaniya", tr: "Almanya" } },
+  { id: "fr", flag: "🇫🇷", label: { ru: "Франция", en: "France", az: "Fransa", tr: "Fransa" } },
+  { id: "gb", flag: "🇬🇧", label: { ru: "Великобритания", en: "United Kingdom", az: "Böyük Britaniya", tr: "Birleşik Krallık" } },
+  { id: "eu_other", flag: "🌍", label: { ru: "Другая страна Европы", en: "Other European country", az: "Avropada başqa ölkə", tr: "Diğer Avrupa ülkesi" } },
+],
+america: [
+  { id: "us", flag: "🇺🇸", label: { ru: "США", en: "USA", az: "ABŞ", tr: "ABD" } },
+  { id: "ca", flag: "🇨🇦", label: { ru: "Канада", en: "Canada", az: "Kanada", tr: "Kanada" } },
+  { id: "am_other", flag: "🌎", label: { ru: "Другая страна Америки", en: "Other American country", az: "Amerikada başqa ölkə", tr: "Diğer Amerika ülkesi" } },
+],
+other: [
+  { id: "other", flag: "🌐", label: { ru: "Другой регион", en: "Other region", az: "Digər region", tr: "Diğer bölge" } },
+],
+  } as Record<string, { id: string; flag: string; label: { ru: string; en: string; az: string; tr: string } }[]>,
   cities: {
     ru: ["Москва", "Санкт-Петербург", "Казань", "Екатеринбург", "Другой город"],
     kz: ["Алматы", "Астана", "Другой город"],
@@ -283,7 +332,7 @@ function LoadingScreen({ steps }: { steps: string[] }) {
 
 export default function PlannerPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
-  const lang = (locale === "ru" || locale === "az") ? locale : "en";
+  const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
   const t = content[lang];
 
   const [step, setStep] = useState(0);
@@ -326,9 +375,9 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
       });
       const data = await res.json();
       if (data.plan) { setPlan(data.plan); setStep(7); }
-      else { setError(lang === "ru" ? "Ошибка генерации. Попробуй ещё раз." : "Generation error. Please try again."); }
+      else { setError(lang === "ru" ? "Ошибка генерации. Попробуй ещё раз." : lang === "tr" ? "Oluşturma hatası. Tekrar deneyin." : "Generation error. Please try again."); }
     } catch {
-      setError(lang === "ru" ? "Ошибка сети. Попробуй ещё раз." : "Network error. Please try again.");
+      setError(lang === "ru" ? "Ошибка сети. Попробуй ещё раз." : lang === "tr" ? "Ağ hatası. Tekrar deneyin." : "Network error. Please try again.");
     }
     setLoading(false);
   };
@@ -515,7 +564,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
               <div style={cardStyle}>
                 <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>{t.step5}</h2>
                 <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>
-                  {lang === "ru" ? "Можно выбрать несколько" : lang === "az" ? "Bir neçə seçə bilərsiniz" : "You can select multiple"}
+                  {lang === "ru" ? "Можно выбрать несколько" : lang === "az" ? "Bir neçə seçə bilərsiniz" : lang === "tr" ? "Birden fazla seçebilirsiniz" : "You can select multiple"}
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
                   {t.diets.map(d => (
@@ -619,7 +668,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                 <div style={{ background: "linear-gradient(135deg, rgba(10,112,112,0.3), rgba(13,144,144,0.15))", borderBottom: "1px solid rgba(255,255,255,0.08)", padding: "18px 28px", display: "flex", alignItems: "center", gap: 14 }}>
                   <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(45,212,191,0.2)", border: "1px solid rgba(45,212,191,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 600, color: "#2DD4BF", fontFamily: "DM Sans, sans-serif", flexShrink: 0 }}>{day.day}</div>
                   <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.4rem", color: "white", fontWeight: 400, margin: 0 }}>
-                    {lang === "ru" ? `День ${day.day}` : lang === "az" ? `Gün ${day.day}` : `Day ${day.day}`}: {day.title}
+                    {lang === "ru" ? `День ${day.day}` : lang === "az" ? `Gün ${day.day}` : lang === "tr" ? `Gün ${day.day}` : `Day ${day.day}`}: {day.title}
                   </h2>
                 </div>
 
