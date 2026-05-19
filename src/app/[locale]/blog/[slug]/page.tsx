@@ -97,20 +97,31 @@ function PartnerCard({ icon, label, title, desc, btnText, href }: {
   );
 }
 
-function CTABlock({
-  title = "Готов планировать поездку?",
-  desc = "Ответь на 5 вопросов — ИИ составит маршрут под твой бюджет и интересы. Бесплатно.",
-  btnText = "Создать маршрут с ИИ",
-  locale = "ru",
-}: {
-  title?: string; desc?: string; btnText?: string; locale?: string;
-}) {
+function CTABlock({ locale = "en" }: { locale?: string }) {
+  const titles: Record<string, string> = {
+    ru: "Готов планировать поездку?",
+    en: "Ready to plan your trip?",
+    tr: "Seyahatinizi planlamaya hazır mısınız?",
+    az: "Səyahətinizi planlamağa hazırsınız?",
+  };
+  const descs: Record<string, string> = {
+    ru: "Ответь на 5 вопросов — ИИ составит маршрут под твой бюджет и интересы. Бесплатно.",
+    en: "Answer 5 questions — AI will create an itinerary for your budget and interests. Free.",
+    tr: "5 soruyu yanıtlayın — AI bütçenize ve ilgi alanlarınıza göre rota oluştursun. Ücretsiz.",
+    az: "5 suala cavab ver — süni intellekt büdcənə uyğun marşrut tərtib etsin. Pulsuz.",
+  };
+  const btns: Record<string, string> = {
+    ru: "Создать маршрут с ИИ",
+    en: "Create AI Itinerary",
+    tr: "AI ile Rota Oluştur",
+    az: "AI ilə Marşrut Yarat",
+  };
   return (
     <div className="cta-block">
-      <h3>{title}</h3>
-      <p>{desc}</p>
+      <h3>{titles[locale] || titles.en}</h3>
+      <p>{descs[locale] || descs.en}</p>
       <Link className="cta-block-btn" href={`/${locale}/planner`}>
-        {btnText} →
+        {btns[locale] || btns.en} →
       </Link>
     </div>
   );
@@ -202,7 +213,7 @@ dateModified: data.date ? new Date(data.date).toISOString() : new Date().toISOSt
         <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginBottom: 12 }}>
           <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, margin: 0 }}>
             {new Date(data.date).toLocaleDateString(
-              locale === "ru" ? "ru-RU" : "en-US",
+              locale === "ru" ? "ru-RU" : locale === "tr" ? "tr-TR" : "en-US",
               { year: "numeric", month: "long", day: "numeric" }
             )}
           </p>

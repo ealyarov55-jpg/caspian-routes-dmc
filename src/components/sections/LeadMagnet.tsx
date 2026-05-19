@@ -42,10 +42,23 @@ const content = {
     success: "Bələdçi emailinə göndərildi! 📬",
     error: "Xəta. Yenidən cəhd edin.",
   },
+  tr: {
+  title: "Ücretsiz Rehberinizi Alın",
+  subtitle: "Ne almak istediğinizi seçin",
+  guides: [
+    { id: "top10", label: "🏙️ Bakü'nün Top-10 Yeri" },
+    { id: "checklist", label: "✅ Gezgin Kontrol Listesi" },
+  ],
+  placeholder: "E-posta adresiniz",
+  btn: "Rehberi al →",
+  sending: "Gönderiliyor...",
+  success: "Rehber e-postanıza gönderildi! 📬",
+  error: "Hata. Lütfen tekrar deneyin.",
+},
 };
 
 export default function LeadMagnet({ locale }: { locale: string }) {
-  const lang = (locale === "ru" || locale === "az") ? locale : "en";
+  const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
   const t = content[lang as keyof typeof content];
 
   const [email, setEmail] = useState("");
@@ -174,7 +187,7 @@ export default function LeadMagnet({ locale }: { locale: string }) {
           {error && <p style={{ color: "#f87171", fontSize: 13, marginTop: 10, fontFamily: "DM Sans, sans-serif" }}>{error}</p>}
 
           <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 12, fontFamily: "DM Sans, sans-serif", marginTop: 14 }}>
-            {lang === "ru" ? "Без спама. Только полезное." : lang === "az" ? "Spam yoxdur." : "No spam. Just useful content."}
+            {lang === "ru" ? "Без спама. Только полезное." : lang === "az" ? "Spam yoxdur." : lang === "tr" ? "Spam yok. Yalnızca faydalı içerik." : "No spam. Just useful content."}
           </p>
         </>
       )}
