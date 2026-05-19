@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   try {
     const { days, group, budget, interests, from, locale, diet, pace } = await req.json();
 
-    const langInstruction = locale === "en" ? "Respond in English." : locale === "az" ? "Azərbaycan dilində cavab ver." : "Отвечай на русском языке.";
+    const langInstruction = locale === "en" ? "Respond in English." : locale === "az" ? "Azərbaycan dilində cavab ver." : locale === "tr" ? "Türkçe yanıt ver." : "Отвечай на русском языке.";
 
     const dietLine = diet && diet.length > 0 ? `- Питание/аллергии: ${diet.join(", ")}` : "";
     const paceLine = pace ? `- Темп поездки: ${pace}` : "";
