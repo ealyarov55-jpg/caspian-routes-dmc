@@ -38,23 +38,29 @@ export default async function BlogPage({
   const { locale } = await params;
   const posts = getPosts(locale);
 
-  const title = locale === "ru"
-    ? "Путеводитель по Азербайджану"
-    : locale === "az"
-    ? "Azərbaycan Bələdçisi"
-    : "Azerbaijan Travel Guide";
+ const title = locale === "ru"
+  ? "Путеводитель по Азербайджану"
+  : locale === "az"
+  ? "Azərbaycan Bələdçisi"
+  : locale === "tr"
+  ? "Azerbaycan Seyahat Rehberi"
+  : "Azerbaijan Travel Guide";
 
-  const subtitle = locale === "ru"
-    ? "Маршруты, советы и рекомендации для путешественников"
-    : locale === "az"
-    ? "Marşrutlar, məsləhətlər və tövsiyələr"
-    : "Routes, tips and recommendations for travelers";
+const subtitle = locale === "ru"
+  ? "Маршруты, советы и рекомендации для путешественников"
+  : locale === "az"
+  ? "Marşrutlar, məsləhətlər və tövsiyələr"
+  : locale === "tr"
+  ? "Rotalar, ipuçları ve gezginler için öneriler"
+  : "Routes, tips and recommendations for travelers";
 
-  const empty = locale === "ru"
-    ? "Статьи скоро появятся"
-    : locale === "az"
-    ? "Məqalələr tezliklə əlavə ediləcək"
-    : "Posts coming soon";
+const empty = locale === "ru"
+  ? "Статьи скоро появятся"
+  : locale === "az"
+  ? "Məqalələr tezliklə əlavə ediləcək"
+  : locale === "tr"
+  ? "Makaleler yakında eklenecek"
+  : "Posts coming soon";
 
   return (
     <main style={{ background: "#021a1a", minHeight: "100vh" }}>
@@ -83,7 +89,7 @@ export default async function BlogPage({
                 )}
                 <div style={{ padding: "20px 24px" }}>
                   <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, marginBottom: 8 }}>
-                    {new Date(post.date).toLocaleDateString(locale === "ru" ? "ru-RU" : "en-US", { year: "numeric", month: "long", day: "numeric" })}
+                    {new Date(post.date).toLocaleDateString(locale === "ru" ? "ru-RU" : locale === "tr" ? "tr-TR" : "en-US", { year: "numeric", month: "long", day: "numeric" })}
                   </p>
                   <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.3rem", color: "white", fontWeight: 400, marginBottom: 10, lineHeight: 1.3 }}>
                     {post.title}
