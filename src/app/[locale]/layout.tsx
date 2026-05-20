@@ -88,7 +88,7 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
 
-  return (
+return (
     <html lang={locale}>
       <head>
         <script
@@ -98,14 +98,7 @@ export default async function LocaleLayout({
           data-gyg-partner-id="YNRQ0A3"
         />
         <meta name="google-site-verification" content="R5qPPlNoG4TA-zvddXVnS47DsbLHO4oQ_yG-rr32RXw" />
-        <link rel="preload" as="image" href="/images/maxxja-baku-1997163_1920.jpg" />
-        <link rel="preload" as="image" href="/images/maxxja-baku-1997163_1920-opt.jpg" />
-        <link rel="preload" as="image" href="/images/pexels-zulfugarkarimov-33085326-opt.jpg" />
-        <link rel="preload" as="image" href="/images/pozziss-azerbaijan-4856054_1920-opt.jpg" />
-        <link rel="preload" as="image" href="/images/pexels-arzu-ibaeva-479643718-16976814-opt.jpg" />
-        <link rel="preload" as="image" href="/images/pexels-rahibyaqubov-17050728-opt.jpg" />
-        <link rel="preload" as="image" href="/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg" />
-        <link rel="preload" as="image" href="/images/pexels-zulfugarkarimov-34686330-opt.jpg" />
+        <link rel="preload" as="image" href="/images/baku-hero.jpg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
