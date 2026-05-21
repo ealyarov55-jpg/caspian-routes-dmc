@@ -16,6 +16,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "firebase": "^12.11.0",
+    "googleapis": "^172.0.0",
     "gray-matter": "^4.0.3",
     "jspdf": "^4.2.1",
     "lucide-react": "^1.7.0",
