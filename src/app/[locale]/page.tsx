@@ -133,8 +133,34 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
   const t = content[lang];
 
+  const schemaOrg = {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "name": "Caspian Routes",
+    "description": t.sub,
+    "url": `https://www.caspian-routes.com/${locale}`,
+    "logo": "https://www.caspian-routes.com/favicon.png",
+    "image": "https://www.caspian-routes.com/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Baku",
+      "addressCountry": "AZ"
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "Azerbaijan"
+    },
+    "serviceType": "AI Travel Planning",
+    "priceRange": "Free",
+    "sameAs": ["https://www.caspian-routes.com"]
+  };
+
   return (
     <main style={{ background: "#021a1a", minHeight: "100vh" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
+      />
       <Navbar locale={locale} />
 
       <style>{`
