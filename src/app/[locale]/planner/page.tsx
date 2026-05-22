@@ -584,7 +584,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
   const TOTAL_STEPS = 7;
 
   return (
-    <main style={{ background: "#021a1a", minHeight: "100vh" }}>
+    <main style={{ background: "#0D1116", minHeight: "100vh" }}>
       <Navbar locale={locale} />
       <style>{`
         .planner-btn { padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; font-weight: 400; transition: all 0.2s ease; }
