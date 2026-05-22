@@ -735,13 +735,16 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
           <div ref={planRef}>
             <div style={{ textAlign: "center", marginBottom: 48 }}>
               <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(45,212,191,0.1)", border: "2px solid rgba(45,212,191,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 28 }}>🗺️</div>
-              <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 4vw, 2.8rem)", color: "white", fontWeight: 300, marginBottom: 12 }}>{plan.plan_title}</h1>
-              <p style={{ color: "#2DD4BF", fontSize: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.total_budget_estimate}</p>
+             <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 4vw, 2.8rem)", color: "white", fontWeight: 300, marginBottom: 16 }}>{plan.plan_title}</h1>
+<div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(45,212,191,0.12)", border: "1px solid rgba(45,212,191,0.3)", borderRadius: 99, padding: "6px 16px" }}>
+  <span style={{ fontSize: 14 }}>💰</span>
+  <span style={{ color: "#2DD4BF", fontSize: 14, fontFamily: "DM Sans, sans-serif", fontWeight: 500 }}>{plan.total_budget_estimate}</span>
+</div>
             </div>
 
             {plan.days.map((day) => (
               <div key={day.day} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, marginBottom: 24, overflow: "hidden" }}>
-                <div style={{ background: "linear-gradient(135deg, rgba(10,112,112,0.3), rgba(13,144,144,0.15))", borderBottom: "1px solid rgba(255,255,255,0.08)", padding: "18px 28px", display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ background: "linear-gradient(135deg, rgba(10,112,112,0.5), rgba(13,144,144,0.3))", borderBottom: "1px solid rgba(45,212,191,0.2)", padding: "18px 28px", display: "flex", alignItems: "center", gap: 14 }}>
                   <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(45,212,191,0.2)", border: "1px solid rgba(45,212,191,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 600, color: "#2DD4BF", fontFamily: "DM Sans, sans-serif", flexShrink: 0 }}>{day.day}</div>
                   <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.4rem", color: "white", fontWeight: 400, margin: 0 }}>
                     {lang === "ru" ? `День ${day.day}` : lang === "az" ? `Gün ${day.day}` : lang === "tr" ? `Gün ${day.day}` : `Day ${day.day}`}: {day.title}
@@ -758,7 +761,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                       <div style={{ display: "flex", alignItems: "flex-start", gap: 14, paddingBottom: 20 }}>
                         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
                           <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>{icon}</div>
-                          {idx < arr.length - 1 && <div style={{ width: 1, flex: 1, minHeight: 20, background: "rgba(255,255,255,0.08)", marginTop: 6 }} />}
+                          {idx < arr.length - 1 && <div style={{ width: 2, flex: 1, minHeight: 20, background: "linear-gradient(180deg, #2DD4BF, rgba(45,212,191,0.2))", marginTop: 6, borderRadius: 99 }} />}
                         </div>
                         <div style={{ flex: 1, paddingBottom: idx < arr.length - 1 ? 16 : 0 }}>
                           <p style={{ color, fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6, fontFamily: "DM Sans, sans-serif" }}>{label}</p>
@@ -778,8 +781,28 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
 
                   {(day.hotel?.name || day.excursion?.name) && (
                     <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8, paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-                      {day.hotel?.name && <a href={day.hotel.booking_url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">🏨 {day.hotel.name} — {t.bookHotel}</a>}
-                      {day.excursion?.name && <a href={day.excursion.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">🗺️ {day.excursion.name} — {t.bookExcursion}</a>}
+                     {day.hotel?.name && (
+  <a href={day.hotel.booking_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", flex: 1, minWidth: 200 }}>
+    <div style={{ background: "rgba(45,212,191,0.08)", border: "1px solid rgba(45,212,191,0.25)", borderRadius: 12, padding: "14px 18px", transition: "all 0.2s ease", cursor: "pointer" }}
+      onMouseEnter={e => (e.currentTarget.style.background = "rgba(45,212,191,0.15)")}
+      onMouseLeave={e => (e.currentTarget.style.background = "rgba(45,212,191,0.08)")}>
+      <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontFamily: "DM Sans, sans-serif", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>🏨 {lang === "ru" ? "Отель" : lang === "tr" ? "Otel" : lang === "az" ? "Otel" : "Hotel"}</p>
+      <p style={{ color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif", fontWeight: 500, marginBottom: 8 }}>{day.hotel.name}</p>
+      <span style={{ color: "#2DD4BF", fontSize: 13, fontFamily: "DM Sans, sans-serif", fontWeight: 500 }}>{t.bookHotel}</span>
+    </div>
+  </a>
+)}
+{day.excursion?.name && (
+  <a href={day.excursion.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", flex: 1, minWidth: 200 }}>
+    <div style={{ background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.25)", borderRadius: 12, padding: "14px 18px", transition: "all 0.2s ease", cursor: "pointer" }}
+      onMouseEnter={e => (e.currentTarget.style.background = "rgba(201,168,76,0.15)")}
+      onMouseLeave={e => (e.currentTarget.style.background = "rgba(201,168,76,0.08)")}>
+      <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontFamily: "DM Sans, sans-serif", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>🗺️ {lang === "ru" ? "Экскурсия" : lang === "tr" ? "Tur" : lang === "az" ? "Ekskursiya" : "Excursion"}</p>
+      <p style={{ color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif", fontWeight: 500, marginBottom: 8 }}>{day.excursion.name}</p>
+      <span style={{ color: "#c9a84c", fontSize: 13, fontFamily: "DM Sans, sans-serif", fontWeight: 500 }}>{t.bookExcursion}</span>
+    </div>
+  </a>
+)}
                     </div>
                   )}
                 </div>
