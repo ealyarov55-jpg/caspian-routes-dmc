@@ -239,96 +239,104 @@ other: [
 ],
   } as Record<string, { id: string; flag: string; label: { ru: string; en: string; az: string; tr: string } }[]>,
   cities: {
-    ru: ["Москва", "Санкт-Петербург", "Казань", "Екатеринбург", "Другой город"],
-    kz: ["Алматы", "Астана", "Другой город"],
-    uz: ["Ташкент", "Самарканд", "Другой город"],
-    tr: ["Стамбул", "Анкара", "Другой город"],
-    ae: ["Дубай", "Абу-Даби", "Другой город"],
-    cn: ["Пекин", "Шанхай", "Другой город"],
-    pk: ["Карачи", "Лахор", "Другой город"],
-    by: ["Минск", "Другой город"],
-    ua: ["Киев", "Другой город"],
-    de: ["Берлин", "Мюнхен", "Другой город"],
-    fr: ["Париж", "Другой город"],
-    gb: ["Лондон", "Другой город"],
-    us: ["Нью-Йорк", "Лос-Анджелес", "Другой город"],
-    ca: ["Торонто", "Ванкувер", "Другой город"],
-    asia_other: ["Другой город"],
-    eu_other: ["Другой город"],
-    am_other: ["Другой город"],
-    other: ["Другой город"],
-  } as Record<string, string[]>,
+    ru: {
+      en: ["Moscow", "Saint Petersburg", "Kazan", "Yekaterinburg", "Other city"],
+      ru: ["Москва", "Санкт-Петербург", "Казань", "Екатеринбург", "Другой город"],
+      az: ["Moskva", "Sankt-Peterburq", "Kazan", "Yekaterinburq", "Digər şəhər"],
+      tr: ["Moskova", "Sankt-Petersburg", "Kazan", "Yekaterinburg", "Diğer şehir"],
+    },
+    kz: {
+      en: ["Almaty", "Astana", "Other city"],
+      ru: ["Алматы", "Астана", "Другой город"],
+      az: ["Almatı", "Astana", "Digər şəhər"],
+      tr: ["Almatı", "Astana", "Diğer şehir"],
+    },
+    uz: {
+      en: ["Tashkent", "Samarkand", "Other city"],
+      ru: ["Ташкент", "Самарканд", "Другой город"],
+      az: ["Daşkənd", "Səmərqənd", "Digər şəhər"],
+      tr: ["Taşkent", "Semerkand", "Diğer şehir"],
+    },
+    tr: {
+      en: ["Istanbul", "Ankara", "Other city"],
+      ru: ["Стамбул", "Анкара", "Другой город"],
+      az: ["İstanbul", "Ankara", "Digər şəhər"],
+      tr: ["İstanbul", "Ankara", "Diğer şehir"],
+    },
+    ae: {
+      en: ["Dubai", "Abu Dhabi", "Other city"],
+      ru: ["Дубай", "Абу-Даби", "Другой город"],
+      az: ["Dubai", "Əbu-Dabi", "Digər şəhər"],
+      tr: ["Dubai", "Abu Dabi", "Diğer şehir"],
+    },
+    cn: {
+      en: ["Beijing", "Shanghai", "Other city"],
+      ru: ["Пекин", "Шанхай", "Другой город"],
+      az: ["Pekin", "Şanxay", "Digər şəhər"],
+      tr: ["Pekin", "Şanghay", "Diğer şehir"],
+    },
+    pk: {
+      en: ["Karachi", "Lahore", "Other city"],
+      ru: ["Карачи", "Лахор", "Другой город"],
+      az: ["Karaçi", "Lahor", "Digər şəhər"],
+      tr: ["Karaçi", "Lahor", "Diğer şehir"],
+    },
+    by: {
+      en: ["Minsk", "Other city"],
+      ru: ["Минск", "Другой город"],
+      az: ["Minsk", "Digər şəhər"],
+      tr: ["Minsk", "Diğer şehir"],
+    },
+    ua: {
+      en: ["Kyiv", "Other city"],
+      ru: ["Киев", "Другой город"],
+      az: ["Kiyev", "Digər şəhər"],
+      tr: ["Kiev", "Diğer şehir"],
+    },
+    de: {
+      en: ["Berlin", "Munich", "Other city"],
+      ru: ["Берлин", "Мюнхен", "Другой город"],
+      az: ["Berlin", "Münhen", "Digər şəhər"],
+      tr: ["Berlin", "Münih", "Diğer şehir"],
+    },
+    fr: {
+      en: ["Paris", "Other city"],
+      ru: ["Париж", "Другой город"],
+      az: ["Paris", "Digər şəhər"],
+      tr: ["Paris", "Diğer şehir"],
+    },
+    gb: {
+      en: ["London", "Other city"],
+      ru: ["Лондон", "Другой город"],
+      az: ["London", "Digər şəhər"],
+      tr: ["Londra", "Diğer şehir"],
+    },
+    us: {
+      en: ["New York", "Los Angeles", "Other city"],
+      ru: ["Нью-Йорк", "Лос-Анджелес", "Другой город"],
+      az: ["Nyu-York", "Los-Anceles", "Digər şəhər"],
+      tr: ["New York", "Los Angeles", "Diğer şehir"],
+    },
+    ca: {
+      en: ["Toronto", "Vancouver", "Other city"],
+      ru: ["Торонто", "Ванкувер", "Другой город"],
+      az: ["Toronto", "Vankuver", "Digər şəhər"],
+      tr: ["Toronto", "Vancouver", "Diğer şehir"],
+    },
+    asia_other: {
+      en: ["Other city"], ru: ["Другой город"], az: ["Digər şəhər"], tr: ["Diğer şehir"],
+    },
+    eu_other: {
+      en: ["Other city"], ru: ["Другой город"], az: ["Digər şəhər"], tr: ["Diğer şehir"],
+    },
+    am_other: {
+      en: ["Other city"], ru: ["Другой город"], az: ["Digər şəhər"], tr: ["Diğer şehir"],
+    },
+    other: {
+      en: ["Other city"], ru: ["Другой город"], az: ["Digər şəhər"], tr: ["Diğer şehir"],
+    },
+  } as Record<string, Record<string, string[]>>,
 };
-
-type Plan = {
-  plan_title: string;
-  total_budget_estimate: string;
-  days: Array<{
-    day: number;
-    title: string;
-    morning: { activity: string; description: string; tip: string };
-    afternoon: { activity: string; description: string; tip: string };
-    evening: { activity: string; description: string; tip: string };
-    hotel: { name: string; booking_url: string };
-    excursion: { name: string; url: string };
-  }>;
-  flights: { tip: string; url: string };
-  car_rental: { tip: string; url: string };
-};
-
-function LoadingScreen({ steps }: { steps: string[] }) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const stepInterval = setInterval(() => {
-      setCurrentStep(prev => (prev < steps.length - 1 ? prev + 1 : prev));
-    }, 2200);
-    const progressInterval = setInterval(() => {
-      setProgress(prev => (prev < 95 ? prev + 1 : prev));
-    }, 140);
-    return () => { clearInterval(stepInterval); clearInterval(progressInterval); };
-  }, [steps.length]);
-
-  return (
-    <div style={{ textAlign: "center", padding: "60px 24px" }}>
-      <div style={{ marginBottom: 40 }}>
-        <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(45,212,191,0.1)", border: "2px solid rgba(45,212,191,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", animation: "pulse 2s ease-in-out infinite" }}>
-          <span style={{ fontSize: 36 }}>🗺️</span>
-        </div>
-        <style>{`
-          @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(45,212,191,0.3); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(45,212,191,0); }
-          }
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-        `}</style>
-      </div>
-      <div style={{ minHeight: 32, marginBottom: 40 }}>
-        <p key={currentStep} style={{ color: "white", fontSize: 18, fontWeight: 500, fontFamily: "DM Sans, sans-serif", animation: "fadeIn 0.4s ease" }}>
-          {steps[currentStep]}
-        </p>
-      </div>
-      <div style={{ maxWidth: 400, margin: "0 auto 32px" }}>
-        <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 99, height: 6, overflow: "hidden" }}>
-          <div style={{ height: "100%", width: `${progress}%`, borderRadius: 99, background: "linear-gradient(90deg, #0a7070, #2DD4BF)", transition: "width 0.14s linear" }} />
-        </div>
-        <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginTop: 10 }}>{progress}%</p>
-      </div>
-      <div style={{ maxWidth: 360, margin: "0 auto", textAlign: "left" }}>
-        {steps.slice(0, currentStep + 1).map((step, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", opacity: i === currentStep ? 1 : 0.45, transition: "opacity 0.3s" }}>
-            <span style={{ color: i < currentStep ? "#2DD4BF" : "rgba(255,255,255,0.3)", fontSize: 14 }}>{i < currentStep ? "✓" : "›"}</span>
-            <span style={{ color: i === currentStep ? "white" : "rgba(255,255,255,0.5)", fontSize: 14, fontFamily: "DM Sans, sans-serif" }}>{step}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default function PlannerPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
@@ -632,7 +640,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                     <button style={backBtnStyle} onClick={() => setCountry("")}>{t.back}</button>
                     <span style={labelStyle}>{t.selectCity}</span>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                      {GEO_DATA.cities[country].map(c => (
+                      {(GEO_DATA.cities[country][lang] || GEO_DATA.cities[country]["en"]).map(c => (
                         <button key={c} className={`planner-btn${city === c ? " selected" : ""}`} onClick={() => setCity(c)}>{c}</button>
                       ))}
                     </div>
