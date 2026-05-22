@@ -424,8 +424,8 @@ function TipCard({ label, data, icon, color, bg, border }: {
         <span style={{ fontSize: 20 }}>{icon}</span>
         <span style={{ color, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "DM Sans, sans-serif" }}>{label}</span>
       </div>
-      <p style={{ color: "white", fontSize: 15, fontWeight: 600, marginBottom: 8, fontFamily: "DM Sans, sans-serif", lineHeight: 1.4 }}>{data.activity}</p>
-      <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, lineHeight: 1.7, fontFamily: "DM Sans, sans-serif", marginBottom: data.tip ? 12 : 0 }}>{data.description}</p>
+     <p style={{ color: "white", fontSize: 16, fontWeight: 400, marginBottom: 8, fontFamily: "Cormorant Garamond, serif", lineHeight: 1.3 }}>{data.activity}</p>
+<p style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, lineHeight: 1.7, fontFamily: "DM Sans, sans-serif", marginBottom: data.tip ? 12 : 0 }}>{data.description}</p>
       {data.tip && (
         <>
           <button
