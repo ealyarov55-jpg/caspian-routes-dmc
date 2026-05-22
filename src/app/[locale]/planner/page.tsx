@@ -337,7 +337,75 @@ other: [
     },
   } as Record<string, Record<string, string[]>>,
 };
+type Plan = {
+  plan_title: string;
+  total_budget_estimate: string;
+  days: Array<{
+    day: number;
+    title: string;
+    morning: { activity: string; description: string; tip: string };
+    afternoon: { activity: string; description: string; tip: string };
+    evening: { activity: string; description: string; tip: string };
+    hotel: { name: string; booking_url: string };
+    excursion: { name: string; url: string };
+  }>;
+  flights: { tip: string; url: string };
+  car_rental: { tip: string; url: string };
+};
 
+function LoadingScreen({ steps }: { steps: string[] }) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const stepInterval = setInterval(() => {
+      setCurrentStep(prev => (prev < steps.length - 1 ? prev + 1 : prev));
+    }, 2200);
+    const progressInterval = setInterval(() => {
+      setProgress(prev => (prev < 95 ? prev + 1 : prev));
+    }, 140);
+    return () => { clearInterval(stepInterval); clearInterval(progressInterval); };
+  }, [steps.length]);
+
+  return (
+    <div style={{ textAlign: "center", padding: "60px 24px" }}>
+      <div style={{ marginBottom: 40 }}>
+        <div style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(45,212,191,0.1)", border: "2px solid rgba(45,212,191,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", animation: "pulse 2s ease-in-out infinite" }}>
+          <span style={{ fontSize: 36 }}>🗺️</span>
+        </div>
+        <style>{`
+          @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(45,212,191,0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(45,212,191,0); }
+          }
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+        `}</style>
+      </div>
+      <div style={{ minHeight: 32, marginBottom: 40 }}>
+        <p key={currentStep} style={{ color: "white", fontSize: 18, fontWeight: 500, fontFamily: "DM Sans, sans-serif", animation: "fadeIn 0.4s ease" }}>
+          {steps[currentStep]}
+        </p>
+      </div>
+      <div style={{ maxWidth: 400, margin: "0 auto 32px" }}>
+        <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 99, height: 6, overflow: "hidden" }}>
+          <div style={{ height: "100%", width: `${progress}%`, borderRadius: 99, background: "linear-gradient(90deg, #0a7070, #2DD4BF)", transition: "width 0.14s linear" }} />
+        </div>
+        <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginTop: 10 }}>{progress}%</p>
+      </div>
+      <div style={{ maxWidth: 360, margin: "0 auto", textAlign: "left" }}>
+        {steps.slice(0, currentStep + 1).map((step, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", opacity: i === currentStep ? 1 : 0.45, transition: "opacity 0.3s" }}>
+            <span style={{ color: i < currentStep ? "#2DD4BF" : "rgba(255,255,255,0.3)", fontSize: 14 }}>{i < currentStep ? "✓" : "›"}</span>
+            <span style={{ color: i === currentStep ? "white" : "rgba(255,255,255,0.5)", fontSize: 14, fontFamily: "DM Sans, sans-serif" }}>{step}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 export default function PlannerPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
   const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
