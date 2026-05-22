@@ -409,29 +409,54 @@ function LoadingScreen({ steps }: { steps: string[] }) {
 function TipCard({ label, data, icon }: {
   label: string;
   data: { activity: string; description: string; tip: string };
-  icon: string;
+  icon: "morning" | "afternoon" | "evening";
 }) {
   const [open, setOpen] = useState(false);
+
+  const icons = {
+    morning: (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        <circle cx="12" cy="12" r="4"/>
+      </svg>
+    ),
+    afternoon: (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+    ),
+    evening: (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    ),
+  };
+
   return (
-    <div style={{ background: "#18181b", borderRadius: 16, padding: "24px", display: "flex", flexDirection: "column", gap: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.3), 0 16px 40px rgba(0,0,0,0.25)", height: "100%" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 15 }}>{icon}</span>
-          <span style={{ color: "#2DD4BF", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif" }}>{label}</span>
+    <div style={{ background: "#18181b", borderRadius: 16, padding: "28px", display: "flex", flexDirection: "column", gap: 16, height: "100%", boxSizing: "border-box" as const }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#4DB6AC" }}>
+          {icons[icon]}
+          <span style={{ color: "#4DB6AC", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif" }}>{label}</span>
         </div>
         <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 17, fontWeight: 500, color: "white", lineHeight: 1.4, margin: 0 }}>{data.activity}</h3>
       </div>
-      <p style={{ color: "#9f9fa9", fontSize: 14, lineHeight: 1.7, margin: 0, fontFamily: "DM Sans, sans-serif", flex: 1 }}>{data.description}</p>
+      <p style={{ color: "#9f9fa9", fontSize: 13, lineHeight: 1.8, margin: 0, fontFamily: "DM Sans, sans-serif", flex: 1 }}>{data.description}</p>
       {data.tip && (
         <div>
-          <button onClick={() => setOpen(!open)} style={{ color: "#2DD4BF", fontSize: 12, fontFamily: "DM Sans, sans-serif", background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: 6 }}>
-            <span>💡</span>
-            <span>Show tip</span>
+          <button onClick={() => setOpen(!open)} style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, fontFamily: "DM Sans, sans-serif", background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: 6, transition: "color 0.2s" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+            </svg>
+            <span>{open ? "Hide tip" : "Show tip"}</span>
             <span style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "none", display: "inline-block" }}>▾</span>
           </button>
           {open && (
-            <div style={{ marginTop: 10, padding: "10px 14px", background: "rgba(0,0,0,0.3)", borderRadius: 8 }}>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, fontStyle: "italic", margin: 0, fontFamily: "DM Sans, sans-serif", lineHeight: 1.6 }}>{data.tip}</p>
+            <div style={{ marginTop: 10, padding: "12px 16px", background: "rgba(0,0,0,0.4)", borderRadius: 8, borderLeft: "2px solid rgba(77,182,172,0.4)" }}>
+              <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 12, fontStyle: "italic", margin: 0, fontFamily: "DM Sans, sans-serif", lineHeight: 1.7 }}>{data.tip}</p>
             </div>
           )}
         </div>
@@ -794,42 +819,42 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
 
                 {/* 3 колонки */}
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 16 }}>
-                  <TipCard label={t.morning} data={day.morning} icon="🌅" />
-                  <TipCard label={t.afternoon} data={day.afternoon} icon="☀️" />
-                  <TipCard label={t.evening} data={day.evening} icon="🌙" />
+                  <TipCard label={t.morning} data={day.morning} icon="morning" />
+<TipCard label={t.afternoon} data={day.afternoon} icon="afternoon" />
+<TipCard label={t.evening} data={day.evening} icon="evening" />
                 </div>
 
-                {/* Отель и экскурсия */}
+              {/* Отель и экскурсия */}
                 {(day.hotel?.name || day.excursion?.name) && (
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                     {day.hotel?.name && (
                       <a href={day.hotel.booking_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
-                        <div style={{ background: "rgba(180,100,40,0.35)", borderRadius: 16, padding: "24px", display: "flex", flexDirection: "column", gap: 8, transition: "background 0.2s", cursor: "pointer" }}
-                          onMouseEnter={e => (e.currentTarget.style.background = "rgba(180,100,40,0.5)")}
-                          onMouseLeave={e => (e.currentTarget.style.background = "rgba(180,100,40,0.35)")}>
+                        <div style={{ background: "#18181b", border: "1px solid rgba(77,182,172,0.2)", borderRadius: 16, padding: "24px", display: "flex", flexDirection: "column", gap: 8, transition: "all 0.25s ease", cursor: "pointer" }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(77,182,172,0.5)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)"; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(77,182,172,0.2)"; (e.currentTarget as HTMLDivElement).style.transform = "none"; }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <span style={{ fontSize: 12 }}>🏨</span>
-                            <span style={{ color: "rgba(220,160,100,0.8)", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif" }}>{lang === "ru" ? "Отель" : lang === "tr" ? "Otel" : lang === "az" ? "Otel" : "Hotel"}</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4DB6AC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+                            <span style={{ color: "rgba(77,182,172,0.7)", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif" }}>{lang === "ru" ? "Отель" : lang === "tr" ? "Otel" : lang === "az" ? "Otel" : "Hotel"}</span>
                           </div>
                           <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 15, fontWeight: 500, color: "white", margin: 0, lineHeight: 1.4 }}>{day.hotel.name}</h3>
                           <div style={{ display: "flex", alignItems: "center", gap: 4, color: "white", fontSize: 12, fontFamily: "DM Sans, sans-serif", fontWeight: 500, marginTop: 4 }}>
-                            <span>{t.bookHotel}</span>
+                            <span>{t.bookHotel}</span><span>→</span>
                           </div>
                         </div>
                       </a>
                     )}
                     {day.excursion?.name && (
                       <a href={day.excursion.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
-                        <div style={{ background: "rgba(180,100,40,0.35)", borderRadius: 16, padding: "24px", display: "flex", flexDirection: "column", gap: 8, transition: "background 0.2s", cursor: "pointer" }}
-                          onMouseEnter={e => (e.currentTarget.style.background = "rgba(180,100,40,0.5)")}
-                          onMouseLeave={e => (e.currentTarget.style.background = "rgba(180,100,40,0.35)")}>
+                        <div style={{ background: "#18181b", border: "1px solid rgba(77,182,172,0.2)", borderRadius: 16, padding: "24px", display: "flex", flexDirection: "column", gap: 8, transition: "all 0.25s ease", cursor: "pointer" }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(77,182,172,0.5)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)"; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(77,182,172,0.2)"; (e.currentTarget as HTMLDivElement).style.transform = "none"; }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <span style={{ fontSize: 12 }}>🗺️</span>
-                            <span style={{ color: "rgba(220,160,100,0.8)", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif" }}>{lang === "ru" ? "Экскурсия" : lang === "tr" ? "Tur" : lang === "az" ? "Ekskursiya" : "Excursion"}</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4DB6AC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16 10,8"/></svg>
+                            <span style={{ color: "rgba(77,182,172,0.7)", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif" }}>{lang === "ru" ? "Экскурсия" : lang === "tr" ? "Tur" : lang === "az" ? "Ekskursiya" : "Excursion"}</span>
                           </div>
                           <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 15, fontWeight: 500, color: "white", margin: 0, lineHeight: 1.4 }}>{day.excursion.name}</h3>
                           <div style={{ display: "flex", alignItems: "center", gap: 4, color: "white", fontSize: 12, fontFamily: "DM Sans, sans-serif", fontWeight: 500, marginTop: 4 }}>
-                            <span>{t.bookExcursion}</span>
+                            <span>{t.bookExcursion}</span><span>→</span>
                           </div>
                         </div>
                       </a>
@@ -840,6 +865,8 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                 {/* Разделитель */}
                 <div style={{ height: 1, background: "rgba(45,212,191,0.12)", marginTop: 48 }} />
               </section>
+
+               
             ))}
 
             {/* Авиа и авто */}
