@@ -406,18 +406,19 @@ function LoadingScreen({ steps }: { steps: string[] }) {
     </div>
   );
 }
-function TipCard({ label, data, icon, color, bg, border }: {
+function TipCard({ label, data, icon, color, bg, border, tall }: {
   label: string;
   data: { activity: string; description: string; tip: string };
   icon: string;
   color: string;
   bg: string;
   border: string;
+  tall?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div style={{ background: "rgba(255,255,255,0.03)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "24px", transition: "all 0.3s ease", cursor: "default" }}
+    <div style={{ background: "rgba(255,255,255,0.03)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "24px", transition: "all 0.3s ease", cursor: "default", height: tall ? "100%" : "auto", boxSizing: "border-box" }}
   onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.border = "1px solid rgba(45,212,191,0.35)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(0,0,0,0.3)"; }}
   onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.border = "1px solid rgba(255,255,255,0.08)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
@@ -801,15 +802,13 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                   </div>
                 </div>
 
-                {/* Bento Grid — утро/день/вечер */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginBottom: 16 }}>
-                  {[
-                    { label: t.morning, data: day.morning, icon: "🌅", color: "#f59e0b", bg: "rgba(245,158,11,0.06)", border: "rgba(245,158,11,0.2)" },
-                    { label: t.afternoon, data: day.afternoon, icon: "☀️", color: "#10b981", bg: "rgba(16,185,129,0.06)", border: "rgba(16,185,129,0.2)" },
-                    { label: t.evening, data: day.evening, icon: "🌙", color: "#818cf8", bg: "rgba(129,140,248,0.06)", border: "rgba(129,140,248,0.2)" },
-                  ].map(({ label, data, icon, color, bg, border }) => (
-                    <TipCard key={label} label={label} data={data} icon={icon} color={color} bg={bg} border={border} />
-                  ))}
+            {/* Bento Grid — утро/день/вечер */}
+<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "auto auto", gap: 12, marginBottom: 16 }}>
+                  <div style={{ gridRow: "1 / 3" }}>
+  <TipCard label={t.morning} data={day.morning} icon="🌅" color="#f59e0b" bg="rgba(245,158,11,0.06)" border="rgba(245,158,11,0.2)" tall />
+</div>
+<TipCard label={t.afternoon} data={day.afternoon} icon="☀️" color="#10b981" bg="rgba(16,185,129,0.06)" border="rgba(16,185,129,0.2)" />
+<TipCard label={t.evening} data={day.evening} icon="🌙" color="#818cf8" bg="rgba(129,140,248,0.06)" border="rgba(129,140,248,0.2)" />
                 </div>
 
                 {/* Карточки отеля и экскурсии */}
