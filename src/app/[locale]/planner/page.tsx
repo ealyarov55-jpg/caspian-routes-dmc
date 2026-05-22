@@ -406,45 +406,35 @@ function LoadingScreen({ steps }: { steps: string[] }) {
     </div>
   );
 }
-function TipCard({ label, data, icon, color, bg, border, tall }: {
+function TipCard({ label, data, icon }: {
   label: string;
   data: { activity: string; description: string; tip: string };
   icon: string;
-  color: string;
-  bg: string;
-  border: string;
-  tall?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-
   return (
-    <div style={{ background: "rgba(255,255,255,0.03)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "24px", transition: "all 0.3s ease", cursor: "default", height: tall ? "100%" : "auto", boxSizing: "border-box" }}
-  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.border = "1px solid rgba(45,212,191,0.35)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(0,0,0,0.3)"; }}
-  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.border = "1px solid rgba(255,255,255,0.08)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-        <span style={{ fontSize: 20 }}>{icon}</span>
-        <span style={{ color, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "DM Sans, sans-serif" }}>{label}</span>
+    <div style={{ background: "#18181b", borderRadius: 16, padding: "24px", display: "flex", flexDirection: "column", gap: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.3), 0 16px 40px rgba(0,0,0,0.25)", height: "100%" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 15 }}>{icon}</span>
+          <span style={{ color: "#2DD4BF", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif" }}>{label}</span>
+        </div>
+        <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 17, fontWeight: 500, color: "white", lineHeight: 1.4, margin: 0 }}>{data.activity}</h3>
       </div>
-     <p style={{ color: "white", fontSize: 16, fontWeight: 400, marginBottom: 8, fontFamily: "Cormorant Garamond, serif", lineHeight: 1.3 }}>{data.activity}</p>
-<p style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, lineHeight: 1.7, fontFamily: "DM Sans, sans-serif", marginBottom: data.tip ? 12 : 0 }}>{data.description}</p>
+      <p style={{ color: "#9f9fa9", fontSize: 14, lineHeight: 1.7, margin: 0, fontFamily: "DM Sans, sans-serif", flex: 1 }}>{data.description}</p>
       {data.tip && (
-        <>
-          <button
-            onClick={() => setOpen(!open)}
-            style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", padding: 0, color: "rgba(255,255,255,0.4)", fontSize: 12, fontFamily: "DM Sans, sans-serif", transition: "color 0.2s" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}
-            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}
-          >
+        <div>
+          <button onClick={() => setOpen(!open)} style={{ color: "#2DD4BF", fontSize: 12, fontFamily: "DM Sans, sans-serif", background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: 6 }}>
             <span>💡</span>
-            <span>{open ? "Hide tip" : "Show tip"}</span>
-            <span style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "none" }}>▾</span>
+            <span>Show tip</span>
+            <span style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "none", display: "inline-block" }}>▾</span>
           </button>
           {open && (
-            <div style={{ marginTop: 10, padding: "10px 14px", background: "rgba(255,255,255,0.04)", borderRadius: 8, borderLeft: `2px solid ${color}` }}>
-              <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, fontStyle: "italic", margin: 0, fontFamily: "DM Sans, sans-serif", lineHeight: 1.6 }}>{data.tip}</p>
+            <div style={{ marginTop: 10, padding: "10px 14px", background: "rgba(0,0,0,0.3)", borderRadius: 8 }}>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, fontStyle: "italic", margin: 0, fontFamily: "DM Sans, sans-serif", lineHeight: 1.6 }}>{data.tip}</p>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );
@@ -777,86 +767,94 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
         {!loading && step === TOTAL_STEPS && plan && (
           <div ref={planRef}>
 
-            {/* Hero заголовок */}
-            <div style={{ textAlign: "center", marginBottom: 48, padding: "0 0 40px", borderBottom: "1px solid rgba(45,212,191,0.1)" }}>
-              <div style={{ width: 72, height: 72, borderRadius: "50%", background: "linear-gradient(135deg, rgba(10,112,112,0.4), rgba(45,212,191,0.2))", border: "2px solid rgba(45,212,191,0.4)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", fontSize: 32, boxShadow: "0 0 40px rgba(45,212,191,0.15)" }}>🗺️</div>
-              <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2rem, 5vw, 3.2rem)", color: "white", fontWeight: 300, marginBottom: 20, lineHeight: 1.2 }}>{plan.plan_title}</h1>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(45,212,191,0.12)", border: "1px solid rgba(45,212,191,0.3)", borderRadius: 99, padding: "8px 20px" }}>
-                <span style={{ fontSize: 16 }}>💰</span>
-                <span style={{ color: "#2DD4BF", fontSize: 15, fontFamily: "DM Sans, sans-serif", fontWeight: 500 }}>{plan.total_budget_estimate}</span>
+            {/* Hero */}
+            <div style={{ textAlign: "center", marginBottom: 48, paddingBottom: 40, borderBottom: "1px solid rgba(45,212,191,0.15)" }}>
+              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "#18181b", boxShadow: "0 1px 3px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 32px", fontSize: 24 }}>🗺️</div>
+              <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2rem, 5vw, 3rem)", color: "white", fontWeight: 300, marginBottom: 24, lineHeight: 1.2 }}>{plan.plan_title}</h1>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#18181b", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 99, padding: "8px 20px" }}>
+                <span style={{ fontSize: 14 }}>💰</span>
+                <span style={{ color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif" }}>{plan.total_budget_estimate}</span>
               </div>
             </div>
 
             {/* Дни */}
             {plan.days.map((day) => (
-              <div key={day.day} style={{ marginBottom: 40 }}>
+              <section key={day.day} style={{ marginBottom: 64 }}>
 
                 {/* Заголовок дня */}
-                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #0a7070, #2DD4BF)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: "white", fontFamily: "DM Sans, sans-serif", flexShrink: 0, boxShadow: "0 4px 16px rgba(45,212,191,0.3)" }}>{day.day}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 32 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#2DD4BF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 700, color: "#0D1116", fontFamily: "DM Sans, sans-serif", flexShrink: 0 }}>{day.day}</div>
                   <div>
-                    <p style={{ color: "#2DD4BF", fontSize: 11, fontFamily: "DM Sans, sans-serif", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 2 }}>
+                    <p style={{ color: "#2DD4BF", fontSize: 10, fontFamily: "DM Sans, sans-serif", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", marginBottom: 4 }}>
                       {lang === "ru" ? `День ${day.day}` : lang === "az" ? `Gün ${day.day}` : lang === "tr" ? `Gün ${day.day}` : `Day ${day.day}`}
                     </p>
-                    <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.3rem, 3vw, 1.8rem)", color: "white", fontWeight: 400, margin: 0 }}>{day.title}</h2>
+                    <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.4rem, 3vw, 2rem)", color: "white", fontWeight: 300, margin: 0 }}>{day.title}</h2>
                   </div>
                 </div>
 
-            {/* Bento Grid — утро/день/вечер */}
-<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "auto auto", gap: 12, marginBottom: 16 }}>
-                  <div style={{ gridRow: "1 / 3" }}>
-  <TipCard label={t.morning} data={day.morning} icon="🌅" color="#f59e0b" bg="rgba(245,158,11,0.06)" border="rgba(245,158,11,0.2)" tall />
-</div>
-<TipCard label={t.afternoon} data={day.afternoon} icon="☀️" color="#10b981" bg="rgba(16,185,129,0.06)" border="rgba(16,185,129,0.2)" />
-<TipCard label={t.evening} data={day.evening} icon="🌙" color="#818cf8" bg="rgba(129,140,248,0.06)" border="rgba(129,140,248,0.2)" />
+                {/* 3 колонки */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 16 }}>
+                  <TipCard label={t.morning} data={day.morning} icon="🌅" />
+                  <TipCard label={t.afternoon} data={day.afternoon} icon="☀️" />
+                  <TipCard label={t.evening} data={day.evening} icon="🌙" />
                 </div>
 
-                {/* Карточки отеля и экскурсии */}
+                {/* Отель и экскурсия */}
                 {(day.hotel?.name || day.excursion?.name) && (
-                  <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                     {day.hotel?.name && (
-                      <a href={day.hotel.booking_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", flex: 1, minWidth: 200 }}>
-                        <div style={{ background: "rgba(45,212,191,0.06)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 12, padding: "14px 18px", transition: "all 0.2s ease", cursor: "pointer" }}
-                          onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(45,212,191,0.12)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(45,212,191,0.4)"; }}
-                          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(45,212,191,0.06)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(45,212,191,0.2)"; }}>
-                          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 10, fontFamily: "DM Sans, sans-serif", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>🏨 {lang === "ru" ? "Отель" : lang === "tr" ? "Otel" : lang === "az" ? "Otel" : "Hotel"}</p>
-                          <p style={{ color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif", fontWeight: 500, marginBottom: 10 }}>{day.hotel.name}</p>
-                          <span style={{ color: "#2DD4BF", fontSize: 13, fontFamily: "DM Sans, sans-serif", fontWeight: 600 }}>{t.bookHotel}</span>
+                      <a href={day.hotel.booking_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+                        <div style={{ background: "rgba(180,100,40,0.35)", borderRadius: 16, padding: "24px", display: "flex", flexDirection: "column", gap: 8, transition: "background 0.2s", cursor: "pointer" }}
+                          onMouseEnter={e => (e.currentTarget.style.background = "rgba(180,100,40,0.5)")}
+                          onMouseLeave={e => (e.currentTarget.style.background = "rgba(180,100,40,0.35)")}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <span style={{ fontSize: 12 }}>🏨</span>
+                            <span style={{ color: "rgba(220,160,100,0.8)", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif" }}>{lang === "ru" ? "Отель" : lang === "tr" ? "Otel" : lang === "az" ? "Otel" : "Hotel"}</span>
+                          </div>
+                          <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 15, fontWeight: 500, color: "white", margin: 0, lineHeight: 1.4 }}>{day.hotel.name}</h3>
+                          <div style={{ display: "flex", alignItems: "center", gap: 4, color: "white", fontSize: 12, fontFamily: "DM Sans, sans-serif", fontWeight: 500, marginTop: 4 }}>
+                            <span>{t.bookHotel}</span>
+                          </div>
                         </div>
                       </a>
                     )}
                     {day.excursion?.name && (
-                      <a href={day.excursion.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", flex: 1, minWidth: 200 }}>
-                        <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: 12, padding: "14px 18px", transition: "all 0.2s ease", cursor: "pointer" }}
-                          onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(201,168,76,0.12)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(201,168,76,0.4)"; }}
-                          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(201,168,76,0.06)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(201,168,76,0.2)"; }}>
-                          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 10, fontFamily: "DM Sans, sans-serif", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>🗺️ {lang === "ru" ? "Экскурсия" : lang === "tr" ? "Tur" : lang === "az" ? "Ekskursiya" : "Excursion"}</p>
-                          <p style={{ color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif", fontWeight: 500, marginBottom: 10 }}>{day.excursion.name}</p>
-                          <span style={{ color: "#c9a84c", fontSize: 13, fontFamily: "DM Sans, sans-serif", fontWeight: 600 }}>{t.bookExcursion}</span>
+                      <a href={day.excursion.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+                        <div style={{ background: "rgba(180,100,40,0.35)", borderRadius: 16, padding: "24px", display: "flex", flexDirection: "column", gap: 8, transition: "background 0.2s", cursor: "pointer" }}
+                          onMouseEnter={e => (e.currentTarget.style.background = "rgba(180,100,40,0.5)")}
+                          onMouseLeave={e => (e.currentTarget.style.background = "rgba(180,100,40,0.35)")}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <span style={{ fontSize: 12 }}>🗺️</span>
+                            <span style={{ color: "rgba(220,160,100,0.8)", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif" }}>{lang === "ru" ? "Экскурсия" : lang === "tr" ? "Tur" : lang === "az" ? "Ekskursiya" : "Excursion"}</span>
+                          </div>
+                          <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 15, fontWeight: 500, color: "white", margin: 0, lineHeight: 1.4 }}>{day.excursion.name}</h3>
+                          <div style={{ display: "flex", alignItems: "center", gap: 4, color: "white", fontSize: 12, fontFamily: "DM Sans, sans-serif", fontWeight: 500, marginTop: 4 }}>
+                            <span>{t.bookExcursion}</span>
+                          </div>
                         </div>
                       </a>
                     )}
                   </div>
                 )}
 
-                {/* Разделитель между днями */}
-                <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(45,212,191,0.2), transparent)", marginTop: 32 }} />
-              </div>
+                {/* Разделитель */}
+                <div style={{ height: 1, background: "rgba(45,212,191,0.12)", marginTop: 48 }} />
+              </section>
             ))}
 
             {/* Авиа и авто */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 40 }}>
               {plan.flights && (
-                <div style={{ background: "rgba(45,212,191,0.06)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 16, padding: "24px" }}>
-                  <p style={{ color: "#2DD4BF", fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10, fontFamily: "DM Sans, sans-serif" }}>✈️ {t.flights}</p>
-                  <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.7, marginBottom: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.flights.tip}</p>
+                <div style={{ background: "#18181b", borderRadius: 16, padding: "24px" }}>
+                  <p style={{ color: "#2DD4BF", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>✈️ {t.flights}</p>
+                  <p style={{ color: "#9f9fa9", fontSize: 14, lineHeight: 1.7, marginBottom: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.flights.tip}</p>
                   <a href={plan.flights.url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">{t.bookFlight}</a>
                 </div>
               )}
               {plan.car_rental && (
-                <div style={{ background: "rgba(201,168,76,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: 16, padding: "24px" }}>
-                  <p style={{ color: "#c9a84c", fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10, fontFamily: "DM Sans, sans-serif" }}>🚗 {t.carRental}</p>
-                  <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, lineHeight: 1.7, marginBottom: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.car_rental.tip}</p>
+                <div style={{ background: "#18181b", borderRadius: 16, padding: "24px" }}>
+                  <p style={{ color: "#c9a84c", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>🚗 {t.carRental}</p>
+                  <p style={{ color: "#9f9fa9", fontSize: 14, lineHeight: 1.7, marginBottom: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.car_rental.tip}</p>
                   <a href={plan.car_rental.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">{t.bookCar}</a>
                 </div>
               )}
