@@ -743,7 +743,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
             </div>
 
             {plan.days.map((day) => (
-              <div key={day.day} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, marginBottom: 24, overflow: "hidden" }}>
+              <div key={day.day} style={{ background: "rgba(13,40,40,0.95)", border: "1px solid rgba(45,212,191,0.15)", borderRadius: 16, marginBottom: 24, overflow: "hidden", boxShadow: "0 4px 24px rgba(0,0,0,0.3)" }}>
                 <div style={{ background: "linear-gradient(135deg, rgba(10,112,112,0.5), rgba(13,144,144,0.3))", borderBottom: "1px solid rgba(45,212,191,0.2)", padding: "18px 28px", display: "flex", alignItems: "center", gap: 14 }}>
                   <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(45,212,191,0.2)", border: "1px solid rgba(45,212,191,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 600, color: "#2DD4BF", fontFamily: "DM Sans, sans-serif", flexShrink: 0 }}>{day.day}</div>
                   <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.4rem", color: "white", fontWeight: 400, margin: 0 }}>
@@ -760,7 +760,7 @@ export default function PlannerPage({ params }: { params: Promise<{ locale: stri
                     <div key={label}>
                       <div style={{ display: "flex", alignItems: "flex-start", gap: 14, paddingBottom: 20 }}>
                         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
-                          <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>{icon}</div>
+                          <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, rgba(10,112,112,0.4), rgba(45,212,191,0.2))", border: "2px solid rgba(45,212,191,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, boxShadow: "0 0 12px rgba(45,212,191,0.2)" }}>{icon}</div>
                           {idx < arr.length - 1 && <div style={{ width: 2, flex: 1, minHeight: 20, background: "linear-gradient(180deg, #2DD4BF, rgba(45,212,191,0.2))", marginTop: 6, borderRadius: 99 }} />}
                         </div>
                         <div style={{ flex: 1, paddingBottom: idx < arr.length - 1 ? 16 : 0 }}>
