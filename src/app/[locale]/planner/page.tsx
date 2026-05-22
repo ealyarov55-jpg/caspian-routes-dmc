@@ -417,7 +417,9 @@ function TipCard({ label, data, icon, color, bg, border }: {
   const [open, setOpen] = useState(false);
 
   return (
-    <div style={{ background: bg, border: `1px solid ${border}`, borderRadius: 14, padding: "20px", transition: "all 0.2s ease" }}>
+    <div style={{ background: "rgba(255,255,255,0.03)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "24px", transition: "all 0.3s ease", cursor: "default" }}
+  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.border = "1px solid rgba(45,212,191,0.35)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(0,0,0,0.3)"; }}
+  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.border = "1px solid rgba(255,255,255,0.08)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
         <span style={{ fontSize: 20 }}>{icon}</span>
         <span style={{ color, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "DM Sans, sans-serif" }}>{label}</span>
