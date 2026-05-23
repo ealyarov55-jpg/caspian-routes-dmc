@@ -532,7 +532,7 @@ function DaySection({ day, t, lang, planEnabled }: {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }} className="day-cards-grid">
         <FeaturedActivityCard
           label={`Featured · ${t.afternoon}`}
           data={day.afternoon}
@@ -742,7 +742,7 @@ const { locale } = use(params);
         .pdf-btn { padding: 12px 28px; border-radius: 10px; background: linear-gradient(135deg, #0a7070, #0d9090); border: none; color: white; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; font-weight: 500; transition: all 0.25s ease; box-shadow: 0 4px 16px rgba(10,112,112,0.3); }
         .pdf-btn:hover { background: linear-gradient(135deg, #0d9090, #2DD4BF); box-shadow: 0 8px 28px rgba(10,112,112,0.5); transform: translateY(-2px); }
         @media (max-width: 767px) { .planner-btn { padding: 10px 16px; font-size: 13px; } .generate-btn { width: 100%; } .next-btn { width: 100%; margin-right: 0; margin-bottom: 10px; } .skip-btn { width: 100%; } }
-      `}</style>
+      @media (max-width: 640px) { .day-cards-grid { grid-template-columns: 1fr !important; } }`}</style>
 
       <div style={{ maxWidth: 780, margin: "0 auto", padding: "100px 24px 80px" }}>
 
