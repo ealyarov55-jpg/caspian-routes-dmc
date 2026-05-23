@@ -19,7 +19,7 @@ const content = {
     generating: "Создаём маршрут...",
     days: ["3 дня", "5 дней", "7 дней", "10+ дней"],
     groups: ["Один", "Пара", "Семья с детьми", "Друзья"],
-    budgets: ["$300-500", "$500-1000", "$1000-2000", "$2000+"],
+    budgets: ["1", "2", "3", "4"],
     interests: ["История и культура", "Природа", "Гастрономия", "Фото", "Активный отдых", "Шопинг"],
     diets: ["Нет ограничений", "Вегетарианец", "Веган", "Халяль", "Без глютена", "Без лактозы", "Аллергия на морепродукты", "Аллергия на орехи"],
     paces: [
@@ -68,7 +68,7 @@ const content = {
     generating: "Creating itinerary...",
     days: ["3 days", "5 days", "7 days", "10+ days"],
     groups: ["Solo", "Couple", "Family with kids", "Friends"],
-    budgets: ["$300-500", "$500-1000", "$1000-2000", "$2000+"],
+    budgets: ["1", "2", "3", "4"],
     interests: ["History & Culture", "Nature", "Food", "Photography", "Adventure", "Shopping"],
     diets: ["No restrictions", "Vegetarian", "Vegan", "Halal", "Gluten-free", "Lactose-free", "Seafood allergy", "Nut allergy"],
     paces: [
@@ -117,7 +117,7 @@ const content = {
     generating: "Marşrut yaradılır...",
     days: ["3 gün", "5 gün", "7 gün", "10+ gün"],
     groups: ["Tək", "Cütlük", "Uşaqlı ailə", "Dostlar"],
-    budgets: ["$300-500", "$500-1000", "$1000-2000", "$2000+"],
+    budgets: ["1", "2", "3", "4"],
     interests: ["Tarix və mədəniyyət", "Təbiət", "Qastronomiya", "Foto", "Aktiv istirahət", "Alış-veriş"],
     diets: ["Məhdudiyyət yoxdur", "Vegetarian", "Vegan", "Halal", "Qlütensiz", "Laktosasız", "Dəniz məhsulları allergiyası", "Qoz allergiyası"],
     paces: [
@@ -166,7 +166,7 @@ const content = {
   generating: "Rota oluşturuluyor...",
   days: ["3 gün", "5 gün", "7 gün", "10+ gün"],
   groups: ["Yalnız", "Çift", "Çocuklu aile", "Arkadaşlar"],
-  budgets: ["$300-500", "$500-1000", "$1000-2000", "$2000+"],
+  budgets: ["1", "2", "3", "4"],
   interests: ["Tarih ve kültür", "Doğa", "Gastronomi", "Fotoğraf", "Macera", "Alışveriş"],
   diets: ["Kısıtlama yok", "Vejetaryen", "Vegan", "Helal", "Glutensiz", "Laktozsuz", "Deniz ürünleri alerjisi", "Fındık alerjisi"],
   paces: [
@@ -202,7 +202,25 @@ const content = {
   ],
 },
 };
-
+const CURRENCY_BUDGETS: Record<string, { symbol: string; ranges: string[] }> = {
+  ru: { symbol: "₽", ranges: ["₽25 000–45 000", "₽45 000–90 000", "₽90 000–180 000", "₽180 000+"] },
+  kz: { symbol: "₸", ranges: ["₸150 000–250 000", "₸250 000–500 000", "₸500 000–1 000 000", "₸1 000 000+"] },
+  uz: { symbol: "сум", ranges: ["3 500 000–6 000 000 сум", "6 000 000–12 000 000 сум", "12 000 000–24 000 000 сум", "24 000 000+ сум"] },
+  tr: { symbol: "₺", ranges: ["₺10 000–18 000", "₺18 000–35 000", "₺35 000–70 000", "₺70 000+"] },
+  ae: { symbol: "د.إ", ranges: ["د.إ1 100–1 800", "د.إ1 800–3 700", "د.إ3 700–7 300", "د.إ7 300+"] },
+  cn: { symbol: "¥", ranges: ["¥2 200–3 600", "¥3 600–7 300", "¥7 300–14 500", "¥14 500+"] },
+  pk: { symbol: "₨", ranges: ["₨85 000–140 000", "₨140 000–280 000", "₨280 000–560 000", "₨560 000+"] },
+  by: { symbol: "Br", ranges: ["Br1 000–1 600", "Br1 600–3 200", "Br3 200–6 500", "Br6 500+"] },
+  ua: { symbol: "₴", ranges: ["₴12 000–20 000", "₴20 000–40 000", "₴40 000–80 000", "₴80 000+"] },
+  de: { symbol: "€", ranges: ["€280–450", "€450–900", "€900–1 800", "€1 800+"] },
+  fr: { symbol: "€", ranges: ["€280–450", "€450–900", "€900–1 800", "€1 800+"] },
+  gb: { symbol: "€", ranges: ["€280–450", "€450–900", "€900–1 800", "€1 800+"] },
+  eu_other: { symbol: "€", ranges: ["€280–450", "€450–900", "€900–1 800", "€1 800+"] },
+  us: { symbol: "$", ranges: ["$300–500", "$500–1 000", "$1 000–2 000", "$2 000+"] },
+  ca: { symbol: "CA$", ranges: ["CA$400–650", "CA$650–1 300", "CA$1 300–2 600", "CA$2 600+"] },
+  az: { symbol: "₼", ranges: ["₼500–850", "₼850–1 700", "₼1 700–3 400", "₼3 400+"] },
+  default: { symbol: "$", ranges: ["$300–500", "$500–1 000", "$1 000–2 000", "$2 000+"] },
+};
 const GEO_DATA = {
  continents: [
   { id: "asia", label: { ru: "🌏 Азия", en: "🌏 Asia", az: "🌏 Asiya", tr: "🌏 Asya" } },
@@ -582,21 +600,22 @@ const { locale } = use(params);
   const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
   const t = content[lang];
 
-  const [step, setStep] = useState(0);
-  const [days, setDays] = useState("");
-  const [group, setGroup] = useState("");
-  const [budget, setBudget] = useState("");
-  const [interests, setInterests] = useState<string[]>([]);
-  const [diet, setDiet] = useState<string[]>([]);
-  const [pace, setPace] = useState("");
-  const [continent, setContinent] = useState("");
-  const [country, setCountry] = useState("");
-  const [city, setCity] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [plan, setPlan] = useState<Plan | null>(null);
-  const [planEnabled, setPlanEnabled] = useState(false);
-  const [error, setError] = useState("");
-  const planRef = useRef<HTMLDivElement>(null);
+ const [step, setStep] = useState(0);
+const [days, setDays] = useState("");
+const [group, setGroup] = useState("");
+const [budget, setBudget] = useState("");
+const [interests, setInterests] = useState<string[]>([]);
+const [diet, setDiet] = useState<string[]>([]);
+const [pace, setPace] = useState("");
+const [continent, setContinent] = useState("");
+const [country, setCountry] = useState("");
+const [city, setCity] = useState("");
+const [loading, setLoading] = useState(false);
+const [plan, setPlan] = useState<Plan | null>(null);
+const [planEnabled, setPlanEnabled] = useState(false);
+const [error, setError] = useState("");
+const planRef = useRef<HTMLDivElement>(null);
+const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
 
   const toggleInterest = (i: string) => setInterests(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]);
   const toggleDiet = (d: string) => {
@@ -787,9 +806,9 @@ const { locale } = use(params);
               <div style={cardStyle}>
                 <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step3}</h2>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                  {t.budgets.map(b => (
-                    <button key={b} className={`planner-btn${budget === b ? " selected" : ""}`} onClick={() => { setBudget(b); setStep(3); }}>{b}</button>
-                  ))}
+                 {currentBudgets.ranges.map(b => (
+  <button key={b} className={`planner-btn${budget === b ? " selected" : ""}`} onClick={() => { setBudget(b); setStep(3); }}>{b}</button>
+))}
                 </div>
               </div>
             )}
