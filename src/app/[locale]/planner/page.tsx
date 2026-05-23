@@ -550,18 +550,25 @@ function DaySection({ day, t, lang, planEnabled }: {
 
       {day.hotel?.name && (
   <a href={day.hotel.booking_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "block", marginBottom: 16 }}>
-    <div style={{ background: "linear-gradient(135deg, rgba(10,112,112,0.15), rgba(45,212,191,0.08))", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 16, padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, transition: "all 0.25s ease" }}
-      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(45,212,191,0.5)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)"; }}
-      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(45,212,191,0.2)"; (e.currentTarget as HTMLDivElement).style.transform = "none"; }}>
+    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(45,212,191,0.15)", borderRadius: 16, padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, transition: "all 0.25s ease" }}
+      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(45,212,191,0.4)"; (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.05)"; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(45,212,191,0.15)"; (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.03)"; }}>
       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(45,212,191,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>🏨</div>
+        <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(45,212,191,0.1)", border: "1px solid rgba(45,212,191,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9,22 9,12 15,12 15,22"/>
+          </svg>
+        </div>
         <div>
-          <p style={{ color: "#2DD4BF", fontSize: 9, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif", marginBottom: 3 }}>{lang === "ru" ? "Где остановиться" : "Where to stay"}</p>
+          <p style={{ color: "rgba(45,212,191,0.6)", fontSize: 9, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif", marginBottom: 3 }}>
+            {lang === "ru" ? "Рекомендация ИИ" : "AI Recommendation"}
+          </p>
           <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 16, fontWeight: 500, color: "white", margin: 0 }}>{day.hotel.name}</h3>
         </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(45,212,191,0.12)", border: "1px solid rgba(45,212,191,0.3)", borderRadius: 8, padding: "8px 14px", whiteSpace: "nowrap" as const }}>
-        <span style={{ color: "#2DD4BF", fontSize: 12, fontFamily: "DM Sans, sans-serif", fontWeight: 500 }}>{t.bookHotel}</span>
+      <div style={{ border: "1px solid rgba(45,212,191,0.3)", borderRadius: 8, padding: "7px 14px", whiteSpace: "nowrap" as const, transition: "all 0.2s" }}>
+        <span style={{ color: "#2DD4BF", fontSize: 12, fontFamily: "DM Sans, sans-serif", fontWeight: 400 }}>{t.bookHotel}</span>
       </div>
     </div>
   </a>
