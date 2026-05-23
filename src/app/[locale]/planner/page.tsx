@@ -491,9 +491,10 @@ function FeaturedActivityCard({ label, data, photoUrl, photographer, photographe
             onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.04)")}
             onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")} />
         ) : (
-          <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, rgba(45,212,191,0.12), rgba(10,112,112,0.25))", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontSize: 64, opacity: 0.3 }}>🏛️</span>
-          </div>
+          <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #0a2a2a, #0d3d3d)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12 }}>
+  <span style={{ fontSize: 48, opacity: 0.5 }}>🏛️</span>
+  <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, fontFamily: "DM Sans, sans-serif" }}>{data.activity}</span>
+</div>
         )}
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)" }} />
         <div style={{ position: "absolute", top: 16, left: 16, background: "rgba(45,212,191,0.9)", borderRadius: 99, padding: "4px 12px" }}>
@@ -526,7 +527,7 @@ function FeaturedActivityCard({ label, data, photoUrl, photographer, photographe
         {bookLabel && bookUrl && (
           <a href={bookUrl} target="_blank" rel="noopener noreferrer"
             style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", background: "rgba(45,212,191,0.12)", border: "1px solid rgba(45,212,191,0.3)", borderRadius: 8, color: "#2DD4BF", fontSize: 12, fontFamily: "DM Sans, sans-serif", textDecoration: "none" }}>
-            {bookLabel} →
+            {bookLabel}
           </a>
         )}
       </div>
