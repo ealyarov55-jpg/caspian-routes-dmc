@@ -801,126 +801,124 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
               </div>
             )}
 
-            {/* Step 2: Budget */}
-            {step === 2 && (
-              <div style={cardStyle}>
-                <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step3}</h2>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                 {currentBudgets.ranges.map(b => (
-  <button key={b} className={`planner-btn${budget === b ? " selected" : ""}`} onClick={() => { setBudget(b); setStep(3); }}>{b}</button>
-))}
-                </div>
-              </div>
-            )}
+           {/* Step 2: Location */}
+{step === 2 && (
+  <div style={cardStyle}>
+    <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step7}</h2>
 
-            {/* Step 3: Interests */}
-            {step === 3 && (
-              <div style={cardStyle}>
-                <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step4}</h2>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
-                  {t.interests.map(i => (
-                    <button key={i} className={`planner-btn${interests.includes(i) ? " selected" : ""}`} onClick={() => toggleInterest(i)}>{i}</button>
-                  ))}
-                </div>
-                <button className="next-btn" onClick={() => setStep(4)} disabled={interests.length === 0}>{t.next}</button>
-              </div>
-            )}
+    {!continent && (
+      <>
+        <span style={labelStyle}>{t.selectRegion}</span>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+          {GEO_DATA.continents.map(c => (
+            <button key={c.id} className="planner-btn" onClick={() => setContinent(c.id)}>{c.label[lang]}</button>
+          ))}
+        </div>
+      </>
+    )}
 
-            {/* Step 4: Diet */}
-            {step === 4 && (
-              <div style={cardStyle}>
-                <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>{t.step5}</h2>
-                <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>
-                  {lang === "ru" ? "Можно выбрать несколько" : lang === "az" ? "Bir neçə seçə bilərsiniz" : lang === "tr" ? "Birden fazla seçebilirsiniz" : "You can select multiple"}
-                </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
-                  {t.diets.map(d => (
-                    <button key={d} className={`planner-btn${diet.includes(d) ? " selected" : ""}`} onClick={() => toggleDiet(d)}>{d}</button>
-                  ))}
-                </div>
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <button className="next-btn" onClick={() => setStep(5)} disabled={diet.length === 0}>{t.next}</button>
-                  <button className="skip-btn" onClick={() => { setDiet([t.diets[0]]); setStep(5); }}>{t.skip}</button>
-                </div>
-              </div>
-            )}
+    {continent && !country && (
+      <>
+        <button style={backBtnStyle} onClick={() => setContinent("")}>{t.back}</button>
+        <span style={labelStyle}>{t.selectCountry}</span>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+          {GEO_DATA.countries[continent].map(c => (
+            <button key={c.id} className="planner-btn" onClick={() => setCountry(c.id)} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              {!["asia_other", "eu_other", "am_other", "other"].includes(c.id)
+                ? <img src={`https://flagcdn.com/w20/${c.id}.png`} width={20} height={15} alt={c.id} style={{ borderRadius: 2 }} />
+                : <span>{c.flag}</span>
+              }
+              {c.label[lang]}
+            </button>
+          ))}
+        </div>
+      </>
+    )}
 
-            {/* Step 5: Pace */}
-            {step === 5 && (
-              <div style={cardStyle}>
-                <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step6}</h2>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 8 }}>
-                  {t.paces.map(p => (
-                    <button key={p.id} className={`pace-btn${pace === p.label ? " selected" : ""}`} onClick={() => { setPace(p.label); setStep(6); }}>
-                      <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 4 }}>{p.label}</div>
-                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>{p.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+    {continent && country && !city && (
+      <>
+        <button style={backBtnStyle} onClick={() => setCountry("")}>{t.back}</button>
+        <span style={labelStyle}>{t.selectCity}</span>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+          {(GEO_DATA.cities[country][lang] || GEO_DATA.cities[country]["en"]).map(c => (
+            <button key={c} className={`planner-btn${city === c ? " selected" : ""}`} onClick={() => setCity(c)}>{c}</button>
+          ))}
+        </div>
+      </>
+    )}
 
-            {/* Step 6: Location */}
-            {step === 6 && (
-              <div style={cardStyle}>
-                <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step7}</h2>
+    {continent && country && city && (
+      <>
+        <div style={{ background: "rgba(45,212,191,0.08)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif" }}>{getFromString()}</span>
+          <button onClick={() => setCity("")} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}>{t.change}</button>
+        </div>
+        <button className="next-btn" onClick={() => setStep(3)}>{t.next}</button>
+      </>
+    )}
+  </div>
+)}
 
-                {!continent && (
-                  <>
-                    <span style={labelStyle}>{t.selectRegion}</span>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                      {GEO_DATA.continents.map(c => (
-                        <button key={c.id} className="planner-btn" onClick={() => setContinent(c.id)}>{c.label[lang]}</button>
-                      ))}
-                    </div>
-                  </>
-                )}
+{/* Step 3: Budget */}
+{step === 3 && (
+  <div style={cardStyle}>
+    <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step3}</h2>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+      {currentBudgets.ranges.map(b => (
+        <button key={b} className={`planner-btn${budget === b ? " selected" : ""}`} onClick={() => { setBudget(b); setStep(4); }}>{b}</button>
+      ))}
+    </div>
+  </div>
+)}
 
-                {continent && !country && (
-                  <>
-                    <button style={backBtnStyle} onClick={() => setContinent("")}>{t.back}</button>
-                    <span style={labelStyle}>{t.selectCountry}</span>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                      {GEO_DATA.countries[continent].map(c => (
-                        <button key={c.id} className="planner-btn" onClick={() => setCountry(c.id)} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          {!["asia_other", "eu_other", "am_other", "other"].includes(c.id)
-                            ? <img src={`https://flagcdn.com/w20/${c.id}.png`} width={20} height={15} alt={c.id} style={{ borderRadius: 2 }} />
-                            : <span>{c.flag}</span>
-                          }
-                          {c.label[lang]}
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
+{/* Step 4: Interests */}
+{step === 4 && (
+  <div style={cardStyle}>
+    <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step4}</h2>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
+      {t.interests.map(i => (
+        <button key={i} className={`planner-btn${interests.includes(i) ? " selected" : ""}`} onClick={() => toggleInterest(i)}>{i}</button>
+      ))}
+    </div>
+    <button className="next-btn" onClick={() => setStep(5)} disabled={interests.length === 0}>{t.next}</button>
+  </div>
+)}
 
-                {continent && country && !city && (
-                  <>
-                    <button style={backBtnStyle} onClick={() => setCountry("")}>{t.back}</button>
-                    <span style={labelStyle}>{t.selectCity}</span>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                      {(GEO_DATA.cities[country][lang] || GEO_DATA.cities[country]["en"]).map(c => (
-                        <button key={c} className={`planner-btn${city === c ? " selected" : ""}`} onClick={() => setCity(c)}>{c}</button>
-                      ))}
-                    </div>
-                  </>
-                )}
+{/* Step 5: Diet */}
+{step === 5 && (
+  <div style={cardStyle}>
+    <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>{t.step5}</h2>
+    <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>
+      {lang === "ru" ? "Можно выбрать несколько" : lang === "az" ? "Bir neçə seçə bilərsiniz" : lang === "tr" ? "Birden fazla seçebilirsiniz" : "You can select multiple"}
+    </p>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
+      {t.diets.map(d => (
+        <button key={d} className={`planner-btn${diet.includes(d) ? " selected" : ""}`} onClick={() => toggleDiet(d)}>{d}</button>
+      ))}
+    </div>
+    <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+      <button className="next-btn" onClick={() => setStep(6)} disabled={diet.length === 0}>{t.next}</button>
+      <button className="skip-btn" onClick={() => { setDiet([t.diets[0]]); setStep(6); }}>{t.skip}</button>
+    </div>
+  </div>
+)}
 
-                {continent && country && city && (
-                  <>
-                    <div style={{ background: "rgba(45,212,191,0.08)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <span style={{ color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif" }}>{getFromString()}</span>
-                      <button onClick={() => setCity("")} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}>{t.change}</button>
-                    </div>
-                    {error && <p style={{ color: "#f87171", fontSize: 14, marginBottom: 12 }}>{error}</p>}
-                    <button className="generate-btn" onClick={generatePlan}>{t.generate}</button>
-                  </>
-                )}
-              </div>
-            )}
-          </>
-        )}
-
+{/* Step 6: Pace */}
+{step === 6 && (
+  <div style={cardStyle}>
+    <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step6}</h2>
+    <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 8 }}>
+      {t.paces.map(p => (
+        <button key={p.id} className={`pace-btn${pace === p.label ? " selected" : ""}`} onClick={() => { setPace(p.label); setStep(7); }}>
+          <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 4 }}>{p.label}</div>
+          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>{p.desc}</div>
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+</>
+)}
       {/* Результат */}
 {!loading && step === TOTAL_STEPS && plan && (
   <div ref={planRef}>
