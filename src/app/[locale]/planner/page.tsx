@@ -899,15 +899,31 @@ const { locale } = use(params);
 {!loading && step === TOTAL_STEPS && plan && (
   <div ref={planRef}>
 
-    {/* Hero */}
-    <div style={{ textAlign: "center", marginBottom: 48, paddingBottom: 40, borderBottom: "1px solid rgba(45,212,191,0.15)" }}>
-      <div style={{ width: 56, height: 56, borderRadius: "50%", background: "#18181b", boxShadow: "0 1px 3px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 32px", fontSize: 24 }}>🗺️</div>
-      <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2rem, 5vw, 3rem)", color: "white", fontWeight: 300, marginBottom: 24, lineHeight: 1.2 }}>{plan.plan_title}</h1>
-      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#18181b", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 99, padding: "8px 20px" }}>
-        <span style={{ fontSize: 14 }}>💰</span>
-        <span style={{ color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif" }}>{plan.total_budget_estimate}</span>
-      </div>
+   {/* Hero */}
+<div style={{ textAlign: "center", marginBottom: 48, paddingBottom: 40, borderBottom: "1px solid rgba(45,212,191,0.15)", position: "relative", overflow: "hidden", borderRadius: 24, padding: "60px 32px 40px" }}>
+  {/* Ambient glow */}
+  <div style={{ position: "absolute", top: -60, left: "10%", width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(45,212,191,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
+  <div style={{ position: "absolute", top: -40, right: "10%", width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(10,112,112,0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+  <div style={{ position: "absolute", bottom: -60, left: "30%", width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
+
+  {/* BG photo */}
+  <div style={{ position: "absolute", inset: 0, borderRadius: 24, overflow: "hidden", zIndex: 0 }}>
+    <img
+      src="https://images.pexels.com/photos/3573382/pexels-photo-3573382.jpeg?auto=compress&cs=tinysrgb&w=1200"
+      alt="Baku"
+      style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.12, filter: "blur(2px) saturate(1.5)", transform: "scale(1.05)" }}
+    />
+  </div>
+
+  <div style={{ position: "relative", zIndex: 1 }}>
+    <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(45,212,191,0.15)", border: "1px solid rgba(45,212,191,0.3)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 28px", fontSize: 24 }}>🗺️</div>
+    <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2rem, 5vw, 3rem)", color: "white", fontWeight: 300, marginBottom: 24, lineHeight: 1.2 }}>{plan.plan_title}</h1>
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 99, padding: "8px 20px", backdropFilter: "blur(8px)" }}>
+      <span style={{ fontSize: 14 }}>💰</span>
+      <span style={{ color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif" }}>{plan.total_budget_estimate}</span>
     </div>
+  </div>
+</div>
 
     {plan.days.map((day) => (
       <DaySection key={day.day} day={day} t={t} lang={lang} planEnabled={planEnabled} />
