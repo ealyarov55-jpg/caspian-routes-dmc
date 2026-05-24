@@ -41,7 +41,7 @@ Return ONLY valid JSON:
       "morning": { "activity": "what", "description": "desc", "tip": "tip", "curator_note": "insider tip" },
       "afternoon": { "activity": "what", "description": "desc", "tip": "tip", "curator_note": "insider tip" },
       "evening": { "activity": "what", "description": "desc", "tip": "tip", "curator_note": "insider tip" },
-      "hotel": { "name": "hotel name", "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" },
+      "hotel": { "name": "clean hotel name in English only, no descriptions", "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" },
       "excursion": { "name": "excursion name", "search_query": "exact excursion name in English" }
     }
   ],
@@ -81,7 +81,7 @@ Return ONLY valid JSON:
         } : day.excursion,
         hotel: day.hotel?.name ? {
           ...day.hotel,
-          booking_url: `https://ostrovok.ru/hotel/search/?query=${encodeURIComponent(day.hotel.name)}&ref_id=DDho2QGw`
+          booking_url: `https://www.ostrovok.ru/hotels/azerbaijan/?q=${encodeURIComponent(day.hotel.name)}&ref=DDho2QGw`
         } : day.hotel
       }));
     }
