@@ -820,35 +820,57 @@ const currentBudgets = typeof window !== "undefined" ? (CURRENCY_BUDGETS[country
       </>
     )}
 
-    {continent && !country && (
-      <>
-        <button style={backBtnStyle} onClick={() => setContinent("")}>{t.back}</button>
-        <span style={labelStyle}>{t.selectCountry}</span>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-          {GEO_DATA.countries[continent].map(c => (
-            <button key={c.id} className="planner-btn" onClick={() => setCountry(c.id)} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              {!["asia_other", "eu_other", "am_other", "other"].includes(c.id)
-                ? <img src={`https://flagcdn.com/w20/${c.id}.png`} width={20} height={15} alt={c.id} style={{ borderRadius: 2 }} />
-                : <span>{c.flag}</span>
-              }
-              {c.label[lang]}
-            </button>
-          ))}
-        </div>
-      </>
-    )}
+   {continent && !country && (
+  <>
+    <button style={backBtnStyle} onClick={() => setContinent("")}>{t.back}</button>
+    <span style={labelStyle}>{t.selectCountry}</span>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+      {GEO_DATA.countries[continent].map(c => (
+        <button key={c.id} className="planner-btn" onClick={() => setCountry(c.id)} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {!["asia_other", "eu_other", "am_other", "other"].includes(c.id)
+            ? <img src={`https://flagcdn.com/w20/${c.id}.png`} width={20} height={15} alt={c.id} style={{ borderRadius: 2 }} />
+            : <span>{c.flag}</span>
+          }
+          {c.label[lang]}
+        </button>
+      ))}
+    </div>
+    <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
+      <input
+        type="text"
+        placeholder={lang === "ru" ? "Или введи свою страну..." : lang === "az" ? "Və ya öz ölkənizi yazın..." : lang === "tr" ? "Ya da ülkenizi yazın..." : "Or type your country..."}
+        onKeyDown={(e) => { if (e.key === "Enter" && e.currentTarget.value.trim()) setCountry(e.currentTarget.value.trim()); }}
+        style={{ flex: 1, padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif", outline: "none" }}
+      />
+      <button
+        onClick={(e) => { const input = (e.currentTarget as HTMLButtonElement).previousSibling as HTMLInputElement; if (input.value.trim()) setCountry(input.value.trim()); }}
+        className="next-btn" style={{ padding: "10px 16px" }}>→</button>
+    </div>
+  </>
+)}
 
     {continent && country && !city && (
-      <>
-        <button style={backBtnStyle} onClick={() => setCountry("")}>{t.back}</button>
-        <span style={labelStyle}>{t.selectCity}</span>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-          {(GEO_DATA.cities[country][lang] || GEO_DATA.cities[country]["en"]).map(c => (
-            <button key={c} className={`planner-btn${city === c ? " selected" : ""}`} onClick={() => setCity(c)}>{c}</button>
-          ))}
-        </div>
-      </>
-    )}
+  <>
+    <button style={backBtnStyle} onClick={() => setCountry("")}>{t.back}</button>
+    <span style={labelStyle}>{t.selectCity}</span>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+      {(GEO_DATA.cities[country] ? (GEO_DATA.cities[country][lang] || GEO_DATA.cities[country]["en"]) : []).map(c => (
+        <button key={c} className={`planner-btn${city === c ? " selected" : ""}`} onClick={() => setCity(c)}>{c}</button>
+      ))}
+    </div>
+    <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
+      <input
+        type="text"
+        placeholder={lang === "ru" ? "Или введи свой город..." : lang === "az" ? "Və ya şəhərinizi yazın..." : lang === "tr" ? "Ya da şehrinizi yazın..." : "Or type your city..."}
+        onKeyDown={(e) => { if (e.key === "Enter" && e.currentTarget.value.trim()) setCity(e.currentTarget.value.trim()); }}
+        style={{ flex: 1, padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif", outline: "none" }}
+      />
+      <button
+        onClick={(e) => { const input = (e.currentTarget as HTMLButtonElement).previousSibling as HTMLInputElement; if (input.value.trim()) setCity(input.value.trim()); }}
+        className="next-btn" style={{ padding: "10px 16px" }}>→</button>
+    </div>
+  </>
+)}
 
     {continent && country && city && (
       <>
