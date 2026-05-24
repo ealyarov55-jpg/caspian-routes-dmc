@@ -918,7 +918,8 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
    {pace && (
   <button className="generate-btn" onClick={async () => {
     setLoading(true);
-    setError("");
+setError("");
+console.log("DEBUG:", { days, group, budget, interests, diet, pace, continent, country, city });;
     setPlanEnabled(false);
     try {
       const res = await fetch("/api/generate-plan", {
