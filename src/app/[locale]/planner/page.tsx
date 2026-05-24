@@ -615,7 +615,7 @@ const [plan, setPlan] = useState<Plan | null>(null);
 const [planEnabled, setPlanEnabled] = useState(false);
 const [error, setError] = useState("");
 const planRef = useRef<HTMLDivElement>(null);
-const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
+const currentBudgets = CURRENCY_BUDGETS[country] ?? CURRENCY_BUDGETS["default"];
 
   const toggleInterest = (i: string) => setInterests(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]);
   const toggleDiet = (d: string) => {
@@ -729,7 +729,7 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
   };
 
   const cardStyle = { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 28px", marginBottom: 24 };
-  const backBtnStyle = { background: "none", border: "none", color: "rgba(255,255,255,0.6)", cursor: "pointer", fontSize: 13, fontFamily: "DM Sans, sans-serif", padding: 0, marginBottom: 16, display: "flex", alignItems: "center", gap: 6 };
+  const backBtnStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "rgba(255,255,255,0.7)", cursor: "pointer", fontSize: 12, fontFamily: "DM Sans, sans-serif", padding: "6px 12px", marginBottom: 20, display: "inline-flex", alignItems: "center", gap: 6 };
   const labelStyle = { color: "rgba(255,255,255,0.5)", fontSize: 13, marginBottom: 16, fontFamily: "DM Sans, sans-serif", display: "block" };
 
   const TOTAL_STEPS = 7;
@@ -780,7 +780,7 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
             {/* Step 0: Days */}
             {step === 0 && (
               <div style={cardStyle}>
-                <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
+                
                 <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step1}</h2>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                   {t.days.map(d => (
