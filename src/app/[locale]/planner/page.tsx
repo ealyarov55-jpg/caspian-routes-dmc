@@ -378,9 +378,9 @@ type Plan = {
   days: Array<{
     day: number;
     title: string;
-    morning: { activity: string; description: string; tip: string };
-    afternoon: { activity: string; description: string; tip: string };
-    evening: { activity: string; description: string; tip: string };
+    morning: { activity: string; description: string; tip: string; curator_note?: string };
+    afternoon: { activity: string; description: string; tip: string; curator_note?: string };
+    evening: { activity: string; description: string; tip: string; curator_note?: string };
     hotel: { name: string; booking_url: string };
     excursion: { name: string; url: string };
   }>;
@@ -443,7 +443,7 @@ function LoadingScreen({ steps }: { steps: string[] }) {
 }
 function SmallActivityCard({ label, data, icon, photoUrl, photographer, photographerUrl }: {
   label: string;
-  data: { activity: string; description: string; tip: string };
+  data: { activity: string; description: string; tip: string; curator_note?: string };
   icon: "morning" | "afternoon" | "evening";
   photoUrl: string | null;
   photographer?: string;
@@ -474,7 +474,11 @@ function SmallActivityCard({ label, data, icon, photoUrl, photographer, photogra
         <span style={{ color: "#4DB6AC", fontSize: 9, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif" }}>{label}</span>
         <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 15, fontWeight: 500, color: "white", lineHeight: 1.4, margin: 0 }}>{data.activity}</h3>
         <p style={{ color: "#9f9fa9", fontSize: 12, lineHeight: 1.7, margin: 0, fontFamily: "DM Sans, sans-serif", flex: 1 }}>{data.description}</p>
-        
+        {data.curator_note && (
+          <div style={{ borderLeft: "2px solid rgba(45,212,191,0.4)", paddingLeft: 12, marginTop: 8 }}>
+            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontStyle: "italic", fontFamily: "Cormorant Garamond, serif", lineHeight: 1.7, margin: 0 }}>{data.curator_note}</p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -482,7 +486,7 @@ function SmallActivityCard({ label, data, icon, photoUrl, photographer, photogra
 
 function FeaturedActivityCard({ label, data, photoUrl, photographer, photographerUrl, bookLabel, bookUrl }: {
   label: string;
-  data: { activity: string; description: string; tip: string };
+  data: { activity: string; description: string; tip: string; curator_note?: string };
   photoUrl: string | null;
   photographer?: string;
   photographerUrl?: string;
@@ -517,6 +521,11 @@ function FeaturedActivityCard({ label, data, photoUrl, photographer, photographe
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, lineHeight: 1.7, margin: 0, fontFamily: "DM Sans, sans-serif" }}>{data.description}</p>
         </div>
       </div>
+      {data.curator_note && (
+        <div style={{ padding: "12px 24px 0", borderLeft: "2px solid rgba(45,212,191,0.4)", margin: "12px 24px 0" }}>
+          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontStyle: "italic", fontFamily: "Cormorant Garamond, serif", lineHeight: 1.7, margin: 0 }}>{data.curator_note}</p>
+        </div>
+      )}
       {bookLabel && bookUrl && (
         <div style={{ padding: "16px 24px 20px" }}>
           <a href={bookUrl} target="_blank" rel="noopener noreferrer"
