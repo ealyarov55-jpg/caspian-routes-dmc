@@ -386,6 +386,7 @@ type Plan = {
   }>;
   flights: { tip: string; url: string };
   car_rental: { tip: string; url: string };
+  logistics?: { title: string; content: string };
 };
 
 function LoadingScreen({ steps }: { steps: string[] }) {
@@ -1043,23 +1044,30 @@ setError("");
       <DaySection key={day.day} day={day} t={t} lang={lang} planEnabled={planEnabled} />
     ))}
 
-    {/* Авиа и авто */}
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 40 }}>
-      {plan.flights && (
-        <div style={{ background: "#18181b", borderRadius: 16, padding: "24px" }}>
-          <p style={{ color: "#2DD4BF", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>✈️ {t.flights}</p>
-          <p style={{ color: "#9f9fa9", fontSize: 14, lineHeight: 1.7, marginBottom: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.flights.tip}</p>
-          <a href={plan.flights.url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">{t.bookFlight}</a>
-        </div>
-      )}
-      {plan.car_rental && (
-        <div style={{ background: "#18181b", borderRadius: 16, padding: "24px" }}>
-          <p style={{ color: "#c9a84c", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>🚗 {t.carRental}</p>
-          <p style={{ color: "#9f9fa9", fontSize: 14, lineHeight: 1.7, marginBottom: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.car_rental.tip}</p>
-          <a href={plan.car_rental.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">{t.bookCar}</a>
-        </div>
-      )}
+   {plan.logistics && (
+  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "24px 28px", marginBottom: 24 }}>
+    <p style={{ color: "#2DD4BF", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>🚕 {plan.logistics.title}</p>
+    <p style={{ color: "#9f9fa9", fontSize: 14, lineHeight: 1.8, margin: 0, fontFamily: "DM Sans, sans-serif", fontStyle: "italic" }}>{plan.logistics.content}</p>
+  </div>
+)}
+
+{/* Авиа и авто */}
+<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 40 }}>
+  {plan.flights && (
+    <div style={{ background: "#18181b", borderRadius: 16, padding: "24px" }}>
+      <p style={{ color: "#2DD4BF", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>✈️ {t.flights}</p>
+      <p style={{ color: "#9f9fa9", fontSize: 14, lineHeight: 1.7, marginBottom: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.flights.tip}</p>
+      <a href={plan.flights.url} target="_blank" rel="noopener noreferrer" className="partner-btn-teal">{t.bookFlight}</a>
     </div>
+  )}
+  {plan.car_rental && (
+    <div style={{ background: "#18181b", borderRadius: 16, padding: "24px" }}>
+      <p style={{ color: "#c9a84c", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", marginBottom: 12, fontFamily: "DM Sans, sans-serif" }}>🚗 {t.carRental}</p>
+      <p style={{ color: "#9f9fa9", fontSize: 14, lineHeight: 1.7, marginBottom: 16, fontFamily: "DM Sans, sans-serif" }}>{plan.car_rental.tip}</p>
+      <a href={plan.car_rental.url} target="_blank" rel="noopener noreferrer" className="partner-btn-gold">{t.bookCar}</a>
+    </div>
+  )}
+</div>
 
             {/* Кнопки */}
             <div style={{ textAlign: "center", paddingTop: 16 }}>

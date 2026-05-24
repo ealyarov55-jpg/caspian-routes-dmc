@@ -44,6 +44,7 @@ Return ONLY valid JSON, no markdown, no code blocks:
       "excursion": { "name": "excursion name", "url": "https://www.getyourguide.com/baku-l1408/?partner_id=YNRQ0A3&utm_medium=online_publisher" }
     }
   ],
+  "logistics": { "title": "short title like 'Getting around Baku'", "content": "2-3 sentence practical insider guide on local transport — specific apps, prices, what to avoid. Personal tone like a local friend." },
   "flights": { "tip": "flight tip", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
   "car_rental": { "tip": "car tip", "url": "https://localrent.tpk.ro/BAFUsMGN" }
 }`;
