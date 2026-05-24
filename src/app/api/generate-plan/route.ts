@@ -71,14 +71,18 @@ Return ONLY valid JSON:
       }
     }
 
-    // Build GYG search URLs from search_query
+    // Build GYG and Ostrovok search URLs
     if (plan.days) {
       plan.days = plan.days.map((day: any) => ({
         ...day,
         excursion: day.excursion?.name ? {
           ...day.excursion,
           url: `https://www.getyourguide.com/s/?q=${encodeURIComponent(day.excursion.search_query || day.excursion.name)}&partner_id=YNRQ0A3&utm_medium=online_publisher`
-        } : day.excursion
+        } : day.excursion,
+        hotel: day.hotel?.name ? {
+          ...day.hotel,
+          booking_url: `https://ostrovok.ru/hotel/search/?query=${encodeURIComponent(day.hotel.name)}&ref_id=DDho2QGw`
+        } : day.hotel
       }));
     }
 
