@@ -547,11 +547,26 @@ function FeaturedActivityCard({ label, data, photoUrl, photographer, photographe
 }
 
 function HotelCard({ hotel, lang, bookHotel }: { hotel: { name: string; booking_url: string }; lang: string; bookHotel: string }) {
-  const photos = HOTEL_PHOTOS[hotel.name] || [];
+  const [photos, setPhotos] = useState<string[]>([]);
+
+  useEffect(() => {
+    const localPhotos = HOTEL_PHOTOS[hotel.name] || [];
+    if (localPhotos.length > 0) {
+      setPhotos(localPhotos);
+      return;
+    }
+    fetch(`/api/unsplash?query=${encodeURIComponent(hotel.name + " hotel")}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.url) setPhotos([data.url]);
+      })
+      .catch(() => {});
+  }, [hotel.name]);
+
   return (
     <div style={{ marginBottom: 16 }}>
       {photos.length > 0 && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 12, borderRadius: 16, overflow: "hidden" }}>
+        <div style={{ display: "grid", gridTemplateColumns: `repeat(${photos.length}, 1fr)`, gap: 8, marginBottom: 12, borderRadius: 16, overflow: "hidden" }}>
           {photos.map((photo, i) => (
             <div key={i} style={{ height: 120, overflow: "hidden" }}>
               <img src={photo} alt={hotel.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
