@@ -615,7 +615,7 @@ const [plan, setPlan] = useState<Plan | null>(null);
 const [planEnabled, setPlanEnabled] = useState(false);
 const [error, setError] = useState("");
 const planRef = useRef<HTMLDivElement>(null);
-const currentBudgets = CURRENCY_BUDGETS[country] ?? CURRENCY_BUDGETS["default"];
+const currentBudgets = typeof window !== "undefined" ? (CURRENCY_BUDGETS[country] ?? CURRENCY_BUDGETS["default"]) : CURRENCY_BUDGETS["default"];
 
   const toggleInterest = (i: string) => setInterests(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]);
   const toggleDiet = (d: string) => {
