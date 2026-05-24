@@ -58,11 +58,22 @@ Return ONLY valid JSON:
 
     const text = message.content[0].type === "text" ? message.content[0].text : "";
     const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    const plan = JSON.parse(clean);
+    
+    let plan;
+    try {
+      plan = JSON.parse(clean);
+    } catch {
+      const match = clean.match(/\{[\s\S]*\}/);
+      if (match) {
+        plan = JSON.parse(match[0]);
+      } else {
+        throw new Error("Invalid JSON");
+      }
+    }
 
     return NextResponse.json({ plan });
   } catch (error) {
-    console.error(error);
+    console.error("Error:", error);
     return NextResponse.json({ error: "Failed to generate plan" }, { status: 500 });
   }
 }
