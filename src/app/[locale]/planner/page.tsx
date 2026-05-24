@@ -759,9 +759,9 @@ const currentBudgets = typeof window !== "undefined" ? (CURRENCY_BUDGETS[country
           backgroundImage: `url(${photo})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          opacity: i === bgIndex ? 0.07 : 0,
-          transition: "opacity 1.5s ease",
-          filter: "blur(3px) saturate(1.2)",
+         opacity: i === bgIndex ? 0.18 : 0,
+transition: "opacity 2s ease",
+filter: "blur(1px) saturate(1.3)",
         }} />
       ))}
     </div>
