@@ -42,7 +42,7 @@ Return ONLY valid JSON:
       "afternoon": { "activity": "what", "description": "desc", "tip": "tip", "curator_note": "insider tip" },
       "evening": { "activity": "what", "description": "desc", "tip": "tip", "curator_note": "insider tip" },
       "hotel": { "name": "hotel name", "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" },
-      "excursion": { "name": "excursion name", "url": "https://www.getyourguide.com/baku-l1408/?partner_id=YNRQ0A3&utm_medium=online_publisher" }
+      "excursion": { "name": "excursion name", "search_query": "exact excursion name in English" }
     }
   ],
   "logistics": { "title": "Getting around", "content": "practical transport tips" },
@@ -58,7 +58,7 @@ Return ONLY valid JSON:
 
     const text = message.content[0].type === "text" ? message.content[0].text : "";
     const clean = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    
+
     let plan;
     try {
       plan = JSON.parse(clean);
@@ -69,6 +69,17 @@ Return ONLY valid JSON:
       } else {
         throw new Error("Invalid JSON");
       }
+    }
+
+    // Build GYG search URLs from search_query
+    if (plan.days) {
+      plan.days = plan.days.map((day: any) => ({
+        ...day,
+        excursion: day.excursion?.name ? {
+          ...day.excursion,
+          url: `https://www.getyourguide.com/s/?q=${encodeURIComponent(day.excursion.search_query || day.excursion.name)}&partner_id=YNRQ0A3&utm_medium=online_publisher`
+        } : day.excursion
+      }));
     }
 
     return NextResponse.json({ plan });
