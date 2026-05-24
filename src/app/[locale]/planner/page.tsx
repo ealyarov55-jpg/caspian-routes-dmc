@@ -599,7 +599,9 @@ function DaySection({ day, t, lang, planEnabled }: {
 const { locale } = use(params);
   const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
   const t = content[lang];
-
+const [mounted, setMounted] = useState(false);
+useEffect(() => setMounted(true), []);
+if (!mounted) return null;
  const [step, setStep] = useState(0);
 const [days, setDays] = useState("");
 const [group, setGroup] = useState("");
