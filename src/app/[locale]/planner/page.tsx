@@ -917,9 +917,9 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
     </div>
   </div>
 )}
-</>
-)}
-      {/* Результат */}
+          </>
+        )}
+        {/* Результат */}
 {!loading && step === TOTAL_STEPS && plan && (
   <div ref={planRef}>
 
@@ -971,13 +971,13 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
       )}
     </div>
 
-    {/* Кнопки */}
-    <div style={{ textAlign: "center", paddingTop: 16 }}>
-      <button className="restart-btn" onClick={resetAll}>{t.restart}</button>
-      <button className="pdf-btn" onClick={downloadPdf}>📄 {t.downloadPdf}</button>
-    </div>
-  </div>
-)}
+            {/* Кнопки */}
+            <div style={{ textAlign: "center", paddingTop: 16 }}>
+              <button className="restart-btn" onClick={resetAll}>{t.restart}</button>
+              <button className="pdf-btn" onClick={downloadPdf}>📄 {t.downloadPdf}</button>
+            </div>
+          </div>
+        )}
       </div>
       <Footer locale={locale} />
     </main>
