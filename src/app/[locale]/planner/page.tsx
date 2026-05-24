@@ -729,7 +729,7 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
   };
 
   const cardStyle = { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 28px", marginBottom: 24 };
-  const backBtnStyle = { background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: 13, fontFamily: "DM Sans, sans-serif", padding: 0, marginBottom: 16, display: "block" };
+  const backBtnStyle = { background: "none", border: "none", color: "rgba(255,255,255,0.6)", cursor: "pointer", fontSize: 13, fontFamily: "DM Sans, sans-serif", padding: 0, marginBottom: 16, display: "flex", alignItems: "center", gap: 6 };
   const labelStyle = { color: "rgba(255,255,255,0.5)", fontSize: 13, marginBottom: 16, fontFamily: "DM Sans, sans-serif", display: "block" };
 
   const TOTAL_STEPS = 7;
