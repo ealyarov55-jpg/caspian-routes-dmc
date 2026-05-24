@@ -909,15 +909,32 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
     <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step6}</h2>
     <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 8 }}>
       {t.paces.map(p => (
-        <button key={p.id} className={`pace-btn${pace === p.label ? " selected" : ""}`} onClick={() => setPace(p.label)}>
-          <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 4 }}>{p.label}</div>
-          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>{p.desc}</div>
-        </button>
-      ))}
+  <button key={p.id} className={`pace-btn${pace === p.label ? " selected" : ""}`} onClick={() => setPace(p.label)}>
+    <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 4 }}>{p.label}</div>
+    <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>{p.desc}</div>
+  </button>
+))}
     </div>
-    {pace && (
-      <button className="generate-btn" onClick={generatePlan} style={{ marginTop: 16 }}>{t.generate}</button>
-    )}
+   {pace && (
+  <button className="generate-btn" onClick={async () => {
+    setLoading(true);
+    setError("");
+    setPlanEnabled(false);
+    try {
+      const res = await fetch("/api/generate-plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ days, group, budget, interests, from: getFromString(), locale, diet, pace }),
+      });
+      const data = await res.json();
+      if (data.plan) { setPlan(data.plan); setStep(7); setTimeout(() => setPlanEnabled(true), 100); }
+      else { setError(lang === "ru" ? "Ошибка генерации. Попробуй ещё раз." : "Generation error. Please try again."); }
+    } catch {
+      setError(lang === "ru" ? "Ошибка сети. Попробуй ещё раз." : "Network error. Please try again.");
+    }
+    setLoading(false);
+  }} style={{ marginTop: 16 }}>{t.generate}</button>
+)}
   </div>
 )}
           </>
