@@ -13,17 +13,25 @@ export async function POST(req: NextRequest) {
     const paceLine = pace ? `- Pace: ${pace}` : "";
 
     const prompt = `${langInstruction}
-You are a travel curator for Azerbaijan. Create a concise travel plan.
+You are a local expert travel curator for Azerbaijan. Create a highly personalized travel plan.
 
 Parameters: Days: ${days}, Group: ${group}, Budget: ${budget}, Interests: ${interests.join(", ")}, From: ${from}
 ${dietLine}
 ${paceLine}
 
-Rules:
-- curator_note: 1 short sentence insider tip per activity
-- logistics: 2 sentences max on local transport
-- hotel name: clean English name only, no descriptions
-- Keep descriptions short (1-2 sentences max)
+CRITICAL HOTEL RULES:
+- Match hotel to BOTH the day's location AND the budget
+- If day is in Baku: recommend Baku hotels matching budget level
+- If day is in Sheki/Guba/Quba/Lankaran/other regions: recommend hotels IN THAT REGION, not Baku
+- Budget ${budget} means: low budget = hostels/guesthouses, mid = 3-4 star, high = 5 star luxury
+- NEVER recommend a luxury hotel for low budget or vice versa
+- Hotel name must be REAL and exist in Azerbaijan
+
+CRITICAL CONTENT RULES:
+- curator_note: 1 specific insider sentence (mention exact place, time, or local secret)
+- descriptions: tailored to the group type (${group}) and interests (${interests.join(", ")})
+- logistics: specific to the route (mention actual apps, real prices in local currency)
+- Keep all text concise (1-2 sentences max per field)
 
 Return ONLY valid JSON:
 {
@@ -33,15 +41,15 @@ Return ONLY valid JSON:
     {
       "day": 1,
       "title": "day title",
-      "morning": { "activity": "name", "description": "1-2 sentences", "tip": "short tip", "curator_note": "1 sentence" },
-      "afternoon": { "activity": "name", "description": "1-2 sentences", "tip": "short tip", "curator_note": "1 sentence" },
-      "evening": { "activity": "name", "description": "1-2 sentences", "tip": "short tip", "curator_note": "1 sentence" },
-      "hotel": { "name": "choose from: Fairmont Baku, JW Marriott Absheron Baku, Holiday Inn Baku, Movenpick Winter Park Baku, Baku Marriott Hotel Boulevard, ibis Baku City, Four Seasons Hotel Baku, InterContinental Baku, Old Baku Boutique Hotel, Boutique 19 Hotel, Sultan INN Baku, Moss Art Hotel, Hazz Hotel Baku, Promenade Hotel Baku, Twelve Inn Boutique Hotel. Pick the most suitable for the day and budget.", "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" },
+      "morning": { "activity": "name", "description": "1-2 sentences tailored to group/interests", "tip": "specific tip", "curator_note": "1 specific insider sentence" },
+      "afternoon": { "activity": "name", "description": "1-2 sentences", "tip": "specific tip", "curator_note": "1 specific insider sentence" },
+      "evening": { "activity": "name", "description": "1-2 sentences", "tip": "specific tip", "curator_note": "1 specific insider sentence" },
+      "hotel": { "name": "Real hotel name matching day location and budget", "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" },
       "excursion": { "name": "excursion name", "search_query": "excursion name in English" }
     }
   ],
-  "logistics": { "title": "short title", "content": "2 sentences max" },
-  "flights": { "tip": "1 sentence", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
+  "logistics": { "title": "short title", "content": "specific transport tips with real prices" },
+  "flights": { "tip": "specific flight tip from ${from}", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
   "car_rental": { "tip": "1 sentence", "url": "https://localrent.tpk.ro/BAFUsMGN" }
 }`;
 
