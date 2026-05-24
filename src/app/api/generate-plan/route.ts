@@ -31,7 +31,7 @@ CRITICAL CONTENT RULES:
 - curator_note: 1 specific insider sentence (mention exact place, time, or local secret)
 - descriptions: tailored to the group type (${group}) and interests (${interests.join(", ")})
 - logistics: specific to the route (mention actual apps, real prices in local currency)
-- Keep all text concise (1-2 sentences max per field)
+- Keep all text VERY short (max 15 words per field, no exceptions)
 
 Return ONLY valid JSON:
 {
@@ -55,7 +55,7 @@ Return ONLY valid JSON:
 
     const message = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 4000,
+      max_tokens: 5000,
       messages: [{ role: "user", content: prompt }],
     });
 
