@@ -13,24 +13,19 @@ export async function POST(req: NextRequest) {
     const paceLine = pace ? `- Pace: ${pace}` : "";
 
     const prompt = `${langInstruction}
-CRITICAL: booking_url must ALWAYS be https://ostrovok.tpk.ro/DDho2QGw
+You are a travel curator for Azerbaijan. Create a concise travel plan.
 
-You are an expert travel curator for Azerbaijan. Create a travel plan.
-
-Parameters:
-- Days: ${days}
-- Group: ${group}
-- Budget: ${budget}
-- Interests: ${interests.join(", ")}
-- From: ${from}
+Parameters: Days: ${days}, Group: ${group}, Budget: ${budget}, Interests: ${interests.join(", ")}, From: ${from}
 ${dietLine}
 ${paceLine}
 
-For each activity add "curator_note" — 1 sentence insider tip from a local friend.
-Add "logistics" with a short title and 2-3 sentence practical transport guide (apps, prices, tips).
+Rules:
+- curator_note: 1 short sentence insider tip per activity
+- logistics: 2 sentences max on local transport
+- hotel name: clean English name only, no descriptions
+- Keep descriptions short (1-2 sentences max)
 
 Return ONLY valid JSON:
-
 {
   "plan_title": "title",
   "total_budget_estimate": "budget",
@@ -38,21 +33,21 @@ Return ONLY valid JSON:
     {
       "day": 1,
       "title": "day title",
-      "morning": { "activity": "what", "description": "desc", "tip": "tip", "curator_note": "insider tip" },
-      "afternoon": { "activity": "what", "description": "desc", "tip": "tip", "curator_note": "insider tip" },
-      "evening": { "activity": "what", "description": "desc", "tip": "tip", "curator_note": "insider tip" },
-      "hotel": { "name": "clean hotel name in English only, no descriptions", "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" },
-      "excursion": { "name": "excursion name", "search_query": "exact excursion name in English" }
+      "morning": { "activity": "name", "description": "1-2 sentences", "tip": "short tip", "curator_note": "1 sentence" },
+      "afternoon": { "activity": "name", "description": "1-2 sentences", "tip": "short tip", "curator_note": "1 sentence" },
+      "evening": { "activity": "name", "description": "1-2 sentences", "tip": "short tip", "curator_note": "1 sentence" },
+      "hotel": { "name": "Hotel Name Only", "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" },
+      "excursion": { "name": "excursion name", "search_query": "excursion name in English" }
     }
   ],
-  "logistics": { "title": "Getting around", "content": "practical transport tips" },
-  "flights": { "tip": "flight tip", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
-  "car_rental": { "tip": "car tip", "url": "https://localrent.tpk.ro/BAFUsMGN" }
+  "logistics": { "title": "short title", "content": "2 sentences max" },
+  "flights": { "tip": "1 sentence", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
+  "car_rental": { "tip": "1 sentence", "url": "https://localrent.tpk.ro/BAFUsMGN" }
 }`;
 
     const message = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 6000,
+      max_tokens: 4000,
       messages: [{ role: "user", content: prompt }],
     });
 
@@ -71,7 +66,6 @@ Return ONLY valid JSON:
       }
     }
 
-    // Build GYG and Ostrovok search URLs
     if (plan.days) {
       plan.days = plan.days.map((day: any) => ({
         ...day,
@@ -79,10 +73,6 @@ Return ONLY valid JSON:
           ...day.excursion,
           url: `https://www.getyourguide.com/s/?q=${encodeURIComponent(day.excursion.search_query || day.excursion.name)}&partner_id=YNRQ0A3&utm_medium=online_publisher`
         } : day.excursion,
-        hotel: day.hotel?.name ? {
-          ...day.hotel,
-          booking_url: `https://www.ostrovok.ru/hotels/azerbaijan/?q=${encodeURIComponent(day.hotel.name)}&ref=DDho2QGw`
-        } : day.hotel
       }));
     }
 
