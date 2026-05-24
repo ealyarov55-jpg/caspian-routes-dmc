@@ -26,9 +26,10 @@ Parameters:
 ${dietLine}
 ${paceLine}
 
-For each activity add "curator_note" — 1 sentence insider tip from a local friend. Be specific and personal.
+For each activity add "curator_note" — 1 sentence insider tip from a local friend.
+Add "logistics" with a short title and 2-3 sentence practical transport guide (apps, prices, tips).
 
-Return ONLY valid JSON, no markdown, no code blocks:
+Return ONLY valid JSON:
 
 {
   "plan_title": "title",
@@ -44,7 +45,7 @@ Return ONLY valid JSON, no markdown, no code blocks:
       "excursion": { "name": "excursion name", "url": "https://www.getyourguide.com/baku-l1408/?partner_id=YNRQ0A3&utm_medium=online_publisher" }
     }
   ],
-  "logistics": { "title": "short title like 'Getting around Baku'", "content": "2-3 sentence practical insider guide on local transport — specific apps, prices, what to avoid. Personal tone like a local friend." },
+  "logistics": { "title": "Getting around", "content": "practical transport tips" },
   "flights": { "tip": "flight tip", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
   "car_rental": { "tip": "car tip", "url": "https://localrent.tpk.ro/BAFUsMGN" }
 }`;
