@@ -615,6 +615,21 @@ const [plan, setPlan] = useState<Plan | null>(null);
 const [planEnabled, setPlanEnabled] = useState(false);
 const [error, setError] = useState("");
 const planRef = useRef<HTMLDivElement>(null);
+const bgPhotos = [
+  "https://images.pexels.com/photos/3573382/pexels-photo-3573382.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "https://images.pexels.com/photos/18313670/pexels-photo-18313670.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "https://images.pexels.com/photos/3889827/pexels-photo-3889827.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "https://images.pexels.com/photos/2161467/pexels-photo-2161467.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "https://images.pexels.com/photos/1271619/pexels-photo-1271619.jpeg?auto=compress&cs=tinysrgb&w=1200",
+];
+const [bgIndex, setBgIndex] = useState(0);
+useEffect(() => {
+  if (step >= TOTAL_STEPS) return;
+  const interval = setInterval(() => {
+    setBgIndex(prev => (prev + 1) % bgPhotos.length);
+  }, 4000);
+  return () => clearInterval(interval);
+}, [step]);
 const currentBudgets = typeof window !== "undefined" ? (CURRENCY_BUDGETS[country] ?? CURRENCY_BUDGETS["default"]) : CURRENCY_BUDGETS["default"];
 
   const toggleInterest = (i: string) => setInterests(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]);
@@ -735,7 +750,22 @@ const currentBudgets = typeof window !== "undefined" ? (CURRENCY_BUDGETS[country
   const TOTAL_STEPS = 7;
 
   return (
-    <main style={{ background: "#0D1116", minHeight: "100vh" }}>
+    <main style={{ background: "#0D1116", minHeight: "100vh", position: "relative", overflow: "hidden" }}>
+  {step < TOTAL_STEPS && !loading && (
+    <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+      {bgPhotos.map((photo, i) => (
+        <div key={i} style={{
+          position: "absolute", inset: 0,
+          backgroundImage: `url(${photo})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: i === bgIndex ? 0.07 : 0,
+          transition: "opacity 1.5s ease",
+          filter: "blur(3px) saturate(1.2)",
+        }} />
+      ))}
+    </div>
+  )}
       <Navbar locale={locale} />
       <style>{`
         .planner-btn { padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; font-weight: 400; transition: all 0.2s ease; }
