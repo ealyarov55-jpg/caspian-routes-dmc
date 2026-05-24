@@ -780,6 +780,7 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
             {/* Step 0: Days */}
             {step === 0 && (
               <div style={cardStyle}>
+                <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
                 <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step1}</h2>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                   {t.days.map(d => (
@@ -792,6 +793,7 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
             {/* Step 1: Group */}
             {step === 1 && (
               <div style={cardStyle}>
+                <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
                 <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step2}</h2>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                   {t.groups.map(g => (
@@ -804,6 +806,7 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
            {/* Step 2: Location */}
 {step === 2 && (
   <div style={cardStyle}>
+    <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
     <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step7}</h2>
 
     {!continent && (
@@ -862,6 +865,8 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
 {/* Step 3: Budget */}
 {step === 3 && (
   <div style={cardStyle}>
+    <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
+    <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
     <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step3}</h2>
     <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
       {currentBudgets.ranges.map(b => (
@@ -874,6 +879,7 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
 {/* Step 4: Interests */}
 {step === 4 && (
   <div style={cardStyle}>
+    <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
     <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step4}</h2>
     <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
       {t.interests.map(i => (
@@ -887,6 +893,7 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
 {/* Step 5: Diet */}
 {step === 5 && (
   <div style={cardStyle}>
+    <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
     <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>{t.step5}</h2>
     <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>
       {lang === "ru" ? "Можно выбрать несколько" : lang === "az" ? "Bir neçə seçə bilərsiniz" : lang === "tr" ? "Birden fazla seçebilirsiniz" : "You can select multiple"}
@@ -906,6 +913,7 @@ const currentBudgets = CURRENCY_BUDGETS[country] || CURRENCY_BUDGETS["default"];
 {/* Step 6: Pace */}
 {step === 6 && (
   <div style={cardStyle}>
+    <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
     <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step6}</h2>
     <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 8 }}>
       {t.paces.map(p => (
