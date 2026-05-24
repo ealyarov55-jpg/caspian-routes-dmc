@@ -624,7 +624,7 @@ const bgPhotos = [
 ];
 const [bgIndex, setBgIndex] = useState(0);
 useEffect(() => {
-  if (step >= TOTAL_STEPS) return;
+  if (step >= TOTAL_STEPS && !loading) return;
   const interval = setInterval(() => {
     setBgIndex(prev => (prev + 1) % bgPhotos.length);
   }, 4000);
@@ -751,7 +751,7 @@ const currentBudgets = typeof window !== "undefined" ? (CURRENCY_BUDGETS[country
 
   return (
     <main style={{ background: "#0D1116", minHeight: "100vh", position: "relative", overflow: "hidden" }}>
-  {step < TOTAL_STEPS && !loading && (
+  {(step < TOTAL_STEPS || loading) && (
     <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
       {bgPhotos.map((photo, i) => (
         <div key={i} style={{
