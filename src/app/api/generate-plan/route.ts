@@ -36,7 +36,7 @@ Return ONLY valid JSON:
       "morning": { "activity": "name", "description": "1-2 sentences", "tip": "short tip", "curator_note": "1 sentence" },
       "afternoon": { "activity": "name", "description": "1-2 sentences", "tip": "short tip", "curator_note": "1 sentence" },
       "evening": { "activity": "name", "description": "1-2 sentences", "tip": "short tip", "curator_note": "1 sentence" },
-      "hotel": { "name": "Hotel Name Only", "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" },
+      "hotel": { "name": "choose from: Fairmont Baku, JW Marriott Absheron Baku, Holiday Inn Baku, Movenpick Winter Park Baku, Baku Marriott Hotel Boulevard, ibis Baku City, Four Seasons Hotel Baku, InterContinental Baku, Old Baku Boutique Hotel, Boutique 19 Hotel, Sultan INN Baku, Moss Art Hotel, Hazz Hotel Baku, Promenade Hotel Baku, Twelve Inn Boutique Hotel. Pick the most suitable for the day and budget.", "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" },
       "excursion": { "name": "excursion name", "search_query": "excursion name in English" }
     }
   ],

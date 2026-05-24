@@ -202,6 +202,13 @@ const content = {
   ],
 },
 };
+const HOTEL_PHOTOS: Record<string, string[]> = {
+  "Fairmont Baku": ["/hotels/fairmont-baku-1.jpg", "/hotels/fairmont-baku-2.png", "/hotels/fairmont-baku-3.png"],
+  "JW Marriott Absheron Baku": ["/hotels/jw-marriott-baku-1.jpg", "/hotels/jw-marriott-baku-2.png", "/hotels/jw-marriott-baku-3.png"],
+  "Holiday Inn Baku": ["/hotels/holiday-inn-baku-1.png", "/hotels/holiday-inn-baku-2.png", "/hotels/holiday-inn-baku-3.png"],
+  "Movenpick Winter Park Baku": ["/hotels/movenpick-baku-1.png", "/hotels/movenpick-baku-2.png", "/hotels/movenpick-baku-3.png"],
+  "Baku Marriott Hotel Boulevard": ["/hotels/baku-marriott-boulevard-1.png", "/hotels/baku-marriott-boulevard-2.png", "/hotels/baku-marriott-boulevard-3.png"],
+};
 const CURRENCY_BUDGETS: Record<string, { symbol: string; ranges: string[] }> = {
   ru: { symbol: "₽", ranges: ["₽25 000–45 000", "₽45 000–90 000", "₽90 000–180 000", "₽180 000+"] },
   kz: { symbol: "₸", ranges: ["₸150 000–250 000", "₸250 000–500 000", "₸500 000–1 000 000", "₸1 000 000+"] },
@@ -539,6 +546,48 @@ function FeaturedActivityCard({ label, data, photoUrl, photographer, photographe
   );
 }
 
+function HotelCard({ hotel, lang, bookHotel }: { hotel: { name: string; booking_url: string }; lang: string; bookHotel: string }) {
+  const photos = HOTEL_PHOTOS[hotel.name] || [];
+  return (
+    <div style={{ marginBottom: 16 }}>
+      {photos.length > 0 && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 12, borderRadius: 16, overflow: "hidden" }}>
+          {photos.map((photo, i) => (
+            <div key={i} style={{ height: 120, overflow: "hidden" }}>
+              <img src={photo} alt={hotel.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
+                onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")} />
+            </div>
+          ))}
+        </div>
+      )}
+      <a href={hotel.booking_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "block" }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(45,212,191,0.15)", borderRadius: 16, padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, transition: "all 0.25s ease" }}
+          onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(45,212,191,0.4)"; (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.05)"; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(45,212,191,0.15)"; (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.03)"; }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(45,212,191,0.1)", border: "1px solid rgba(45,212,191,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9,22 9,12 15,12 15,22"/>
+              </svg>
+            </div>
+            <div>
+              <p style={{ color: "rgba(45,212,191,0.6)", fontSize: 9, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif", marginBottom: 3 }}>
+                {lang === "ru" ? "Рекомендация ИИ" : "AI Recommendation"}
+              </p>
+              <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 16, fontWeight: 500, color: "white", margin: 0 }}>{hotel.name}</h3>
+            </div>
+          </div>
+          <div style={{ border: "1px solid rgba(45,212,191,0.3)", borderRadius: 8, padding: "7px 14px", whiteSpace: "nowrap" as const }}>
+            <span style={{ color: "#2DD4BF", fontSize: 12, fontFamily: "DM Sans, sans-serif", fontWeight: 400 }}>{bookHotel}</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  );
+}
+
 function DaySection({ day, t, lang, planEnabled }: {
   day: Plan["days"][0];
   t: typeof content["en"];
@@ -576,32 +625,9 @@ function DaySection({ day, t, lang, planEnabled }: {
         </div>
       </div>
 
-      {day.hotel?.name && (
-  <a href={day.hotel.booking_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "block", marginBottom: 16 }}>
-    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(45,212,191,0.15)", borderRadius: 16, padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, transition: "all 0.25s ease" }}
-      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(45,212,191,0.4)"; (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.05)"; }}
-      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(45,212,191,0.15)"; (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.03)"; }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(45,212,191,0.1)", border: "1px solid rgba(45,212,191,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-            <polyline points="9,22 9,12 15,12 15,22"/>
-          </svg>
-        </div>
-        <div>
-          <p style={{ color: "rgba(45,212,191,0.6)", fontSize: 9, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif", marginBottom: 3 }}>
-            {lang === "ru" ? "Рекомендация ИИ" : "AI Recommendation"}
-          </p>
-          <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 16, fontWeight: 500, color: "white", margin: 0 }}>{day.hotel.name}</h3>
-        </div>
-      </div>
-      <div style={{ border: "1px solid rgba(45,212,191,0.3)", borderRadius: 8, padding: "7px 14px", whiteSpace: "nowrap" as const, transition: "all 0.2s" }}>
-        <span style={{ color: "#2DD4BF", fontSize: 12, fontFamily: "DM Sans, sans-serif", fontWeight: 400 }}>{t.bookHotel}</span>
-      </div>
-    </div>
-  </a>
-)}
-<div style={{ height: 1, background: "rgba(45,212,191,0.1)", marginTop: 32 }} />
+      {day.hotel?.name && <HotelCard hotel={day.hotel} lang={lang} bookHotel={t.bookHotel} />}
+
+      <div style={{ height: 1, background: "rgba(45,212,191,0.1)", marginTop: 32 }} />
     </section>
   );
 }
