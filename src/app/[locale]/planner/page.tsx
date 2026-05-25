@@ -479,10 +479,10 @@ function SmallActivityCard({ label, data, icon, photoUrl, photographer, photogra
           <span style={{ fontSize: 32, opacity: 0.4 }}>{icon === "morning" ? "🌅" : icon === "afternoon" ? "☀️" : "🌙"}</span>
         </div>
       )}
-      <div style={{ padding: "16px 18px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
-        <span style={{ color: "#4DB6AC", fontSize: 9, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif" }}>{label}</span>
-        <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 15, fontWeight: 500, color: "white", lineHeight: 1.4, margin: 0 }}>{data.activity}</h3>
-        <p style={{ color: "#9f9fa9", fontSize: 12, lineHeight: 1.7, margin: 0, fontFamily: "DM Sans, sans-serif", flex: 1 }}>{data.description}</p>
+      <div style={{ padding: "20px 20px", display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
+  <span style={{ color: icon === "morning" ? "#2DD4BF" : icon === "afternoon" ? "#c9a84c" : "#a78bfa", fontSize: 9, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.5em", fontFamily: "DM Sans, sans-serif" }}>{label}</span>
+  <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 17, fontWeight: 500, color: "white", lineHeight: 1.35, margin: 0 }}>{data.activity}</h3>
+  <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 12, lineHeight: 1.8, margin: 0, fontFamily: "DM Sans, sans-serif", flex: 1 }}>{data.description}</p>
         {data.curator_note && (
           <div style={{ borderLeft: "2px solid rgba(45,212,191,0.4)", paddingLeft: 12, marginTop: 8 }}>
             <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 11, fontStyle: "italic", fontFamily: "Cormorant Garamond, serif", lineHeight: 1.7, margin: 0 }}>{data.curator_note}</p>
@@ -636,8 +636,8 @@ function DaySection({ day, t, lang, planEnabled }: {
   const dayLabel = lang === "ru" ? `День ${day.day}` : lang === "az" ? `Gün ${day.day}` : lang === "tr" ? `Gün ${day.day}` : `Day ${day.day}`;
 
   return (
-    <section style={{ marginBottom: 72 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28 }}>
+    <section style={{ marginBottom: 96 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 36 }}>
         <div style={{ width: 44, height: 44, borderRadius: "50%", background: "#2DD4BF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: "#0D1116", fontFamily: "DM Sans, sans-serif", flexShrink: 0 }}>{day.day}</div>
         <div>
           <p style={{ color: "#2DD4BF", fontSize: 10, fontFamily: "DM Sans, sans-serif", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", marginBottom: 3 }}>{dayLabel}</p>
@@ -865,7 +865,7 @@ filter: "blur(1px) saturate(1.3)",
         @media (max-width: 767px) { .planner-btn { padding: 10px 16px; font-size: 13px; } .generate-btn { width: 100%; } .next-btn { width: 100%; margin-right: 0; margin-bottom: 10px; } .skip-btn { width: 100%; } }
       @media (max-width: 640px) { .day-cards-grid { grid-template-columns: 1fr !important; } }`}</style>
 
-      <div style={{ maxWidth: 780, margin: "0 auto", padding: "100px 24px 80px" }}>
+      <div style={{ maxWidth: 860, margin: "0 auto", padding: "100px 32px 100px" }}>
 
         {loading && <LoadingScreen steps={t.loadingSteps} />}
 
