@@ -1,112 +1,68 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
 import Link from "next/link";
-import { FadeIn, StatsSection, WhyCards, BlogCards } from "@/components/sections/HomeAnimations";
+import { FadeIn, BlogCards } from "@/components/sections/HomeAnimations";
 
 const content = {
   ru: {
-    badge: "AI-планировщик путешествий",
-    headline: "Спланируй путешествие\nв Азербайджан с ИИ",
-    sub: "Персональный маршрут под твой бюджет и интересы — за 2 минуты. Бесплатно.",
+    eyebrow: "Азербайджан · Кавказ · Каспий",
+    headline: "Спланируй\nпутешествие\nс ИИ",
+    sub: "Персональный маршрут под твой бюджет и интересы — за 2 минуты.",
     cta: "Создать маршрут",
-    cta2: "Читать путеводитель",
-    cardTitle: "Куда хочешь\nотправиться?",
-    cardSub: "Начни прямо сейчас",
-    free: "Бесплатно · Без регистрации · За 2 минуты",
-    whyTitle: "Почему Caspian Routes",
-    why: [
-      { icon: "🤖", title: "AI-маршрут за 2 минуты", desc: "Отвечаешь на 5 вопросов — получаешь готовый план по дням" },
-      { icon: "💰", title: "Лучшие цены на отели", desc: "Партнёрские ссылки на Booking, Ostrovok и локальные варианты" },
-      { icon: "🗺️", title: "Экскурсии с гидами", desc: "Проверенные туры через GetYourGuide с отзывами туристов" },
-      { icon: "✈️", title: "Дешёвые билеты", desc: "Поиск авиабилетов через Aviasales — без наценок" },
-    ],
-    stats: [
-      { value: 60, suffix: "", label: "статьи о маршрутах" },
-      { value: 4, suffix: "", label: "языка" },
-      { value: 4, suffix: "", label: "партнёра" },
-      { value: 2, suffix: " мин", label: "на маршрут" },
-    ],
-    blogTitle: "Путеводитель по Азербайджану",
-    readMore: "Читать",
+    cta2: "Путеводитель",
+    free: "Бесплатно · Без регистрации",
+    stat1val: "60+", stat1label: "Статей о маршрутах",
+    stat2val: "4", stat2label: "Языка",
+    stat3val: "2 мин", stat3label: "На персональный маршрут",
+    editorialLabel: "Редакция советует",
+    blogTitle: "Путеводитель",
     allArticles: "Все статьи →",
+    readMore: "Читать",
   },
   en: {
-    badge: "AI Travel Planner",
-    headline: "Plan Your Trip to\nAzerbaijan with AI",
-    sub: "Get a personalized itinerary in 2 minutes. Free.",
+    eyebrow: "Azerbaijan · Caucasus · Caspian",
+    headline: "Plan Your\nTrip to\nAzerbaijan",
+    sub: "A personalized itinerary for your budget and interests — in 2 minutes.",
     cta: "Create Itinerary",
-    cta2: "Read Travel Guide",
-    cardTitle: "Where do you\nwant to go?",
-    cardSub: "Start right now",
-    free: "Free · No signup · 2 minutes",
-    whyTitle: "Why Caspian Routes",
-    why: [
-      { icon: "🤖", title: "AI itinerary in 2 min", desc: "Answer 5 questions — get a full day-by-day plan" },
-      { icon: "💰", title: "Best hotel prices", desc: "Partner links to Booking, Ostrovok and local options" },
-      { icon: "🗺️", title: "Guided tours", desc: "Verified tours via GetYourGuide with traveler reviews" },
-      { icon: "✈️", title: "Cheap flights", desc: "Flight search via Aviasales — no markups" },
-    ],
-    stats: [
-      { value: 60, suffix: "", label: "travel articles" },
-      { value: 4, suffix: "", label: "languages" },
-      { value: 4, suffix: "", label: "partners" },
-      { value: 2, suffix: " min", label: "to your itinerary" },
-    ],
-    blogTitle: "Azerbaijan Travel Guide",
-    readMore: "Read",
+    cta2: "Travel Guide",
+    free: "Free · No signup",
+    stat1val: "60+", stat1label: "Travel articles",
+    stat2val: "4", stat2label: "Languages",
+    stat3val: "2 min", stat3label: "To your itinerary",
+    editorialLabel: "Editor's picks",
+    blogTitle: "Travel Guide",
     allArticles: "All articles →",
+    readMore: "Read",
   },
   az: {
-    badge: "AI Səyahət Planlayıcısı",
-    headline: "Azərbaycana Səyahətini\nAI ilə Planlaşdır",
-    sub: "2 dəqiqədə fərdi marşrut. Pulsuz.",
+    eyebrow: "Azərbaycan · Qafqaz · Xəzər",
+    headline: "Səyahətini\nAI ilə\nPlanlaşdır",
+    sub: "Büdcənə və maraqlarına uyğun fərdi marşrut — 2 dəqiqədə.",
     cta: "Marşrut Yarat",
-    cta2: "Bələdçini Oxu",
-    cardTitle: "Hara getmək\nistəyirsən?",
-    cardSub: "İndi başla",
-    free: "Pulsuz · Qeydiyyatsız · 2 dəqiqədə",
-    whyTitle: "Niyə Caspian Routes",
-    why: [
-      { icon: "🤖", title: "2 dəqiqədə AI marşrut", desc: "5 suala cavab ver — günlük plan al" },
-      { icon: "💰", title: "Ən yaxşı otel qiymətləri", desc: "Booking, Ostrovok üzrə tərəfdaş linklər" },
-      { icon: "🗺️", title: "Bələdçi turları", desc: "GetYourGuide vasitəsilə yoxlanmış turlar" },
-      { icon: "✈️", title: "Ucuz aviabiletlər", desc: "Aviasales ilə uçuş axtarışı" },
-    ],
-    stats: [
-      { value: 60, suffix: "", label: "məqalə" },
-      { value: 4, suffix: "", label: "dil" },
-      { value: 4, suffix: "", label: "tərəfdaş" },
-      { value: 2, suffix: " dəq", label: "marşruta" },
-    ],
-    blogTitle: "Azərbaycan Bələdçisi",
-    readMore: "Oxu",
+    cta2: "Bələdçi",
+    free: "Pulsuz · Qeydiyyatsız",
+    stat1val: "60+", stat1label: "Məqalə",
+    stat2val: "4", stat2label: "Dil",
+    stat3val: "2 dəq", stat3label: "Marşruta",
+    editorialLabel: "Redaksiya tövsiyə edir",
+    blogTitle: "Bələdçi",
     allArticles: "Bütün məqalələr →",
+    readMore: "Oxu",
   },
   tr: {
-    badge: "AI Seyahat Planlayıcısı",
-    headline: "Azerbaycan'a Seyahatini\nYapay Zeka ile Planla",
-    sub: "Bütçene ve ilgi alanlarına göre kişisel rota — 2 dakikada. Ücretsiz.",
+    eyebrow: "Azerbaycan · Kafkasya · Hazar",
+    headline: "Seyahatini\nYapay Zeka\nile Planla",
+    sub: "Bütçene ve ilgi alanlarına göre kişisel rota — 2 dakikada.",
     cta: "Rota Oluştur",
-    cta2: "Seyahat Rehberini Oku",
-    cardTitle: "Nereye gitmek\nistiyorsun?",
-    cardSub: "Hemen başla",
-    free: "Ücretsiz · Kayıt yok · 2 dakikada",
-    whyTitle: "Neden Caspian Routes",
-    why: [
-      { icon: "🤖", title: "2 dakikada AI rotası", desc: "5 soruya cevap ver — günlük hazır plan al" },
-      { icon: "💰", title: "En iyi otel fiyatları", desc: "Booking, Ostrovok ve yerel seçeneklere ortak linkler" },
-      { icon: "🗺️", title: "Rehberli turlar", desc: "GetYourGuide üzerinden doğrulanmış turlar" },
-      { icon: "✈️", title: "Ucuz uçuşlar", desc: "Aviasales ile uçuş arama — ek ücret yok" },
-    ],
-    stats: [
-      { value: 60, suffix: "", label: "seyahat makalesi" },
-      { value: 4, suffix: "", label: "dil" },
-      { value: 4, suffix: "", label: "ortak" },
-      { value: 2, suffix: " dk", label: "rotanıza" },
-    ],
-    blogTitle: "Azerbaycan Seyahat Rehberi",
-    readMore: "Oku",
+    cta2: "Seyahat Rehberi",
+    free: "Ücretsiz · Kayıt yok",
+    stat1val: "60+", stat1label: "Seyahat makalesi",
+    stat2val: "4", stat2label: "Dil",
+    stat3val: "2 dk", stat3label: "Rotanıza",
+    editorialLabel: "Editörün seçimi",
+    blogTitle: "Seyahat Rehberi",
     allArticles: "Tüm makaleler →",
+    readMore: "Oku",
   },
 };
 
@@ -114,17 +70,23 @@ const blogPosts = [
   {
     slug: { ru: "marshrut-baku-3-dnya", en: "baku-3-days", az: "marshrut-baku-3-dnya", tr: "baku-3-days" },
     title: { ru: "Маршрут по Баку на 3 дня", en: "Baku 3-Day Itinerary", az: "Bakı 3 günlük marşrut", tr: "Bakü 3 Günlük Rota" },
-    image: "/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg"
+    desc: { ru: "Старый город, Пламенные башни, набережная и лучшие рестораны.", en: "Old City, Flame Towers, boulevard and the best restaurants.", az: "Qala, Alov qüllələri, bulvar və ən yaxşı restoranlar.", tr: "Eski Şehir, Alev Kuleleri, bulvar ve en iyi restoranlar." },
+    image: "/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg",
+    tag: { ru: "Маршрут", en: "Itinerary", az: "Marşrut", tr: "Rota" },
   },
   {
     slug: { ru: "gobustan-kak-dobratsa", en: "gobustan-from-baku", az: "gobustan-kak-dobratsa", tr: "gobustan-from-baku" },
     title: { ru: "Гобустан из Баку", en: "Gobustan from Baku", az: "Bakıdan Qobustan", tr: "Bakü'den Gobustan" },
-    image: "/images/pozziss-azerbaijan-4856054_1920-opt.jpg"
+    desc: { ru: "Грязевые вулканы, наскальные рисунки и лунный пейзаж — однодневная поездка.", en: "Mud volcanoes, petroglyphs and lunar landscape — a day trip.", az: "Palçıq vulkanları, qaya rəsmləri — günlük gəzinti.", tr: "Çamur volkanları, kaya resimleri — günübirlik gezi." },
+    image: "/images/pozziss-azerbaijan-4856054_1920-opt.jpg",
+    tag: { ru: "Природа", en: "Nature", az: "Təbiət", tr: "Doğa" },
   },
   {
     slug: { ru: "baku-letom", en: "baku-summer", az: "baku-letom", tr: "baku-summer" },
     title: { ru: "Баку летом", en: "Baku in Summer", az: "Yay Bakısı", tr: "Yazın Bakü" },
-    image: "/images/pexels-zulfugarkarimov-33085326-opt.jpg"
+    desc: { ru: "Жара, Каспий, ночная жизнь и фестивали — что делать в Баку летом.", en: "Heat, Caspian, nightlife and festivals — what to do in Baku in summer.", az: "İsti, Xəzər, gecə həyatı — yay Bakısında nə etməli.", tr: "Sıcak, Hazar, gece hayatı — Bakü'de yazın ne yapmalı." },
+    image: "/images/pexels-zulfugarkarimov-33085326-opt.jpg",
+    tag: { ru: "Сезон", en: "Season", az: "Mövsüm", tr: "Sezon" },
   },
 ];
 
@@ -141,182 +103,165 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     "url": `https://www.caspian-routes.com/${locale}`,
     "logo": "https://www.caspian-routes.com/favicon.png",
     "image": "https://www.caspian-routes.com/images/pexels-sultan-jafarov-475048977-18207490-opt.jpg",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Baku",
-      "addressCountry": "AZ"
-    },
-    "areaServed": {
-      "@type": "Country",
-      "name": "Azerbaijan"
-    },
+    "address": { "@type": "PostalAddress", "addressLocality": "Baku", "addressCountry": "AZ" },
+    "areaServed": { "@type": "Country", "name": "Azerbaijan" },
     "serviceType": "AI Travel Planning",
     "priceRange": "Free",
     "sameAs": ["https://www.caspian-routes.com"]
   };
 
   return (
-    <main style={{ background: "#021a1a", minHeight: "100vh" }}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
-      />
+    <main style={{ background: "#041315", minHeight: "100vh" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }} />
       <Navbar locale={locale} />
 
       <style>{`
-        .hero-btn-primary {
-          padding: 16px 28px;
-          background: linear-gradient(135deg, #0a7070, #0d9090);
+        .hero-cta-primary {
+          display: inline-block;
+          padding: 14px 36px;
+          background: #0a7070;
           color: white;
           border: none;
-          border-radius: 12px;
-          font-size: 15px;
-          font-weight: 600;
-          font-family: DM Sans, sans-serif;
-          cursor: pointer;
-          text-decoration: none;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-        }
-        .hero-btn-primary:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 32px rgba(10,112,112,0.5);
-          background: linear-gradient(135deg, #0d9090, #10b0b0);
-        }
-        .hero-btn-secondary {
-          padding: 16px 28px;
-          background: transparent;
-          color: white;
-          border: 1.5px solid rgba(255,255,255,0.3);
-          border-radius: 12px;
-          font-size: 15px;
+          border-radius: 2px;
+          font-size: 12px;
           font-weight: 500;
           font-family: DM Sans, sans-serif;
           cursor: pointer;
           text-decoration: none;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          transition: background 0.2s ease;
         }
-        .hero-btn-secondary:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 32px rgba(255,255,255,0.1);
-          border-color: rgba(255,255,255,0.7);
-          background: rgba(255,255,255,0.08);
+        .hero-cta-primary:hover { background: #0d9090; }
+        .hero-cta-secondary {
+          display: inline-block;
+          padding: 14px 36px;
+          background: transparent;
+          color: rgba(255,255,255,0.6);
+          border: 0.5px solid rgba(255,255,255,0.2);
+          border-radius: 2px;
+          font-size: 12px;
+          font-weight: 400;
+          font-family: DM Sans, sans-serif;
+          cursor: pointer;
+          text-decoration: none;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          transition: all 0.2s ease;
         }
-        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
-        .hero-card { display: block; }
-        .hero-mobile-btns { display: none; }
-        .blog-card {
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 12px;
+        .hero-cta-secondary:hover { border-color: rgba(255,255,255,0.4); color: white; }
+        .blog-card-editorial {
+          display: block;
+          text-decoration: none;
+          border-radius: 2px;
           overflow: hidden;
-          transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+          background: #0a1f1f;
+          border: 0.5px solid rgba(255,255,255,0.08);
+          transition: border-color 0.25s ease;
         }
-        .blog-card:hover {
-          transform: translateY(-4px);
-          border-color: rgba(45,212,191,0.3);
-          box-shadow: 0 16px 40px rgba(0,0,0,0.3);
-        }
+        .blog-card-editorial:hover { border-color: rgba(45,212,191,0.3); }
+        .blog-card-editorial img { transition: transform 0.6s ease; }
+        .blog-card-editorial:hover img { transform: scale(1.04); }
         @media (max-width: 767px) {
-          .hero-grid { grid-template-columns: 1fr; gap: 32px; }
-          .hero-card { display: none; }
-          .hero-mobile-btns { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+          .hero-headline { font-size: clamp(3.5rem, 14vw, 5rem) !important; }
+          .hero-cols { grid-template-columns: 1fr !important; }
+          .stat-row { grid-template-columns: 1fr 1fr !important; }
+          .blog-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
       {/* Hero */}
-      <section style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/images/baku-hero.jpg')", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.5 }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(2,26,26,0.97) 0%, rgba(2,26,26,0.85) 40%, rgba(2,26,26,0.3) 100%)" }} />
+      <section style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "flex-end", overflow: "hidden", paddingBottom: 0 }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/images/baku-hero.jpg')", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.35 }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(4,19,21,0.3) 0%, rgba(4,19,21,0.6) 50%, rgba(4,19,21,0.98) 100%)" }} />
 
-        <div style={{ position: "relative", zIndex: 10, maxWidth: 1280, margin: "0 auto", padding: "96px 24px 64px", width: "100%" }}>
-          <div className="hero-grid">
-            <div>
-              <FadeIn delay={0}>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(45,212,191,0.15)", border: "1px solid rgba(45,212,191,0.4)", borderRadius: 999, padding: "6px 16px", marginBottom: 24 }}>
-                  <span style={{ color: "#2DD4BF", fontSize: 13, fontWeight: 500 }}>{t.badge}</span>
-                </div>
-              </FadeIn>
-              <FadeIn delay={150}>
-                <h1 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2.5rem, 5vw, 4.5rem)", color: "white", fontWeight: 300, lineHeight: 1.1, marginBottom: 24, whiteSpace: "pre-line" }}>
-                  {t.headline}
-                </h1>
-              </FadeIn>
-              <FadeIn delay={300}>
-                <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 18, lineHeight: 1.7, maxWidth: 480 }}>
-                  {t.sub}
-                </p>
-              </FadeIn>
-              <div className="hero-mobile-btns">
-                <Link href={`/${locale}/planner`} className="hero-btn-primary">✨ {t.cta}</Link>
-                <Link href={`/${locale}/blog`} className="hero-btn-secondary">📖 {t.cta2}</Link>
-                <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textAlign: "center", margin: 0 }}>{t.free}</p>
+        <div style={{ position: "relative", zIndex: 10, width: "100%", maxWidth: 1280, margin: "0 auto", padding: "0 48px 80px" }}>
+          <FadeIn delay={0}>
+            <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 10, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 32, marginTop: "30vh" }}>
+              {t.eyebrow}
+            </p>
+          </FadeIn>
+
+          <FadeIn delay={100}>
+            <h1 className="hero-headline" style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(5rem, 10vw, 9rem)", color: "white", fontWeight: 300, lineHeight: 0.95, marginBottom: 48, whiteSpace: "pre-line", letterSpacing: "-0.02em" }}>
+              {t.headline}
+            </h1>
+          </FadeIn>
+
+          <FadeIn delay={200}>
+            <div className="hero-cols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "flex-end" }}>
+              <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 16, lineHeight: 1.8, fontFamily: "DM Sans, sans-serif", maxWidth: 400, margin: 0 }}>
+                {t.sub}
+              </p>
+              <div style={{ display: "flex", gap: 12, justifyContent: "flex-end", flexWrap: "wrap" }}>
+                <Link href={`/${locale}/planner`} className="hero-cta-primary">{t.cta} →</Link>
+                <Link href={`/${locale}/blog`} className="hero-cta-secondary">{t.cta2}</Link>
               </div>
             </div>
+          </FadeIn>
 
-            <FadeIn delay={400}>
-              <div className="hero-card" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "40px 36px", backdropFilter: "blur(12px)" }}>
-                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>{t.cardSub}</p>
-                <p style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: "1.6rem", fontWeight: 300, lineHeight: 1.3, marginBottom: 32, whiteSpace: "pre-line" }}>{t.cardTitle}</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  <Link href={`/${locale}/planner`} className="hero-btn-primary">✨ {t.cta}</Link>
-                  <Link href={`/${locale}/blog`} className="hero-btn-secondary">📖 {t.cta2}</Link>
+          <div style={{ height: 1, background: "rgba(255,255,255,0.08)", marginTop: 48 }} />
+
+          {/* Stats row */}
+          <FadeIn delay={300}>
+            <div className="stat-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 0, marginTop: 0 }}>
+              {[
+                { val: t.stat1val, label: t.stat1label },
+                { val: t.stat2val, label: t.stat2label },
+                { val: t.stat3val, label: t.stat3label },
+              ].map((s, i) => (
+                <div key={i} style={{ padding: "28px 0", borderRight: i < 2 ? "0.5px solid rgba(255,255,255,0.08)" : "none", paddingLeft: i > 0 ? 40 : 0 }}>
+                  <p style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: "#2DD4BF", fontWeight: 300, margin: 0, lineHeight: 1 }}>{s.val}</p>
+                  <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 10, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.3em", textTransform: "uppercase", margin: "8px 0 0" }}>{s.label}</p>
                 </div>
-                <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textAlign: "center", marginTop: 20 }}>{t.free}</p>
-              </div>
-            </FadeIn>
-          </div>
+              ))}
+            </div>
+          </FadeIn>
         </div>
       </section>
 
-      {/* Stats */}
-      <section style={{ maxWidth: 1280, margin: "0 auto", padding: "80px 24px 0" }}>
-        <StatsSection stats={t.stats} />
-      </section>
-
-      {/* Why us */}
-      <section style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px 80px" }}>
+      {/* Editorial Blog Section */}
+      <section style={{ maxWidth: 1280, margin: "0 auto", padding: "120px 48px 120px" }}>
         <FadeIn>
-          <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2rem, 4vw, 3rem)", color: "white", fontWeight: 300, marginBottom: 48, textAlign: "center" }}>
-            {t.whyTitle}
-          </h2>
-        </FadeIn>
-        <WhyCards items={t.why} />
-      </section>
-
-      {/* Blog */}
-      <section style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px 80px" }}>
-        <FadeIn>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 40 }}>
-            <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 3vw, 2.5rem)", color: "white", fontWeight: 300 }}>
-              {t.blogTitle}
-            </h2>
-            <Link href={`/${locale}/blog`} style={{ color: "#2DD4BF", fontSize: 14, textDecoration: "none" }}>{t.allArticles}</Link>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 64, borderBottom: "0.5px solid rgba(255,255,255,0.08)", paddingBottom: 32 }}>
+            <div>
+              <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 10, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 12 }}>✦ {t.editorialLabel}</p>
+              <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(2.5rem, 5vw, 4rem)", color: "white", fontWeight: 300, margin: 0, lineHeight: 1 }}>{t.blogTitle}</h2>
+            </div>
+            <Link href={`/${locale}/blog`} style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, fontFamily: "DM Sans, sans-serif", textDecoration: "none", letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: "0.5px solid rgba(255,255,255,0.2)", paddingBottom: 2 }}>{t.allArticles}</Link>
           </div>
         </FadeIn>
+
+        {/* Featured large + 2 small */}
         <BlogCards>
-          {blogPosts.map((post) => (
-            <Link key={post.slug[lang]} href={`/${locale}/blog/${post.slug[lang]}`} style={{ textDecoration: "none" }}>
-              <article className="blog-card">
-                <div style={{ height: 200, overflow: "hidden" }}>
-                  <img src={post.image} alt={post.title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <div className="blog-grid" style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 2 }}>
+            {/* Large featured */}
+            <Link href={`/${locale}/blog/${blogPosts[0].slug[lang]}`} className="blog-card-editorial" style={{ gridRow: "span 2" }}>
+              <div style={{ position: "relative", height: "100%", minHeight: 560, overflow: "hidden" }}>
+                <img src={blogPosts[0].image} alt={blogPosts[0].title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }} />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(4,19,21,0.95) 0%, transparent 60%)" }} />
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "32px" }}>
+                  <span style={{ color: "#2DD4BF", fontSize: 9, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.4em", textTransform: "uppercase" }}>{blogPosts[0].tag[lang]}</span>
+                  <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", color: "white", fontWeight: 300, margin: "12px 0 16px", lineHeight: 1.2 }}>{blogPosts[0].title[lang]}</h3>
+                  <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, fontFamily: "DM Sans, sans-serif", lineHeight: 1.7, margin: 0 }}>{blogPosts[0].desc[lang]}</p>
                 </div>
-                <div style={{ padding: "20px 24px" }}>
-                  <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.2rem", color: "white", fontWeight: 400, marginBottom: 12 }}>
-                    {post.title[lang]}
-                  </h3>
-                  <span style={{ color: "#2DD4BF", fontSize: 13 }}>{t.readMore} →</span>
-                </div>
-              </article>
+              </div>
             </Link>
-          ))}
+
+            {/* Two small */}
+            {blogPosts.slice(1).map((post) => (
+              <Link key={post.slug[lang]} href={`/${locale}/blog/${post.slug[lang]}`} className="blog-card-editorial">
+                <div style={{ position: "relative", height: 240, overflow: "hidden" }}>
+                  <img src={post.image} alt={post.title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(4,19,21,0.9) 0%, transparent 60%)" }} />
+                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "20px 24px" }}>
+                    <span style={{ color: "#2DD4BF", fontSize: 9, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.4em", textTransform: "uppercase" }}>{post.tag[lang]}</span>
+                    <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.2rem", color: "white", fontWeight: 300, margin: "8px 0 0", lineHeight: 1.3 }}>{post.title[lang]}</h3>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </BlogCards>
       </section>
 
