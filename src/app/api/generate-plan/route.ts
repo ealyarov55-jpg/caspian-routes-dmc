@@ -12,54 +12,46 @@ export async function POST(req: NextRequest) {
     const dietLine = diet && diet.length > 0 ? `- Diet/Restrictions: ${diet.join(", ")}` : "";
     const paceLine = pace ? `- Pace/Rhythm: ${pace}` : "";
 
-    const prompt = `${langInstruction}
-You are the Editor-in-Chief of a high-end, premium travel magazine (like Kinfolk or Condé Nast Traveler) curating an exclusive itinerary for Azerbaijan and the Caucasus.
+    const prompt = `${langInstruction} ALL content must be in this language — every word. Zero English if locale is not English.
 
-Context:
-- Days: ${days} | Group: ${group} | Budget: ${budget}
-- Focus: ${interests.join(", ")}
-- Departure from: ${from}
+You are a premium travel curator for Azerbaijan. Create an editorial itinerary.
+
+Context: Days: ${days} | Group: ${group} | Budget: ${budget} | Focus: ${interests.join(", ")} | From: ${from}
 ${dietLine}
 ${paceLine}
 
-CRITICAL TONE & STYLE RULES:
-1. Tone: Elegant, cinematic, sensory, and highly opinionated. 
-2. Ban cliches: NEVER use phrases like "hidden gem", "city of contrasts", "must-see", or "amazing views". Focus on authentic atmosphere, lighting, local rhythm, and architectural details.
-3. Keep text concise but poetic (max 15-20 words per description). 
+RULES:
+- Tone: cinematic, sensory, no cliches ("hidden gem", "must-see" banned)
+- Max 15 words per description field
+- NO hotels in daily schedule — only in curated_stays
+- curated_stays: 3 real hotels matching budget and regions visited
+- All hotel/cafe/street names must be real and exist in Azerbaijan
 
-CRITICAL ARCHITECTURE RULES:
-- DO NOT put hotels inside the daily schedule. Provide 3-4 curated hotels AT THE END in the "curated_stays" array.
-- "curated_stays" must perfectly match the budget level (${budget}) and the regions visited. (Low = stylish guesthouses/boutique hostels, Mid = aesthetic 4-star boutiques, High = 5-star luxury/design).
-- ALL hotel names, streets, and cafes must be 100% REAL and exist in Azerbaijan.
-
-Return ONLY valid JSON matching this exact structure:
+Return ONLY valid JSON:
 {
-  "plan_title": "Cinematic editorial title for the trip",
-  "total_budget_estimate": "Short aesthetic budget summary",
+  "plan_title": "editorial title",
+  "total_budget_estimate": "budget summary",
   "days": [
     {
       "day": 1,
-      "title": "Editorial day title (e.g., 'The Silent Stone of Icherisheher')",
-      "morning": { "activity": "Specific aesthetic location", "description": "Sensory, elegant description", "tip": "Practical local tip", "curator_note": "1 highly specific insider secret" },
-      "afternoon": { "activity": "location", "description": "1-2 sentences", "tip": "tip", "curator_note": "insider secret" },
-      "evening": { "activity": "location", "description": "1-2 sentences", "tip": "tip", "curator_note": "insider secret" },
-      "excursion": { "name": "Curated experience name", "search_query": "English search query for GetYourGuide" }
+      "title": "editorial day title",
+      "morning": { "activity": "location", "description": "max 15 words", "tip": "practical tip", "curator_note": "1 insider secret" },
+      "afternoon": { "activity": "location", "description": "max 15 words", "tip": "tip", "curator_note": "insider secret" },
+      "evening": { "activity": "location", "description": "max 15 words", "tip": "tip", "curator_note": "insider secret" },
+      "excursion": { "name": "experience name", "search_query": "English search query" }
     }
   ],
   "curated_stays": [
-    { 
-      "name": "Real hotel name", 
-      "description": "Editorial review focusing on interior, vibe, or view (max 20 words)"
-    }
+    { "name": "Real hotel name", "description": "max 15 words on vibe/interior" }
   ],
-  "logistics": { "title": "Frictionless Logistics", "content": "Specific transport facts, real prices in AZN, Bolt/Uber tips." },
-  "flights": { "tip": "Editorial flight tip from ${from}", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
-  "car_rental": { "tip": "1 sentence on driving context", "url": "https://localrent.tpk.ro/BAFUsMGN" }
+  "logistics": { "title": "short title", "content": "max 30 words with real prices in AZN" },
+  "flights": { "tip": "max 15 words", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
+  "car_rental": { "tip": "max 10 words", "url": "https://localrent.tpk.ro/BAFUsMGN" }
 }`;
 
     const message = await client.messages.create({
-      model: "claude-3-5-haiku-20241022",
-      max_tokens: 5000,
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 4000,
       messages: [{ role: "user", content: prompt }],
     });
 
@@ -88,28 +80,11 @@ Return ONLY valid JSON matching this exact structure:
       }));
     }
 
-    // Буллетпруф прямые партнерские ссылки через Hotellook (понимает текст и ищет везде)
-    if (plan.days) {
-      plan.days = plan.days.map((day: any) => ({
-        ...day,
-        excursion: day.excursion?.name ? {
-          ...day.excursion,
-          url: `https://www.getyourguide.com/s/?q=${encodeURIComponent(day.excursion.search_query || day.excursion.name)}&partner_id=YNRQ0A3&utm_medium=online_publisher`
-        } : day.excursion,
-      }));
-    }
-
-    // Буллетпруф прямые партнерские ссылки через Hotellook с твоим ID
     if (plan.curated_stays) {
-      plan.curated_stays = plan.curated_stays.map((stay: any) => {
-        const query = `${stay.name}, Azerbaijan`;
-        const hotellookUrl = `https://search.hotellook.com/?q=${encodeURIComponent(query)}&marker=724413&language=${locale}`;
-
-        return {
-          ...stay,
-          booking_url: hotellookUrl
-        };
-      });
+      plan.curated_stays = plan.curated_stays.map((stay: any) => ({
+        ...stay,
+        booking_url: `https://search.hotellook.com/?q=${encodeURIComponent(stay.name + ", Azerbaijan")}&marker=724413&language=${locale}`
+      }));
     }
 
     return NextResponse.json({ plan });
