@@ -12,7 +12,8 @@ export async function POST(req: NextRequest) {
     const dietLine = diet && diet.length > 0 ? `- Diet/Restrictions: ${diet.join(", ")}` : "";
     const paceLine = pace ? `- Pace/Rhythm: ${pace}` : "";
 
-    const prompt = `${langInstruction}
+    const prompt = `${langInstruction} ALL content must be written in this exact language — every word of descriptions, tips, curator_notes, logistics, hotel descriptions, and titles. Zero English if locale is not English.
+
 You are the Editor-in-Chief of a high-end, premium travel magazine (like Kinfolk or Condé Nast Traveler) curating an exclusive itinerary for Azerbaijan and the Caucasus.
 
 Context:
