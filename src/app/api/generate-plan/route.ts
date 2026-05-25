@@ -9,52 +9,57 @@ export async function POST(req: NextRequest) {
 
     const langInstruction = locale === "en" ? "Respond in English." : locale === "az" ? "Azərbaycan dilində cavab ver." : locale === "tr" ? "Türkçe yanıt ver." : "Отвечай на русском языке.";
 
-    const dietLine = diet && diet.length > 0 ? `- Diet: ${diet.join(", ")}` : "";
-    const paceLine = pace ? `- Pace: ${pace}` : "";
+    const dietLine = diet && diet.length > 0 ? `- Diet/Restrictions: ${diet.join(", ")}` : "";
+    const paceLine = pace ? `- Pace/Rhythm: ${pace}` : "";
 
     const prompt = `${langInstruction}
-You are a local expert travel curator for Azerbaijan. Create a highly personalized travel plan.
+You are the Editor-in-Chief of a high-end, premium travel magazine (like Kinfolk or Condé Nast Traveler) curating an exclusive itinerary for Azerbaijan and the Caucasus.
 
-Parameters: Days: ${days}, Group: ${group}, Budget: ${budget}, Interests: ${interests.join(", ")}, From: ${from}
+Context:
+- Days: ${days} | Group: ${group} | Budget: ${budget}
+- Focus: ${interests.join(", ")}
+- Departure from: ${from}
 ${dietLine}
 ${paceLine}
 
-CRITICAL HOTEL RULES:
-- Match hotel to BOTH the day's location AND the budget
-- If day is in Baku: recommend Baku hotels matching budget level
-- If day is in Sheki/Guba/Quba/Lankaran/other regions: recommend hotels IN THAT REGION, not Baku
-- Budget ${budget} means: low budget = hostels/guesthouses, mid = 3-4 star, high = 5 star luxury
-- NEVER recommend a luxury hotel for low budget or vice versa
-- Hotel name must be REAL and exist in Azerbaijan
+CRITICAL TONE & STYLE RULES:
+1. Tone: Elegant, cinematic, sensory, and highly opinionated. 
+2. Ban cliches: NEVER use phrases like "hidden gem", "city of contrasts", "must-see", or "amazing views". Focus on authentic atmosphere, lighting, local rhythm, and architectural details.
+3. Keep text concise but poetic (max 15-20 words per description). 
 
-CRITICAL CONTENT RULES:
-- curator_note: 1 specific insider sentence (mention exact place, time, or local secret)
-- descriptions: tailored to the group type (${group}) and interests (${interests.join(", ")})
-- logistics: specific to the route (mention actual apps, real prices in local currency)
-- Keep all text VERY short (max 15 words per field, no exceptions)
+CRITICAL ARCHITECTURE RULES:
+- DO NOT put hotels inside the daily schedule. Provide 3-4 curated hotels AT THE END in the "curated_stays" array.
+- "curated_stays" must perfectly match the budget level (${budget}) and the regions visited. (Low = stylish guesthouses/boutique hostels, Mid = aesthetic 4-star boutiques, High = 5-star luxury/design).
+- ALL hotel names, streets, and cafes must be 100% REAL and exist in Azerbaijan.
 
-Return ONLY valid JSON:
+Return ONLY valid JSON matching this exact structure:
 {
-  "plan_title": "title",
-  "total_budget_estimate": "budget",
+  "plan_title": "Cinematic editorial title for the trip",
+  "total_budget_estimate": "Short aesthetic budget summary",
   "days": [
     {
       "day": 1,
-      "title": "day title",
-      "morning": { "activity": "name", "description": "1-2 sentences tailored to group/interests", "tip": "specific tip", "curator_note": "1 specific insider sentence" },
-      "afternoon": { "activity": "name", "description": "1-2 sentences", "tip": "specific tip", "curator_note": "1 specific insider sentence" },
-      "evening": { "activity": "name", "description": "1-2 sentences", "tip": "specific tip", "curator_note": "1 specific insider sentence" },
-      "hotel": { "name": "Real hotel name matching day location and budget", "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" },
-      "excursion": { "name": "excursion name", "search_query": "excursion name in English" }
+      "title": "Editorial day title (e.g., 'The Silent Stone of Icherisheher')",
+      "morning": { "activity": "Specific aesthetic location", "description": "Sensory, elegant description", "tip": "Practical local tip", "curator_note": "1 highly specific insider secret (e.g., exact cafe, hidden door, best time for light)" },
+      "afternoon": { "activity": "location", "description": "1-2 sentences", "tip": "tip", "curator_note": "insider secret" },
+      "evening": { "activity": "location", "description": "1-2 sentences", "tip": "tip", "curator_note": "insider secret" },
+      "excursion": { "name": "Curated experience name", "search_query": "English search query for GetYourGuide" }
     }
   ],
-  "logistics": { "title": "short title", "content": "specific transport tips with real prices" },
-  "flights": { "tip": "specific flight tip from ${from}", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
-  "car_rental": { "tip": "1 sentence", "url": "https://localrent.tpk.ro/BAFUsMGN" }
+  "curated_stays": [
+    { 
+      "name": "Real hotel name", 
+      "description": "Editorial review focusing on interior, vibe, or view (max 20 words)", 
+      "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" 
+    }
+  ],
+  "logistics": { "title": "Frictionless Logistics", "content": "Specific transport facts, real prices in AZN, Bolt/Uber tips." },
+  "flights": { "tip": "Editorial flight tip from ${from}", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
+  "car_rental": { "tip": "1 sentence on driving context", "url": "https://localrent.tpk.ro/BAFUsMGN" }
 }`;
 
     const message = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
+      model: "claude-3-5-haiku-20241022", // Обновил модель на актуальную версию Haiku
       max_tokens: 5000,
       messages: [{ role: "user", content: prompt }],
     });
