@@ -118,38 +118,38 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <style>{`
         .hero-cta-primary {
           display: inline-block;
-          padding: 14px 36px;
-          background: #0a7070;
+          padding: 14px 40px;
+          background: transparent;
           color: white;
-          border: none;
+          border: 1px solid rgba(255,255,255,0.6);
           border-radius: 2px;
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 500;
           font-family: DM Sans, sans-serif;
           cursor: pointer;
           text-decoration: none;
-          letter-spacing: 0.1em;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
-          transition: background 0.2s ease;
+          transition: all 0.2s ease;
         }
-        .hero-cta-primary:hover { background: #0d9090; }
+        .hero-cta-primary:hover { background: rgba(255,255,255,0.08); border-color: white; }
         .hero-cta-secondary {
           display: inline-block;
-          padding: 14px 36px;
+          padding: 14px 40px;
           background: transparent;
-          color: rgba(255,255,255,0.6);
-          border: 0.5px solid rgba(255,255,255,0.2);
+          color: rgba(255,255,255,0.4);
+          border: 0.5px solid rgba(255,255,255,0.15);
           border-radius: 2px;
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 400;
           font-family: DM Sans, sans-serif;
           cursor: pointer;
           text-decoration: none;
-          letter-spacing: 0.1em;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
           transition: all 0.2s ease;
         }
-        .hero-cta-secondary:hover { border-color: rgba(255,255,255,0.4); color: white; }
+        .hero-cta-secondary:hover { border-color: rgba(255,255,255,0.35); color: rgba(255,255,255,0.7); }
         .blog-card-editorial {
           display: block;
           text-decoration: none;
@@ -160,11 +160,11 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           transition: border-color 0.25s ease;
         }
         .blog-card-editorial:hover { border-color: rgba(45,212,191,0.3); }
-        .blog-card-editorial img { transition: transform 0.6s ease; }
+        .blog-card-editorial img { transition: transform 0.6s ease; display: block; width: 100%; }
         .blog-card-editorial:hover img { transform: scale(1.04); }
         @media (max-width: 767px) {
-          .hero-headline { font-size: clamp(3.5rem, 14vw, 5rem) !important; }
-          .hero-cols { grid-template-columns: 1fr !important; }
+          .hero-headline { font-size: clamp(2.5rem, 10vw, 4rem) !important; }
+          .hero-cols { grid-template-columns: 1fr !important; gap: 24px !important; }
           .stat-row { grid-template-columns: 1fr 1fr !important; }
           .blog-grid { grid-template-columns: 1fr !important; }
         }
@@ -183,14 +183,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </FadeIn>
 
           <FadeIn delay={100}>
-            <h1 className="hero-headline" style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(5rem, 10vw, 9rem)", color: "white", fontWeight: 300, lineHeight: 0.95, marginBottom: 48, whiteSpace: "pre-line", letterSpacing: "-0.02em" }}>
+            <h1 className="hero-headline" style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(3rem, 5.5vw, 5.5rem)", color: "white", fontWeight: 300, lineHeight: 1.05, marginBottom: 40, whiteSpace: "pre-line", letterSpacing: "-0.01em" }}>
               {t.headline}
             </h1>
           </FadeIn>
 
           <FadeIn delay={200}>
             <div className="hero-cols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "flex-end" }}>
-              <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 16, lineHeight: 1.8, fontFamily: "DM Sans, sans-serif", maxWidth: 400, margin: 0 }}>
+              <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 20, lineHeight: 1.7, fontFamily: "DM Sans, sans-serif", maxWidth: 440, margin: 0, fontWeight: 300 }}>
                 {t.sub}
               </p>
               <div style={{ display: "flex", gap: 12, justifyContent: "flex-end", flexWrap: "wrap" }}>
@@ -234,35 +234,30 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
         {/* Featured large + 2 small */}
         <BlogCards>
-          <div className="blog-grid" style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 2 }}>
-            {/* Large featured */}
-            <Link href={`/${locale}/blog/${blogPosts[0].slug[lang]}`} className="blog-card-editorial" style={{ gridRow: "span 2" }}>
-              <div style={{ position: "relative", height: "100%", minHeight: 560, overflow: "hidden" }}>
-                <img src={blogPosts[0].image} alt={blogPosts[0].title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }} />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(4,19,21,0.95) 0%, transparent 60%)" }} />
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "32px" }}>
-                  <span style={{ color: "#2DD4BF", fontSize: 9, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.4em", textTransform: "uppercase" }}>{blogPosts[0].tag[lang]}</span>
-                  <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", color: "white", fontWeight: 300, margin: "12px 0 16px", lineHeight: 1.2 }}>{blogPosts[0].title[lang]}</h3>
-                  <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, fontFamily: "DM Sans, sans-serif", lineHeight: 1.7, margin: 0 }}>{blogPosts[0].desc[lang]}</p>
-                </div>
-              </div>
-            </Link>
-
-            {/* Two small */}
-            {blogPosts.slice(1).map((post) => (
-              <Link key={post.slug[lang]} href={`/${locale}/blog/${post.slug[lang]}`} className="blog-card-editorial">
-                <div style={{ position: "relative", height: 240, overflow: "hidden" }}>
-                  <img src={post.image} alt={post.title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(4,19,21,0.9) 0%, transparent 60%)" }} />
-                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "20px 24px" }}>
-                    <span style={{ color: "#2DD4BF", fontSize: 9, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.4em", textTransform: "uppercase" }}>{post.tag[lang]}</span>
-                    <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.2rem", color: "white", fontWeight: 300, margin: "8px 0 0", lineHeight: 1.3 }}>{post.title[lang]}</h3>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </BlogCards>
+  <div className="blog-grid" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 32 }}>
+    <Link href={`/${locale}/blog/${blogPosts[0].slug[lang]}`} className="blog-card-editorial" style={{ gridRow: "span 2" }}>
+      <div style={{ overflow: "hidden", height: 320 }}>
+        <img src={blogPosts[0].image} alt={blogPosts[0].title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </div>
+      <div style={{ padding: "24px 28px 32px" }}>
+        <span style={{ color: "#2DD4BF", fontSize: 9, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.4em", textTransform: "uppercase" as const }}>{blogPosts[0].tag[lang]}</span>
+        <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.6rem, 2.5vw, 2.2rem)", color: "white", fontWeight: 300, margin: "12px 0 16px", lineHeight: 1.2 }}>{blogPosts[0].title[lang]}</h3>
+        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, fontFamily: "DM Sans, sans-serif", lineHeight: 1.8, margin: 0 }}>{blogPosts[0].desc[lang]}</p>
+      </div>
+    </Link>
+    {blogPosts.slice(1).map((post) => (
+      <Link key={post.slug[lang]} href={`/${locale}/blog/${post.slug[lang]}`} className="blog-card-editorial">
+        <div style={{ overflow: "hidden", height: 200 }}>
+          <img src={post.image} alt={post.title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
+        <div style={{ padding: "18px 20px 24px" }}>
+          <span style={{ color: "#2DD4BF", fontSize: 9, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.4em", textTransform: "uppercase" as const }}>{post.tag[lang]}</span>
+          <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "1.1rem", color: "white", fontWeight: 300, margin: "8px 0 0", lineHeight: 1.3 }}>{post.title[lang]}</h3>
+        </div>
+      </Link>
+    ))}
+  </div>
+</BlogCards>
       </section>
 
       <Footer locale={locale} />
