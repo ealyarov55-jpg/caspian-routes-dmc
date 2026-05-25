@@ -12,8 +12,7 @@ export async function POST(req: NextRequest) {
     const dietLine = diet && diet.length > 0 ? `- Diet/Restrictions: ${diet.join(", ")}` : "";
     const paceLine = pace ? `- Pace/Rhythm: ${pace}` : "";
 
-    const prompt = `${langInstruction} ALL content must be written in this exact language — every word of descriptions, tips, curator_notes, logistics, hotel descriptions, and titles. Zero English if locale is not English.
-
+    const prompt = `${langInstruction}
 You are the Editor-in-Chief of a high-end, premium travel magazine (like Kinfolk or Condé Nast Traveler) curating an exclusive itinerary for Azerbaijan and the Caucasus.
 
 Context:
@@ -41,7 +40,7 @@ Return ONLY valid JSON matching this exact structure:
     {
       "day": 1,
       "title": "Editorial day title (e.g., 'The Silent Stone of Icherisheher')",
-      "morning": { "activity": "Specific aesthetic location", "description": "Sensory, elegant description", "tip": "Practical local tip", "curator_note": "1 highly specific insider secret (e.g., exact cafe, hidden door, best time for light)" },
+      "morning": { "activity": "Specific aesthetic location", "description": "Sensory, elegant description", "tip": "Practical local tip", "curator_note": "1 highly specific insider secret" },
       "afternoon": { "activity": "location", "description": "1-2 sentences", "tip": "tip", "curator_note": "insider secret" },
       "evening": { "activity": "location", "description": "1-2 sentences", "tip": "tip", "curator_note": "insider secret" },
       "excursion": { "name": "Curated experience name", "search_query": "English search query for GetYourGuide" }
@@ -50,8 +49,7 @@ Return ONLY valid JSON matching this exact structure:
   "curated_stays": [
     { 
       "name": "Real hotel name", 
-      "description": "Editorial review focusing on interior, vibe, or view (max 20 words)", 
-      "booking_url": "https://ostrovok.tpk.ro/DDho2QGw" 
+      "description": "Editorial review focusing on interior, vibe, or view (max 20 words)"
     }
   ],
   "logistics": { "title": "Frictionless Logistics", "content": "Specific transport facts, real prices in AZN, Bolt/Uber tips." },
@@ -60,7 +58,7 @@ Return ONLY valid JSON matching this exact structure:
 }`;
 
     const message = await client.messages.create({
-      model: "claude-haiku-4-5-20251001", // Обновил модель на актуальную версию Haiku
+      model: "claude-3-5-haiku-20241022",
       max_tokens: 5000,
       messages: [{ role: "user", content: prompt }],
     });
@@ -80,6 +78,7 @@ Return ONLY valid JSON matching this exact structure:
       }
     }
 
+    // Динамическая сборка ссылок для экскурсий GYG
     if (plan.days) {
       plan.days = plan.days.map((day: any) => ({
         ...day,
@@ -88,6 +87,23 @@ Return ONLY valid JSON matching this exact structure:
           url: `https://www.getyourguide.com/s/?q=${encodeURIComponent(day.excursion.search_query || day.excursion.name)}&partner_id=YNRQ0A3&utm_medium=online_publisher`
         } : day.excursion,
       }));
+    }
+
+    // Динамическая сборка ДИПЛИНКОВ для отелей через Travelpayouts -> Ostrovok Search
+    if (plan.curated_stays) {
+      plan.curated_stays = plan.curated_stays.map((stay: any) => {
+        // Формируем чистый поисковый запрос для Островка (Название отеля + Азербайджан для точности)
+        const searchQuery = `${stay.name}, Azerbaijan`;
+        const targetOstrovokUrl = `https://ostrovok.ru/search/?q=${encodeURIComponent(searchQuery)}`;
+        
+        // Оборачиваем в универсальный редирект-домен Travelpayouts (p=4060 — это ID программы Ostrovok)
+        const partnerUrl = `https://tp.media/r?marker=ТВОЙ_МАРКЕР&p=4060&u=${encodeURIComponent(targetOstrovokUrl)}`;
+
+        return {
+          ...stay,
+          booking_url: partnerUrl
+        };
+      });
     }
 
     return NextResponse.json({ plan });
