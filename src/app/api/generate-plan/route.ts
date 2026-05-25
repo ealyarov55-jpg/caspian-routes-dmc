@@ -80,10 +80,38 @@ Return ONLY valid JSON:
       }));
     }
 
+    const OSTROVOK_LINKS: Record<string, string> = {
+      "Fairmont Baku": "https://ostrovok.tpk.ro/wpc5B7AO",
+      "Fairmont Baku Flame Towers": "https://ostrovok.tpk.ro/wpc5B7AO",
+      "JW Marriott Absheron Baku": "https://ostrovok.tpk.ro/oQIB2sPb",
+      "Holiday Inn Baku": "https://ostrovok.tpk.ro/mkCHuDrU",
+      "Movenpick Winter Park Baku": "https://ostrovok.tpk.ro/w6Yq5r46",
+      "Movenpick Baku": "https://ostrovok.tpk.ro/w6Yq5r46",
+      "Baku Marriott Hotel Boulevard": "https://ostrovok.tpk.ro/6D6EzJFn",
+      "ibis Baku City": "https://ostrovok.tpk.ro/P3ooM2K8",
+      "ibis Baku": "https://ostrovok.tpk.ro/P3ooM2K8",
+      "Four Seasons Hotel Baku": "https://ostrovok.tpk.ro/G4GPMPsg",
+      "Four Seasons Baku": "https://ostrovok.tpk.ro/G4GPMPsg",
+      "InterContinental Baku": "https://ostrovok.tpk.ro/ld9Ni4pT",
+      "Old Baku Boutique Hotel": "https://ostrovok.tpk.ro/KkU6aEyq",
+      "Boutique 19 Hotel": "https://ostrovok.tpk.ro/LAGpLULR",
+      "Boutique 19 Hotel Baku": "https://ostrovok.tpk.ro/LAGpLULR",
+      "Sultan INN Baku": "https://ostrovok.tpk.ro/tfMnPtHQ",
+      "Sultan Inn Baku": "https://ostrovok.tpk.ro/tfMnPtHQ",
+      "Moss Art Hotel": "https://ostrovok.tpk.ro/coPVmFEA",
+      "Moss Art Hotel Baku": "https://ostrovok.tpk.ro/coPVmFEA",
+      "Art Club Hotel": "https://ostrovok.tpk.ro/f8hd97eZ",
+      "Art Club Hotel Baku": "https://ostrovok.tpk.ro/f8hd97eZ",
+      "Hazz Hotel Baku": "https://ostrovok.tpk.ro/IGg58vAS",
+      "Hazz Hotel": "https://ostrovok.tpk.ro/IGg58vAS",
+      "Boutique Hotel Grandview": "https://ostrovok.tpk.ro/KDpWlTSP",
+      "Grandview Boutique Hotel": "https://ostrovok.tpk.ro/KDpWlTSP",
+    };
+
     if (plan.curated_stays) {
       plan.curated_stays = plan.curated_stays.map((stay: any) => ({
         ...stay,
-        booking_url: `https://search.hotellook.com/?q=${encodeURIComponent(stay.name + ", Azerbaijan")}&marker=724413&language=${locale}`
+        booking_url: OSTROVOK_LINKS[stay.name] || "https://ostrovok.tpk.ro/DDho2QGw"
       }));
     }
 
