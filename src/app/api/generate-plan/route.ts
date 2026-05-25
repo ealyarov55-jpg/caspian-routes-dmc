@@ -78,7 +78,6 @@ Return ONLY valid JSON matching this exact structure:
       }
     }
 
-    // Динамическая сборка ссылок для экскурсий GYG
     if (plan.days) {
       plan.days = plan.days.map((day: any) => ({
         ...day,
@@ -89,19 +88,26 @@ Return ONLY valid JSON matching this exact structure:
       }));
     }
 
-    // Динамическая сборка ДИПЛИНКОВ для отелей через Travelpayouts -> Ostrovok Search
+    // Буллетпруф прямые партнерские ссылки через Hotellook (понимает текст и ищет везде)
+    if (plan.days) {
+      plan.days = plan.days.map((day: any) => ({
+        ...day,
+        excursion: day.excursion?.name ? {
+          ...day.excursion,
+          url: `https://www.getyourguide.com/s/?q=${encodeURIComponent(day.excursion.search_query || day.excursion.name)}&partner_id=YNRQ0A3&utm_medium=online_publisher`
+        } : day.excursion,
+      }));
+    }
+
+    // Буллетпруф прямые партнерские ссылки через Hotellook с твоим ID
     if (plan.curated_stays) {
       plan.curated_stays = plan.curated_stays.map((stay: any) => {
-        // Формируем чистый поисковый запрос для Островка (Название отеля + Азербайджан для точности)
-        const searchQuery = `${stay.name}, Azerbaijan`;
-        const targetOstrovokUrl = `https://ostrovok.ru/search/?q=${encodeURIComponent(searchQuery)}`;
-        
-        // Оборачиваем в универсальный редирект-домен Travelpayouts (p=4060 — это ID программы Ostrovok)
-        const partnerUrl = `https://tp.media/r?marker=ТВОЙ_МАРКЕР&p=4060&u=${encodeURIComponent(targetOstrovokUrl)}`;
+        const query = `${stay.name}, Azerbaijan`;
+        const hotellookUrl = `https://search.hotellook.com/?q=${encodeURIComponent(query)}&marker=724413&language=${locale}`;
 
         return {
           ...stay,
-          booking_url: partnerUrl
+          booking_url: hotellookUrl
         };
       });
     }
