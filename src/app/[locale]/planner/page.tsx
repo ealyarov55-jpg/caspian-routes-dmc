@@ -460,7 +460,7 @@ function SmallActivityCard({ label, data, icon, photoUrl, photographer, photogra
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div style={{ background: "#18181b", borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }}>
+    <div style={{ background: "#0a1f1f", borderRadius: 2, overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }}>
       {photoUrl ? (
         <div style={{ position: "relative", height: 140, overflow: "hidden", flexShrink: 0 }}>
           <img src={photoUrl} alt={data.activity} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
@@ -503,7 +503,7 @@ function FeaturedActivityCard({ label, data, photoUrl, photographer, photographe
   bookUrl?: string;
 }) {
   return (
-    <div style={{ background: "#18181b", borderRadius: 20, overflow: "hidden" }}>
+    <div style={{ background: "#0a1f1f", borderRadius: 2, overflow: "hidden" }}>
       <div style={{ position: "relative", height: 320, overflow: "hidden" }}>
         {photoUrl ? (
           <img src={photoUrl} alt={data.activity} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s ease" }}
@@ -516,7 +516,7 @@ function FeaturedActivityCard({ label, data, photoUrl, photographer, photographe
           </div>
         )}
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)" }} />
-        <div style={{ position: "absolute", top: 16, left: 16, background: "rgba(45,212,191,0.9)", borderRadius: 99, padding: "4px 12px" }}>
+        <div style={{ position: "absolute", top: 16, left: 16, background: "#2DD4BF", borderRadius: 0, padding: "3px 10px" }}>
           <span style={{ color: "#0D1116", fontSize: 9, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.15em", fontFamily: "DM Sans, sans-serif" }}>{label}</span>
         </div>
         {photographer && photographerUrl && (
