@@ -538,7 +538,7 @@ function FeaturedActivityCard({ label, data, photoUrl, photographer, photographe
       {bookLabel && bookUrl && (
         <div style={{ padding: "16px 24px 20px" }}>
           <a href={bookUrl} target="_blank" rel="noopener noreferrer"
-            style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", background: "rgba(45,212,191,0.12)", border: "1px solid rgba(45,212,191,0.3)", borderRadius: 8, color: "#2DD4BF", fontSize: 12, fontFamily: "DM Sans, sans-serif", textDecoration: "none" }}>
+            style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 18px", background: "transparent", border: "0.5px solid rgba(45,212,191,0.4)", borderRadius: 2, color: "#2DD4BF", fontSize: 11, fontFamily: "DM Sans, sans-serif", textDecoration: "none", letterSpacing: "0.06em", textTransform: "uppercase" as const }}>
             {bookLabel}
           </a>
         </div>
@@ -615,7 +615,7 @@ function HotelCard({ hotel, lang, bookHotel }: { hotel: { name: string; booking_
               <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 16, fontWeight: 500, color: "white", margin: 0 }}>{hotel.name}</h3>
             </div>
           </div>
-          <div style={{ border: "1px solid rgba(45,212,191,0.3)", borderRadius: 8, padding: "7px 14px", whiteSpace: "nowrap" as const }}>
+          <div style={{ border: "0.5px solid rgba(45,212,191,0.4)", borderRadius: 2, padding: "6px 14px", whiteSpace: "nowrap" as const }}>
             <span style={{ color: "#2DD4BF", fontSize: 12, fontFamily: "DM Sans, sans-serif", fontWeight: 400 }}>{bookHotel}</span>
           </div>
         </div>
@@ -816,7 +816,7 @@ const currentBudgets = typeof window !== "undefined" ? (CURRENCY_BUDGETS[country
   };
 
   const cardStyle = { background: "transparent", border: "0.5px solid rgba(255,255,255,0.12)", borderRadius: 4, padding: "32px 36px", marginBottom: 24 };
-  const backBtnStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "rgba(255,255,255,0.7)", cursor: "pointer", fontSize: 12, fontFamily: "DM Sans, sans-serif", padding: "6px 12px", marginBottom: 20, display: "inline-flex", alignItems: "center", gap: 6 };
+  const backBtnStyle = { background: "transparent", border: "none", borderBottom: "0.5px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.45)", cursor: "pointer", fontSize: 11, fontFamily: "DM Sans, sans-serif", padding: "0 0 2px 0", marginBottom: 28, display: "inline-flex", alignItems: "center", gap: 8, letterSpacing: "0.08em", textTransform: "uppercase" as const };
   const labelStyle = { color: "rgba(255,255,255,0.5)", fontSize: 13, marginBottom: 16, fontFamily: "DM Sans, sans-serif", display: "block" };
 
   const TOTAL_STEPS = 7;
