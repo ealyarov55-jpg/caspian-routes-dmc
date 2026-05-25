@@ -892,23 +892,23 @@ filter: "blur(1px) saturate(1.3)",
               </div>
             )}
 
-            {/* Step 1: Group */}
-            {step === 1 && (
-              <div style={cardStyle}>
-                <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
-                <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step2}</h2>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                  {t.groups.map(g => (
-                    <button key={g} className={`planner-btn${group === g ? " selected" : ""}`} onClick={() => { setGroup(g); setStep(2); }}>{g}</button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-           {/* Step 2: Location */}
-{step === 2 && (
+           {/* Step 1: Group */}
+{step === 1 && (
   <div style={cardStyle}>
     <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
+    <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step2}</h2>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+      {t.groups.map(g => (
+        <button key={g} className={`planner-btn${group === g ? " selected" : ""}`} onClick={() => { setGroup(g); setStep(2); }}>{g}</button>
+      ))}
+    </div>
+  </div>
+)}
+
+{/* Step 2: Location */}
+{step === 2 && (
+  <div style={cardStyle}>
+    <button style={backBtnStyle} onClick={() => setStep(1)}>{t.back}</button>
     <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step7}</h2>
 
     {!continent && (
@@ -922,63 +922,61 @@ filter: "blur(1px) saturate(1.3)",
       </>
     )}
 
-   {continent && !country && (
-  <>
-    <button style={backBtnStyle} onClick={() => setContinent("")}>{t.back}</button>
-    <span style={labelStyle}>{t.selectCountry}</span>
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-      {GEO_DATA.countries[continent].map(c => (
-        <button key={c.id} className="planner-btn" onClick={() => setCountry(c.id)} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {!["asia_other", "eu_other", "am_other", "other"].includes(c.id)
-            ? <img src={`https://flagcdn.com/w20/${c.id}.png`} width={20} height={15} alt={c.id} style={{ borderRadius: 2 }} />
-            : <span>{c.flag}</span>
-          }
-          {c.label[lang]}
-        </button>
-      ))}
-    </div>
-    <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
-      <input
-        type="text"
-        placeholder={lang === "ru" ? "Или введи свою страну..." : lang === "az" ? "Və ya öz ölkənizi yazın..." : lang === "tr" ? "Ya da ülkenizi yazın..." : "Or type your country..."}
-        onKeyDown={(e) => { if (e.key === "Enter" && e.currentTarget.value.trim()) setCountry(e.currentTarget.value.trim()); }}
-        style={{ flex: 1, padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif", outline: "none" }}
-      />
-      <button
-        onClick={(e) => { const input = (e.currentTarget as HTMLButtonElement).previousSibling as HTMLInputElement; if (input.value.trim()) setCountry(input.value.trim()); }}
-        className="next-btn" style={{ padding: "10px 16px" }}>→</button>
-    </div>
-  </>
-)}
+    {continent && !country && (
+      <>
+        <button style={backBtnStyle} onClick={() => setContinent("")}>{t.back}</button>
+        <span style={labelStyle}>{t.selectCountry}</span>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+          {GEO_DATA.countries[continent].map(c => (
+            <button key={c.id} className="planner-btn" onClick={() => setCountry(c.id)} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              {!["asia_other", "eu_other", "am_other", "other"].includes(c.id)
+                ? <img src={`https://flagcdn.com/w20/${c.id}.png`} width={20} height={15} alt={c.id} style={{ borderRadius: 2 }} />
+                : <span>{c.flag}</span>
+              }
+              {c.label[lang]}
+            </button>
+          ))}
+        </div>
+        <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
+          <input
+            type="text"
+            placeholder={lang === "ru" ? "Или введи свою страну..." : lang === "az" ? "Və ya öz ölkənizi yazın..." : lang === "tr" ? "Ya da ülkenizi yazın..." : "Or type your country..."}
+            onKeyDown={(e) => { if (e.key === "Enter" && e.currentTarget.value.trim()) setCountry(e.currentTarget.value.trim()); }}
+            style={{ flex: 1, padding: "10px 14px", borderRadius: 2, background: "rgba(255,255,255,0.04)", border: "0.5px solid rgba(255,255,255,0.15)", color: "white", fontSize: 13, fontFamily: "DM Sans, sans-serif", outline: "none" }}
+          />
+          <button onClick={(e) => { const input = (e.currentTarget as HTMLButtonElement).previousSibling as HTMLInputElement; if (input.value.trim()) setCountry(input.value.trim()); }}
+            className="next-btn" style={{ padding: "10px 16px" }}>→</button>
+        </div>
+      </>
+    )}
 
     {continent && country && !city && (
-  <>
-    <button style={backBtnStyle} onClick={() => setCountry("")}>{t.back}</button>
-    <span style={labelStyle}>{t.selectCity}</span>
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-      {(GEO_DATA.cities[country] ? (GEO_DATA.cities[country][lang] || GEO_DATA.cities[country]["en"]) : []).map(c => (
-        <button key={c} className={`planner-btn${city === c ? " selected" : ""}`} onClick={() => setCity(c)}>{c}</button>
-      ))}
-    </div>
-    <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
-      <input
-        type="text"
-        placeholder={lang === "ru" ? "Или введи свой город..." : lang === "az" ? "Və ya şəhərinizi yazın..." : lang === "tr" ? "Ya da şehrinizi yazın..." : "Or type your city..."}
-        onKeyDown={(e) => { if (e.key === "Enter" && e.currentTarget.value.trim()) setCity(e.currentTarget.value.trim()); }}
-        style={{ flex: 1, padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif", outline: "none" }}
-      />
-      <button
-        onClick={(e) => { const input = (e.currentTarget as HTMLButtonElement).previousSibling as HTMLInputElement; if (input.value.trim()) setCity(input.value.trim()); }}
-        className="next-btn" style={{ padding: "10px 16px" }}>→</button>
-    </div>
-  </>
-)}
+      <>
+        <button style={backBtnStyle} onClick={() => setCountry("")}>{t.back}</button>
+        <span style={labelStyle}>{t.selectCity}</span>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+          {(GEO_DATA.cities[country] ? (GEO_DATA.cities[country][lang] || GEO_DATA.cities[country]["en"]) : []).map(c => (
+            <button key={c} className={`planner-btn${city === c ? " selected" : ""}`} onClick={() => setCity(c)}>{c}</button>
+          ))}
+        </div>
+        <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
+          <input
+            type="text"
+            placeholder={lang === "ru" ? "Или введи свой город..." : lang === "az" ? "Və ya şəhərinizi yazın..." : lang === "tr" ? "Ya da şehrinizi yazın..." : "Or type your city..."}
+            onKeyDown={(e) => { if (e.key === "Enter" && e.currentTarget.value.trim()) setCity(e.currentTarget.value.trim()); }}
+            style={{ flex: 1, padding: "10px 14px", borderRadius: 2, background: "rgba(255,255,255,0.04)", border: "0.5px solid rgba(255,255,255,0.15)", color: "white", fontSize: 13, fontFamily: "DM Sans, sans-serif", outline: "none" }}
+          />
+          <button onClick={(e) => { const input = (e.currentTarget as HTMLButtonElement).previousSibling as HTMLInputElement; if (input.value.trim()) setCity(input.value.trim()); }}
+            className="next-btn" style={{ padding: "10px 16px" }}>→</button>
+        </div>
+      </>
+    )}
 
     {continent && country && city && (
       <>
-        <div style={{ background: "rgba(45,212,191,0.08)", border: "1px solid rgba(45,212,191,0.2)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ color: "white", fontSize: 14, fontFamily: "DM Sans, sans-serif" }}>{getFromString()}</span>
-          <button onClick={() => setCity("")} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}>{t.change}</button>
+        <div style={{ background: "rgba(45,212,191,0.06)", border: "0.5px solid rgba(45,212,191,0.25)", borderRadius: 2, padding: "12px 16px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ color: "white", fontSize: 13, fontFamily: "DM Sans, sans-serif" }}>{getFromString()}</span>
+          <button onClick={() => setCity("")} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontSize: 11, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.06em", textTransform: "uppercase" }}>{t.change}</button>
         </div>
         <button className="next-btn" onClick={() => setStep(3)}>{t.next}</button>
       </>
@@ -989,8 +987,7 @@ filter: "blur(1px) saturate(1.3)",
 {/* Step 3: Budget */}
 {step === 3 && (
   <div style={cardStyle}>
-    <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
-    <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
+    <button style={backBtnStyle} onClick={() => setStep(2)}>{t.back}</button>
     <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step3}</h2>
     <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
       {currentBudgets.ranges.map(b => (
@@ -1003,7 +1000,7 @@ filter: "blur(1px) saturate(1.3)",
 {/* Step 4: Interests */}
 {step === 4 && (
   <div style={cardStyle}>
-    <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
+    <button style={backBtnStyle} onClick={() => setStep(3)}>{t.back}</button>
     <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step4}</h2>
     <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
       {t.interests.map(i => (
@@ -1017,9 +1014,9 @@ filter: "blur(1px) saturate(1.3)",
 {/* Step 5: Diet */}
 {step === 5 && (
   <div style={cardStyle}>
-    <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
-    <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 8, fontFamily: "DM Sans, sans-serif" }}>{t.step5}</h2>
-    <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>
+    <button style={backBtnStyle} onClick={() => setStep(4)}>{t.back}</button>
+    <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step5}</h2>
+    <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, marginBottom: 20, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.02em" }}>
       {lang === "ru" ? "Можно выбрать несколько" : lang === "az" ? "Bir neçə seçə bilərsiniz" : lang === "tr" ? "Birden fazla seçebilirsiniz" : "You can select multiple"}
     </p>
     <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
@@ -1037,37 +1034,36 @@ filter: "blur(1px) saturate(1.3)",
 {/* Step 6: Pace */}
 {step === 6 && (
   <div style={cardStyle}>
-    <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
+    <button style={backBtnStyle} onClick={() => setStep(5)}>{t.back}</button>
     <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step6}</h2>
-    <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 8 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 8 }}>
       {t.paces.map(p => (
-  <button key={p.id} className={`pace-btn${pace === p.label ? " selected" : ""}`} onClick={() => setPace(p.label)}>
-    <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 4 }}>{p.label}</div>
-    <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>{p.desc}</div>
-  </button>
-))}
+        <button key={p.id} className={`pace-btn${pace === p.label ? " selected" : ""}`} onClick={() => setPace(p.label)}>
+          <div style={{ fontSize: 15, fontWeight: 400, marginBottom: 4, fontFamily: "Cormorant Garamond, serif" }}>{p.label}</div>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", letterSpacing: "0.04em" }}>{p.desc}</div>
+        </button>
+      ))}
     </div>
-   {pace && (
-  <button className="generate-btn" onClick={async () => {
-    setLoading(true);
-setError("");
-;
-    setPlanEnabled(false);
-    try {
-      const res = await fetch("/api/generate-plan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ days, group, budget, interests, from: getFromString(), locale, diet, pace }),
-      });
-      const data = await res.json();
-      if (data.plan) { setPlan(data.plan); setStep(7); setTimeout(() => setPlanEnabled(true), 100); }
-      else { setError(lang === "ru" ? "Ошибка генерации. Попробуй ещё раз." : "Generation error. Please try again."); }
-    } catch {
-      setError(lang === "ru" ? "Ошибка сети. Попробуй ещё раз." : "Network error. Please try again.");
-    }
-    setLoading(false);
-  }} style={{ marginTop: 16 }}>{t.generate}</button>
-)}
+    {pace && (
+      <button className="generate-btn" onClick={async () => {
+        setLoading(true);
+        setError("");
+        setPlanEnabled(false);
+        try {
+          const res = await fetch("/api/generate-plan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ days, group, budget, interests, from: getFromString(), locale, diet, pace }),
+          });
+          const data = await res.json();
+          if (data.plan) { setPlan(data.plan); setStep(7); setTimeout(() => setPlanEnabled(true), 100); }
+          else { setError(lang === "ru" ? "Ошибка генерации. Попробуй ещё раз." : "Generation error. Please try again."); }
+        } catch {
+          setError(lang === "ru" ? "Ошибка сети. Попробуй ещё раз." : "Network error. Please try again.");
+        }
+        setLoading(false);
+      }} style={{ marginTop: 16 }}>{t.generate}</button>
+    )}
   </div>
 )}
           </>
