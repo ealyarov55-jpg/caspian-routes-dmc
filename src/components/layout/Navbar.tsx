@@ -97,43 +97,43 @@ export default function Navbar({ locale }: { locale: string }) {
         .nav-link:hover::after {
           width: 100%;
         }
-        .nav-cta {
-          font-size: 13px;
-          padding: 10px 20px;
-          background: linear-gradient(135deg, #0a7070, #0d9090);
-          color: white;
-          border-radius: 10px;
-          text-decoration: none;
-          font-family: DM Sans, sans-serif;
-          font-weight: 600;
-          white-space: nowrap;
-          transition: all 0.25s ease;
-          box-shadow: 0 2px 8px rgba(10,112,112,0.3);
-          display: inline-block;
-        }
-        .nav-cta:hover {
-          background: linear-gradient(135deg, #0d9090, #2DD4BF);
-          box-shadow: 0 6px 20px rgba(10,112,112,0.5);
-          transform: translateY(-1px);
-        }
+       .nav-cta {
+  font-size: 12px;
+  padding: 9px 20px;
+  background: transparent;
+  color: #2DD4BF;
+  border-radius: 2px;
+  border: 0.5px solid rgba(45,212,191,0.5);
+  text-decoration: none;
+  font-family: DM Sans, sans-serif;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+  display: inline-block;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.nav-cta:hover {
+  background: rgba(45,212,191,0.08);
+  border-color: #2DD4BF;
+}
         .lang-btn {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.15);
-          border-radius: 8px;
-          padding: 6px 12px;
-          cursor: pointer;
-          color: white;
-          font-family: DM Sans, sans-serif;
-          font-size: 13px;
-          transition: all 0.2s ease;
-        }
-        .lang-btn:hover {
-          background: rgba(255,255,255,0.12);
-          border-color: rgba(255,255,255,0.3);
-        }
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 0.5px solid rgba(255,255,255,0.15);
+  border-radius: 2px;
+  padding: 6px 12px;
+  cursor: pointer;
+  color: white;
+  font-family: DM Sans, sans-serif;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+.lang-btn:hover {
+  border-color: rgba(255,255,255,0.3);
+}
         .lang-option {
           display: flex;
           align-items: center;
@@ -150,22 +150,24 @@ export default function Navbar({ locale }: { locale: string }) {
           background: rgba(45,212,191,0.08) !important;
         }
         .mobile-cta {
-          display: block;
-          text-align: center;
-          background: linear-gradient(135deg, #0a7070, #0d9090);
-          color: white;
-          padding: 14px;
-          border-radius: 12px;
-          text-decoration: none;
-          font-size: 15px;
-          font-weight: 600;
-          font-family: DM Sans, sans-serif;
-          margin-top: 12px;
-          transition: all 0.25s ease;
-        }
-        .mobile-cta:hover {
-          background: linear-gradient(135deg, #0d9090, #2DD4BF);
-        }
+  display: block;
+  text-align: center;
+  background: #0a7070;
+  color: white;
+  padding: 14px;
+  border-radius: 2px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: DM Sans, sans-serif;
+  margin-top: 12px;
+  transition: all 0.25s ease;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.mobile-cta:hover {
+  background: #0d9090;
+}
         .mobile-flag-btn {
           padding: 5px 8px;
           border-radius: 6px;
