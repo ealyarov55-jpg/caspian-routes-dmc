@@ -59,7 +59,7 @@ Return ONLY valid JSON matching this exact structure:
 }`;
 
     const message = await client.messages.create({
-      model: "claude-3-5-haiku-20241022", // Обновил модель на актуальную версию Haiku
+      model: "claude-haiku-4-5-20251001", // Обновил модель на актуальную версию Haiku
       max_tokens: 5000,
       messages: [{ role: "user", content: prompt }],
     });

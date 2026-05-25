@@ -394,6 +394,7 @@ type Plan = {
   flights: { tip: string; url: string };
   car_rental: { tip: string; url: string };
   logistics?: { title: string; content: string };
+  curated_stays?: Array<{ name: string; description: string; booking_url: string }>;
 };
 
 function LoadingScreen({ steps }: { steps: string[] }) {
@@ -1113,43 +1114,36 @@ setError("");
 )}
 
 {/* Aesthetic Stays */}
-<div style={{ marginBottom: 40 }}>
-  <div style={{ marginBottom: 20 }}>
-    <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif", marginBottom: 6 }}>✦ Caspian Routes Selects</p>
-    <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.4rem, 3vw, 2rem)", color: "white", fontWeight: 300, margin: 0 }}>
-      {lang === "ru" ? "Атмосферные отели Баку" : lang === "az" ? "Bakının atmosfer otelləri" : lang === "tr" ? "Bakü'nün atmosferik otelleri" : "Aesthetic Stays in Baku"}
-    </h3>
-  </div>
-  <div style={{ display: "flex", gap: 16, overflowX: "auto", paddingBottom: 8, scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" as any, msOverflowStyle: "none" } as React.CSSProperties}>
-    <style>{`.aesthetic-scroll::-webkit-scrollbar { display: none; }`}</style>
-    {[
-      { name: "Old Baku Boutique Hotel", desc: lang === "ru" ? "Каменные стены XII века, ковры ручной работы и полная тишина в сердце Ичери-шехер." : "Stone walls, handwoven rugs, and silence in the heart of Icherisheher.", stars: "9.7 ★" },
-      { name: "Art Club Hotel", desc: lang === "ru" ? "Люксовый бутик оформленный как галерея — каждый номер это отдельное произведение искусства." : "A luxury boutique designed as a gallery — every room is a work of art.", stars: "9.8 ★" },
-      { name: "Moss Art Hotel", desc: lang === "ru" ? "Современный дизайн с живой зеленью в интерьере. Любимое место баку-эстетов и Instagram-путешественников." : "Modern design with living greenery. A favorite among Baku aesthetes.", stars: "9.3 ★" },
-      { name: "Boutique 19 Hotel", desc: lang === "ru" ? "Два шага от площади Фонтанов, стильный интерьер и завтрак который стоит просыпаться ради него." : "Steps from Fountain Square, stylish interiors and a breakfast worth waking up for.", stars: "9.6 ★" },
-    ].map((hotel) => {
-      const localPhotos = HOTEL_PHOTOS[hotel.name] || [];
-      return (
-        <a key={hotel.name} href="https://ostrovok.tpk.ro/DDho2QGw" target="_blank" rel="noopener noreferrer"
-          style={{ textDecoration: "none", minWidth: "calc(33.333% - 8px)", maxWidth: "calc(33.333% - 8px)", scrollSnapAlign: "start", flexShrink: 0 }}>
-          <div style={{ background: "#18181b", borderRadius: 16, overflow: "hidden", transition: "transform 0.25s ease", height: "100%" }}
-            onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-4px)")}
-            onMouseLeave={e => (e.currentTarget.style.transform = "none")}>
-            <HotelCardPhoto hotelName={hotel.name} localPhotos={localPhotos} />
-            <div style={{ padding: "16px 18px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-                <h4 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 15, fontWeight: 500, color: "white", margin: 0 }}>{hotel.name}</h4>
-                <span style={{ color: "#2DD4BF", fontSize: 11, fontFamily: "DM Sans, sans-serif", flexShrink: 0, marginLeft: 8 }}>{hotel.stars}</span>
+{(plan.curated_stays && plan.curated_stays.length > 0) && (
+  <div style={{ marginBottom: 40 }}>
+    <div style={{ marginBottom: 20 }}>
+      <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", fontFamily: "DM Sans, sans-serif", marginBottom: 6 }}>✦ Caspian Routes Selects</p>
+      <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.4rem, 3vw, 2rem)", color: "white", fontWeight: 300, margin: 0 }}>
+        {lang === "ru" ? "Атмосферные отели" : lang === "az" ? "Atmosfer otelləri" : lang === "tr" ? "Atmosferik oteller" : "Curated Stays"}
+      </h3>
+    </div>
+    <div style={{ display: "flex", gap: 16, overflowX: "auto", paddingBottom: 8, scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" as any } as React.CSSProperties}>
+      {plan.curated_stays.map((hotel) => {
+        const localPhotos = HOTEL_PHOTOS[hotel.name] || [];
+        return (
+          <a key={hotel.name} href={hotel.booking_url} target="_blank" rel="noopener noreferrer"
+            style={{ textDecoration: "none", minWidth: "calc(33.333% - 8px)", maxWidth: "calc(33.333% - 8px)", scrollSnapAlign: "start", flexShrink: 0 }}>
+            <div style={{ background: "#18181b", borderRadius: 16, overflow: "hidden", transition: "transform 0.25s ease", height: "100%" }}
+              onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-4px)")}
+              onMouseLeave={e => (e.currentTarget.style.transform = "none")}>
+              <HotelCardPhoto hotelName={hotel.name} localPhotos={localPhotos} />
+              <div style={{ padding: "16px 18px" }}>
+                <h4 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: 15, fontWeight: 500, color: "white", margin: "0 0 6px" }}>{hotel.name}</h4>
+                <p style={{ color: "#9f9fa9", fontSize: 12, lineHeight: 1.6, margin: "0 0 12px", fontFamily: "DM Sans, sans-serif", fontStyle: "italic" }}>{hotel.description}</p>
+                <span style={{ color: "#2DD4BF", fontSize: 11, fontFamily: "DM Sans, sans-serif" }}>{lang === "ru" ? "Смотреть →" : "View →"}</span>
               </div>
-              <p style={{ color: "#9f9fa9", fontSize: 12, lineHeight: 1.6, margin: "0 0 12px", fontFamily: "DM Sans, sans-serif", fontStyle: "italic" }}>{hotel.desc}</p>
-              <span style={{ color: "#2DD4BF", fontSize: 11, fontFamily: "DM Sans, sans-serif" }}>{lang === "ru" ? "Смотреть →" : "View →"}</span>
             </div>
-          </div>
-        </a>
-      );
-    })}
+          </a>
+        );
+      })}
+    </div>
   </div>
-</div>
+)}
 
 {/* Авиа и авто */}
 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 40 }}>
