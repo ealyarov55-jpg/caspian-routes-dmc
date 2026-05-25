@@ -638,7 +638,7 @@ function DaySection({ day, t, lang, planEnabled }: {
   return (
     <section style={{ marginBottom: 96 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 36 }}>
-        <div style={{ width: 44, height: 44, borderRadius: "50%", background: "#2DD4BF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: "#0D1116", fontFamily: "DM Sans, sans-serif", flexShrink: 0 }}>{day.day}</div>
+        <div style={{ width: 36, height: 36, borderRadius: 2, background: "transparent", border: "1px solid #2DD4BF", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, color: "#2DD4BF", fontFamily: "DM Sans, sans-serif", flexShrink: 0, letterSpacing: "0.05em" }}>{day.day}</div>
         <div>
           <p style={{ color: "#2DD4BF", fontSize: 10, fontFamily: "DM Sans, sans-serif", fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.4em", marginBottom: 3 }}>{dayLabel}</p>
           <h2 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.4rem, 3vw, 2rem)", color: "white", fontWeight: 300, margin: 0 }}>{day.title}</h2>
@@ -908,7 +908,7 @@ filter: "blur(1px) saturate(1.3)",
 {/* Step 2: Location */}
 {step === 2 && (
   <div style={cardStyle}>
-    <button style={backBtnStyle} onClick={() => setStep(1)}>{t.back}</button>
+    {!continent && <button style={backBtnStyle} onClick={() => setStep(1)}>{t.back}</button>}
     <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step7}</h2>
 
     {!continent && (
