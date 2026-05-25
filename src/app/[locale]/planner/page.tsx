@@ -839,31 +839,31 @@ filter: "blur(1px) saturate(1.3)",
     </div>
   )}
       <Navbar locale={locale} />
-      <style>{`
-        .planner-btn { padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; font-weight: 400; transition: all 0.2s ease; }
-        .planner-btn:hover { border-color: rgba(45,212,191,0.5); background: rgba(45,212,191,0.08); color: white; transform: translateY(-1px); }
-        .planner-btn.selected { border: 2px solid #2DD4BF; background: rgba(45,212,191,0.15); color: #2DD4BF; font-weight: 500; }
-        .pace-btn { padding: 16px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); cursor: pointer; font-family: DM Sans, sans-serif; text-align: left; width: 100%; transition: all 0.2s ease; margin-bottom: 10px; }
-        .pace-btn:hover { border-color: rgba(45,212,191,0.5); background: rgba(45,212,191,0.06); }
-        .pace-btn.selected { border: 2px solid #2DD4BF; background: rgba(45,212,191,0.12); }
-        .generate-btn { padding: 14px 32px; border-radius: 10px; background: linear-gradient(135deg, #0a7070, #0d9090); color: white; border: none; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 15px; font-weight: 600; transition: all 0.25s ease; box-shadow: 0 4px 16px rgba(10,112,112,0.3); }
-        .generate-btn:hover:not(:disabled) { background: linear-gradient(135deg, #0d9090, #2DD4BF); box-shadow: 0 8px 28px rgba(10,112,112,0.5); transform: translateY(-2px); }
-        .generate-btn:disabled { background: rgba(255,255,255,0.1); box-shadow: none; cursor: not-allowed; }
-        .next-btn { padding: 12px 28px; border-radius: 10px; background: #0a7070; color: white; border: none; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 15px; font-weight: 500; transition: all 0.2s ease; margin-right: 10px; }
-        .next-btn:hover:not(:disabled) { background: #0d9090; transform: translateY(-1px); }
-        .next-btn:disabled { background: rgba(255,255,255,0.1); cursor: not-allowed; }
-        .skip-btn { padding: 12px 20px; border-radius: 10px; background: transparent; color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; transition: all 0.2s ease; }
-        .skip-btn:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.2); }
-        .partner-btn-teal { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(45,212,191,0.1); border: 1px solid rgba(45,212,191,0.3); border-radius: 8px; color: #2DD4BF; text-decoration: none; font-size: 13px; font-family: DM Sans, sans-serif; transition: all 0.2s ease; }
-        .partner-btn-teal:hover { background: rgba(45,212,191,0.2); border-color: rgba(45,212,191,0.6); transform: translateY(-1px); }
-        .partner-btn-gold { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); border-radius: 8px; color: #c9a84c; text-decoration: none; font-size: 13px; font-family: DM Sans, sans-serif; transition: all 0.2s ease; }
-        .partner-btn-gold:hover { background: rgba(201,168,76,0.2); border-color: rgba(201,168,76,0.6); transform: translateY(-1px); }
-        .restart-btn { padding: 12px 28px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: white; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; transition: all 0.2s ease; margin-right: 12px; }
-        .restart-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
-        .pdf-btn { padding: 12px 28px; border-radius: 10px; background: linear-gradient(135deg, #0a7070, #0d9090); border: none; color: white; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 14px; font-weight: 500; transition: all 0.25s ease; box-shadow: 0 4px 16px rgba(10,112,112,0.3); }
-        .pdf-btn:hover { background: linear-gradient(135deg, #0d9090, #2DD4BF); box-shadow: 0 8px 28px rgba(10,112,112,0.5); transform: translateY(-2px); }
-        @media (max-width: 767px) { .planner-btn { padding: 10px 16px; font-size: 13px; } .generate-btn { width: 100%; } .next-btn { width: 100%; margin-right: 0; margin-bottom: 10px; } .skip-btn { width: 100%; } }
-      @media (max-width: 640px) { .day-cards-grid { grid-template-columns: 1fr !important; } }`}</style>
+     <style>{`
+        .planner-btn { padding: 12px 20px; border-radius: 2px; border: 0.5px solid rgba(255,255,255,0.2); background: transparent; color: rgba(255,255,255,0.75); cursor: pointer; font-family: DM Sans, sans-serif; font-size: 13px; font-weight: 400; transition: all 0.2s ease; letter-spacing: 0.02em; }
+        .planner-btn:hover { border-color: #2DD4BF; color: white; }
+        .planner-btn.selected { border: 1px solid #2DD4BF; background: rgba(45,212,191,0.08); color: #2DD4BF; font-weight: 500; }
+        .pace-btn { padding: 18px 24px; border-radius: 2px; border: 0.5px solid rgba(255,255,255,0.15); background: transparent; color: rgba(255,255,255,0.8); cursor: pointer; font-family: DM Sans, sans-serif; text-align: left; width: 100%; transition: all 0.2s ease; margin-bottom: 8px; }
+        .pace-btn:hover { border-color: #2DD4BF; background: rgba(45,212,191,0.04); }
+        .pace-btn.selected { border: 1px solid #2DD4BF; background: rgba(45,212,191,0.06); }
+        .generate-btn { padding: 14px 40px; border-radius: 2px; background: #0a7070; color: white; border: none; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 13px; font-weight: 500; transition: all 0.25s ease; letter-spacing: 0.08em; text-transform: uppercase; }
+        .generate-btn:hover:not(:disabled) { background: #0d9090; }
+        .generate-btn:disabled { background: rgba(255,255,255,0.08); cursor: not-allowed; color: rgba(255,255,255,0.3); }
+        .next-btn { padding: 12px 32px; border-radius: 2px; background: #0a7070; color: white; border: none; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 13px; font-weight: 500; transition: all 0.2s ease; margin-right: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+        .next-btn:hover:not(:disabled) { background: #0d9090; }
+        .next-btn:disabled { background: rgba(255,255,255,0.08); cursor: not-allowed; color: rgba(255,255,255,0.3); }
+        .skip-btn { padding: 12px 24px; border-radius: 2px; background: transparent; color: rgba(255,255,255,0.35); border: 0.5px solid rgba(255,255,255,0.12); cursor: pointer; font-family: DM Sans, sans-serif; font-size: 13px; transition: all 0.2s ease; letter-spacing: 0.04em; }
+        .skip-btn:hover { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.25); }
+        .partner-btn-teal { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: transparent; border: 0.5px solid rgba(45,212,191,0.4); border-radius: 2px; color: #2DD4BF; text-decoration: none; font-size: 12px; font-family: DM Sans, sans-serif; transition: all 0.2s ease; letter-spacing: 0.04em; }
+        .partner-btn-teal:hover { background: rgba(45,212,191,0.08); border-color: #2DD4BF; }
+        .partner-btn-gold { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: transparent; border: 0.5px solid rgba(201,168,76,0.4); border-radius: 2px; color: #c9a84c; text-decoration: none; font-size: 12px; font-family: DM Sans, sans-serif; transition: all 0.2s ease; letter-spacing: 0.04em; }
+        .partner-btn-gold:hover { background: rgba(201,168,76,0.08); border-color: #c9a84c; }
+        .restart-btn { padding: 12px 32px; border-radius: 2px; background: transparent; border: 0.5px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); cursor: pointer; font-family: DM Sans, sans-serif; font-size: 12px; transition: all 0.2s ease; margin-right: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+        .restart-btn:hover { border-color: rgba(255,255,255,0.4); color: white; }
+        .pdf-btn { padding: 12px 32px; border-radius: 2px; background: #0a7070; border: none; color: white; cursor: pointer; font-family: DM Sans, sans-serif; font-size: 12px; font-weight: 500; transition: all 0.25s ease; letter-spacing: 0.06em; text-transform: uppercase; }
+        .pdf-btn:hover { background: #0d9090; }
+        @media (max-width: 767px) { .planner-btn { padding: 10px 16px; font-size: 12px; } .generate-btn { width: 100%; } .next-btn { width: 100%; margin-right: 0; margin-bottom: 10px; } .skip-btn { width: 100%; } }
+        @media (max-width: 640px) { .day-cards-grid { grid-template-columns: 1fr !important; } }`}</style>
 
       <div style={{ maxWidth: 860, margin: "0 auto", padding: "100px 32px 100px" }}>
 
