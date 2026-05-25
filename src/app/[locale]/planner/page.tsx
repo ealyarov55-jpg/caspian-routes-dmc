@@ -815,14 +815,14 @@ const currentBudgets = typeof window !== "undefined" ? (CURRENCY_BUDGETS[country
     setTimeout(() => { printWindow.print(); }, 500);
   };
 
-  const cardStyle = { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "24px 28px", marginBottom: 24 };
+  const cardStyle = { background: "transparent", border: "0.5px solid rgba(255,255,255,0.12)", borderRadius: 4, padding: "32px 36px", marginBottom: 24 };
   const backBtnStyle = { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "rgba(255,255,255,0.7)", cursor: "pointer", fontSize: 12, fontFamily: "DM Sans, sans-serif", padding: "6px 12px", marginBottom: 20, display: "inline-flex", alignItems: "center", gap: 6 };
   const labelStyle = { color: "rgba(255,255,255,0.5)", fontSize: 13, marginBottom: 16, fontFamily: "DM Sans, sans-serif", display: "block" };
 
   const TOTAL_STEPS = 7;
 
   return (
-    <main style={{ background: "#0D1116", minHeight: "100vh", position: "relative", overflow: "hidden" }}>
+    <main style={{ background: "#041315", minHeight: "100vh", position: "relative", overflow: "hidden" }}>
   {(step < TOTAL_STEPS || loading) && (
     <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
       {bgPhotos.map((photo, i) => (
@@ -875,15 +875,15 @@ filter: "blur(1px) saturate(1.3)",
             <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 16, textAlign: "center", marginBottom: 48 }}>{t.subtitle}</p>
             <div style={{ display: "flex", gap: 8, marginBottom: 40 }}>
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-                <div key={i} style={{ flex: 1, height: 4, borderRadius: 99, background: i <= step ? "#2DD4BF" : "rgba(255,255,255,0.1)", transition: "background 0.3s ease" }} />
-              ))}
+  <div key={i} style={{ flex: 1, height: 1, borderRadius: 0, background: i <= step ? "#2DD4BF" : "rgba(255,255,255,0.12)", transition: "background 0.3s ease" }} />
+))}
             </div>
 
             {/* Step 0: Days */}
             {step === 0 && (
               <div style={cardStyle}>
                 
-                <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step1}</h2>
+                <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step1}</h2>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                   {t.days.map(d => (
                     <button key={d} className={`planner-btn${days === d ? " selected" : ""}`} onClick={() => { setDays(d); setStep(1); }}>{d}</button>
@@ -896,7 +896,7 @@ filter: "blur(1px) saturate(1.3)",
             {step === 1 && (
               <div style={cardStyle}>
                 <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
-                <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step2}</h2>
+                <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step2}</h2>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                   {t.groups.map(g => (
                     <button key={g} className={`planner-btn${group === g ? " selected" : ""}`} onClick={() => { setGroup(g); setStep(2); }}>{g}</button>
@@ -909,7 +909,7 @@ filter: "blur(1px) saturate(1.3)",
 {step === 2 && (
   <div style={cardStyle}>
     <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
-    <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step7}</h2>
+    <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step7}</h2>
 
     {!continent && (
       <>
@@ -991,7 +991,7 @@ filter: "blur(1px) saturate(1.3)",
   <div style={cardStyle}>
     <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
     <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
-    <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step3}</h2>
+    <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step3}</h2>
     <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
       {currentBudgets.ranges.map(b => (
         <button key={b} className={`planner-btn${budget === b ? " selected" : ""}`} onClick={() => { setBudget(b); setStep(4); }}>{b}</button>
@@ -1004,7 +1004,7 @@ filter: "blur(1px) saturate(1.3)",
 {step === 4 && (
   <div style={cardStyle}>
     <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
-    <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step4}</h2>
+    <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step4}</h2>
     <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
       {t.interests.map(i => (
         <button key={i} className={`planner-btn${interests.includes(i) ? " selected" : ""}`} onClick={() => toggleInterest(i)}>{i}</button>
@@ -1038,7 +1038,7 @@ filter: "blur(1px) saturate(1.3)",
 {step === 6 && (
   <div style={cardStyle}>
     <button style={backBtnStyle} onClick={() => setStep(0)}>{t.back}</button>
-    <h2 style={{ color: "white", fontSize: 20, fontWeight: 500, marginBottom: 20, fontFamily: "DM Sans, sans-serif" }}>{t.step6}</h2>
+    <h2 style={{ color: "white", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 300, marginBottom: 24, fontFamily: "Cormorant Garamond, serif" }}>{t.step6}</h2>
     <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 8 }}>
       {t.paces.map(p => (
   <button key={p.id} className={`pace-btn${pace === p.label ? " selected" : ""}`} onClick={() => setPace(p.label)}>
