@@ -129,9 +129,9 @@ async function getWeather() {
 
 async function getCurrency() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "https://www.caspian-routes.com"}/api/currency`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "https://www.caspian-routes.com"}/api/currency`, { cache: "no-store" });
     return await res.json();
-  } catch { return { rub: null, usd: null }; }
+  } catch { return { rub: null, usd: null, eur: null, try_: null, aed: null }; }
 }
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
