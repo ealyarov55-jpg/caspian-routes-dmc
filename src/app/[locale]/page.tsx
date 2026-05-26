@@ -211,9 +211,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </FadeIn>
 
           <FadeIn delay={100}>
-            <h1 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(3rem, 8vw, 7rem)", fontWeight: 800, lineHeight: 0.95, margin: "0 0 16px", letterSpacing: -2, whiteSpace: "pre-line" }}>
+            <h1 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(2.5rem, 5vw, 5rem)", fontWeight: 700, lineHeight: 0.95, margin: "0 0 16px", letterSpacing: -2, whiteSpace: "pre-line" }}>
               {t.headline}<br />
-              <span style={{ color: T.accent }}>{t.accent}</span>
+              <span style={{ color: "white", borderBottom: `3px solid ${T.accent}`, paddingBottom: 2 }}>{t.accent}</span>
             </h1>
           </FadeIn>
 
