@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, use, useEffect, useRef } from "react";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/sections/Footer";
+import CaspianCommandCenter from "@/components/sections/CaspianCommandCenter";
 
 const content = {
   ru: {
