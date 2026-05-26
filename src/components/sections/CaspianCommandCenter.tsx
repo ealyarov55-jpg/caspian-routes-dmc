@@ -79,7 +79,19 @@ const itinerary = [
 
 /* ─── COMPONENTS ─── */
 
-function GlowOrb({ top, left, color, size = 200 }) {
+type GlowOrbProps = {
+  top: string | number;
+  left: string | number;
+  color?: string;
+  size?: number;
+};
+
+function GlowOrb({
+  top,
+  left,
+  color,
+  size = 200,
+}: GlowOrbProps) {
   return (
     <div
       style={{
@@ -97,7 +109,7 @@ function GlowOrb({ top, left, color, size = 200 }) {
   );
 }
 
-function DataChip({ icon, label, value, accent }) {
+function DataChip({ icon, label, value, accent }: any) {
   return (
     <div
       style={{
@@ -122,7 +134,7 @@ function DataChip({ icon, label, value, accent }) {
   );
 }
 
-function HotelCard({ hotel, index }) {
+function HotelCard({ hotel, index }: any) {
   const [photoIdx, setPhotoIdx] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -164,7 +176,7 @@ function HotelCard({ hotel, index }) {
             gap: 5,
           }}
         >
-          {hotel.photos.map((_, i) => (
+          {hotel.photos.map((_: any, i: number) => (
             <button
               key={i}
               onClick={() => setPhotoIdx(i)}
@@ -270,7 +282,7 @@ function HotelCard({ hotel, index }) {
         <div style={{ fontSize: 12, color: T.textSoft, marginBottom: 10 }}>📍 {hotel.location}</div>
 
         <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 14 }}>
-          {hotel.tags.map((tag) => (
+          {hotel.tags.map((tag: any) => (
             <span
               key={tag}
               style={{
@@ -306,12 +318,12 @@ function HotelCard({ hotel, index }) {
               boxShadow: `0 4px 15px ${T.accentGlow}`,
             }}
             onMouseEnter={(e) => {
-              e.target.style.transform = "scale(1.05)";
-              e.target.style.boxShadow = `0 6px 25px ${T.accentGlowStrong}`;
+              (e.target as HTMLElement).style.transform = "scale(1.05)";
+              (e.target as HTMLElement).style.boxShadow = `0 6px 25px ${T.accentGlowStrong}`;
             }}
             onMouseLeave={(e) => {
-              e.target.style.transform = "scale(1)";
-              e.target.style.boxShadow = `0 4px 15px ${T.accentGlow}`;
+              (e.target as HTMLElement).style.transform = "scale(1)";
+              (e.target as HTMLElement).style.boxShadow = `0 4px 15px ${T.accentGlow}`;
             }}
           >
             Забронировать →
@@ -322,7 +334,7 @@ function HotelCard({ hotel, index }) {
   );
 }
 
-function TimelineDay({ item, isActive, onClick }) {
+function TimelineDay({ item, isActive, onClick }: { item: any; isActive: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
@@ -349,7 +361,7 @@ function TimelineDay({ item, isActive, onClick }) {
   );
 }
 
-function StepIndicator({ current, total }) {
+function StepIndicator({ current, total }: { current: number; total: number }) {
   return (
     <div style={{ display: "flex", gap: 4, marginBottom: 20 }}>
       {Array.from({ length: total }).map((_, i) => (
@@ -485,8 +497,8 @@ export default function CaspianCommandCenter() {
                 letterSpacing: 0.5,
                 transition: "color 0.2s",
               }}
-              onMouseEnter={(e) => (e.target.style.color = T.accent)}
-              onMouseLeave={(e) => (e.target.style.color = T.textSoft)}
+              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = T.accent)}
+              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = T.textSoft)}
             >
               {item}
             </span>
@@ -539,8 +551,8 @@ export default function CaspianCommandCenter() {
                 animation: "fadeSlideUp 0.7s ease 0.1s both",
               }}
             >
-              <DataChip icon="🌤" label="Баку сейчас" value="31°C, ясно" />
-              <DataChip icon="💱" label="Курс" value="1 AZN = 53.2 ₽" />
+              <DataChip icon="🌤" label="Баку сейчас" value="31°C, ясно" accent={null} />
+              <DataChip icon="💱" label="Курс" value="1 AZN = 53.2 ₽" accent={null} />
               <DataChip icon="✈️" label="Москва → Баку" value="от $145" accent={T.warn} />
               <DataChip icon="📊" label="Сезон" value="Высокий" accent="#f97316" />
             </div>
@@ -636,14 +648,14 @@ export default function CaspianCommandCenter() {
                       animation: `slideInRight 0.3s ease ${i * 0.05}s both`,
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.borderColor = T.accent;
-                      e.target.style.background = T.accentGlow;
-                      e.target.style.color = T.accent;
+                      (e.target as HTMLElement).style.borderColor = T.accent;
+                      (e.target as HTMLElement).style.background = T.accentGlow;
+                      (e.target as HTMLElement).style.color = T.accent;
                     }}
                     onMouseLeave={(e) => {
-                      e.target.style.borderColor = T.border;
-                      e.target.style.background = T.bgCard;
-                      e.target.style.color = T.text;
+                      (e.target as HTMLElement).style.borderColor = T.border;
+                      (e.target as HTMLElement).style.background = T.bgCard;
+                      (e.target as HTMLElement).style.color = T.text;
                     }}
                   >
                     {opt}
