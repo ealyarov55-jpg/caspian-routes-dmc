@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
 import { FadeIn, BlogCards } from "@/components/sections/HomeAnimations";
 
@@ -11,18 +10,18 @@ const content = {
     sub: "Реальные локации. Партнёрские ссылки на отели и экскурсии. Без регистрации.",
     cta: "Создать маршрут",
     cta2: "Путеводитель",
-    stat1val: "60+", stat1label: "Статей о маршрутах",
-    stat2val: "4", stat2label: "Языка",
-    stat3val: "2 мин", stat3label: "На маршрут",
+    weatherLabel: "Баку сейчас",
+    rubLabel: "1 AZN",
+    blogTitle: "Путеводитель",
+    editorialLabel: "Редакция советует",
+    allArticles: "Все статьи →",
     howTitle: "Как это работает",
     steps: [
       { num: "01", label: "Инициация", title: "Выбор ритма", desc: "Интересы, темп и группа — за 60 секунд." },
       { num: "02", label: "Анализ", title: "AI-просчёт", desc: "Только реальные живые локации Азербайджана." },
       { num: "03", label: "Результат", title: "Готовый маршрут", desc: "Инсайды и прямые ссылки на бронирование." },
     ],
-    blogTitle: "Путеводитель",
-    editorialLabel: "Редакция советует",
-    allArticles: "Все статьи →",
+    mapTitle: "Азербайджан на карте",
   },
   en: {
     badge: "AI Travel Planner",
@@ -31,18 +30,18 @@ const content = {
     sub: "Real locations. Partner links for hotels and tours. No signup required.",
     cta: "Create Itinerary",
     cta2: "Travel Guide",
-    stat1val: "60+", stat1label: "Travel articles",
-    stat2val: "4", stat2label: "Languages",
-    stat3val: "2 min", stat3label: "To itinerary",
+    weatherLabel: "Baku now",
+    rubLabel: "1 AZN",
+    blogTitle: "Travel Guide",
+    editorialLabel: "Editor's picks",
+    allArticles: "All articles →",
     howTitle: "How it works",
     steps: [
       { num: "01", label: "Init", title: "Set the rhythm", desc: "Interests, pace and group — in 60 seconds." },
       { num: "02", label: "Analysis", title: "AI processing", desc: "Only real, living locations in Azerbaijan." },
       { num: "03", label: "Result", title: "Ready itinerary", desc: "Insider tips and direct booking links." },
     ],
-    blogTitle: "Travel Guide",
-    editorialLabel: "Editor's picks",
-    allArticles: "All articles →",
+    mapTitle: "Azerbaijan on the map",
   },
   az: {
     badge: "AI Səyahət Planlayıcısı",
@@ -51,18 +50,18 @@ const content = {
     sub: "Real lokasiyalar. Otel və tur üçün tərəfdaş linklər. Qeydiyyatsız.",
     cta: "Marşrut Yarat",
     cta2: "Bələdçi",
-    stat1val: "60+", stat1label: "Məqalə",
-    stat2val: "4", stat2label: "Dil",
-    stat3val: "2 dəq", stat3label: "Marşruta",
+    weatherLabel: "Bakı indi",
+    rubLabel: "1 AZN",
+    blogTitle: "Bələdçi",
+    editorialLabel: "Redaksiya tövsiyə edir",
+    allArticles: "Bütün məqalələr →",
     howTitle: "Necə işləyir",
     steps: [
       { num: "01", label: "Başlanğıc", title: "Ritm seçimi", desc: "Maraqlar, temp və qrup — 60 saniyədə." },
       { num: "02", label: "Analiz", title: "AI hesablaması", desc: "Yalnız real Azərbaycan lokasiyaları." },
       { num: "03", label: "Nəticə", title: "Hazır marşrut", desc: "İnsaydlar və rezervasiya linkləri." },
     ],
-    blogTitle: "Bələdçi",
-    editorialLabel: "Redaksiya tövsiyə edir",
-    allArticles: "Bütün məqalələr →",
+    mapTitle: "Azərbaycan xəritədə",
   },
   tr: {
     badge: "AI Seyahat Planlayıcısı",
@@ -71,18 +70,18 @@ const content = {
     sub: "Gerçek lokasyonlar. Otel ve tur için ortak linkler. Kayıt gerekmez.",
     cta: "Rota Oluştur",
     cta2: "Seyahat Rehberi",
-    stat1val: "60+", stat1label: "Seyahat makalesi",
-    stat2val: "4", stat2label: "Dil",
-    stat3val: "2 dk", stat3label: "Rotanıza",
+    weatherLabel: "Bakü şimdi",
+    rubLabel: "1 AZN",
+    blogTitle: "Seyahat Rehberi",
+    editorialLabel: "Editörün seçimi",
+    allArticles: "Tüm makaleler →",
     howTitle: "Nasıl çalışır",
     steps: [
       { num: "01", label: "Başlangıç", title: "Ritim seçimi", desc: "İlgiler, tempo ve grup — 60 saniyede." },
       { num: "02", label: "Analiz", title: "AI işlemi", desc: "Sadece gerçek Azerbaycan lokasyonları." },
       { num: "03", label: "Sonuç", title: "Hazır rota", desc: "İpuçları ve doğrudan rezervasyon linkleri." },
     ],
-    blogTitle: "Seyahat Rehberi",
-    editorialLabel: "Editörün seçimi",
-    allArticles: "Tüm makaleler →",
+    mapTitle: "Azerbaycan haritada",
   },
 };
 
@@ -113,7 +112,6 @@ const blogPosts = [
 const T = {
   bg: "#06090f",
   accent: "#00d4aa",
-  accentGlow: "rgba(0, 212, 170, 0.08)",
   border: "rgba(255,255,255,0.06)",
   text: "#e8edf5",
   textSoft: "#94a3b8",
@@ -122,10 +120,28 @@ const T = {
   font: "'DM Sans', system-ui, sans-serif",
 };
 
+async function getWeather() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "https://www.caspian-routes.com"}/api/weather`, { next: { revalidate: 1800 } });
+    return await res.json();
+  } catch { return { temp: null }; }
+}
+
+async function getCurrency() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "https://www.caspian-routes.com"}/api/currency`, { next: { revalidate: 3600 } });
+    return await res.json();
+  } catch { return { rub: null, usd: null }; }
+}
+
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
   const t = content[lang];
+
+  const [weather, currency] = await Promise.all([getWeather(), getCurrency()]);
+
+  const mapEmbedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d194304.64910730564!2d49.6570777!3d40.3947365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40307d6bd6211cf9%3A0x343f6605f2a7c9ba!2z0J_QkNCa0KMsINCQ0LfQtdGA0LHQsNC50LTQttCw0L0!5e0!3m2!1sru!2s!4v1620000000000!5m2!1sru!2s";
 
   const schemaOrg = {
     "@context": "https://schema.org",
@@ -150,7 +166,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
         @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
         @keyframes gridPulse { 0%, 100% { opacity: 0.03; } 50% { opacity: 0.06; } }
-        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .home-cta-primary {
           display: inline-block; padding: 13px 32px;
           background: #00d4aa; color: #06090f;
@@ -161,32 +176,27 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           letter-spacing: 0.05em; transition: all 0.2s ease;
         }
         .home-cta-primary:hover { background: #00b894; transform: translateY(-2px); }
-        .home-cta-secondary {
-          display: inline-block; padding: 13px 32px;
-          background: transparent; color: ${T.textSoft};
-          border: 1px solid ${T.border}; border-radius: 8px;
-          font-size: 13px; font-weight: 500;
-          font-family: 'DM Sans', sans-serif;
-          text-decoration: none; cursor: pointer;
-          transition: all 0.2s ease;
-        }
-        .home-cta-secondary:hover { border-color: rgba(255,255,255,0.2); color: ${T.text}; }
         .blog-card-new {
           display: block; text-decoration: none;
           border-radius: 12px; overflow: hidden;
           background: rgba(255,255,255,0.03);
-          border: 1px solid ${T.border};
+          border: 1px solid rgba(255,255,255,0.06);
           transition: border-color 0.25s ease;
         }
         .blog-card-new:hover { border-color: rgba(0,212,170,0.3); }
         .blog-card-new img { transition: transform 0.6s ease; display: block; width: 100%; }
         .blog-card-new:hover img { transform: scale(1.04); }
+        .data-chip {
+          display: flex; align-items: center; gap: 8px;
+          padding: 8px 14px; border-radius: 10px;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.06);
+        }
         @media (max-width: 767px) {
           .hero-cols { grid-template-columns: 1fr !important; gap: 24px !important; }
-          .stat-row { grid-template-columns: 1fr 1fr !important; }
           .blog-grid-new { grid-template-columns: 1fr !important; }
           .how-grid-new { grid-template-columns: 1fr !important; }
-          .how-step-new { border-left: none !important; border-top: 1px solid ${T.border} !important; padding-left: 0 !important; padding-top: 32px !important; }
+          .chips-row { flex-wrap: wrap; }
         }
       `}</style>
 
@@ -198,65 +208,120 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       </div>
 
       {/* Navbar */}
-      <Navbar locale={locale} />
+      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 28px", borderBottom: `1px solid ${T.border}`, backdropFilter: "blur(12px)", background: "rgba(6,9,15,0.8)" }}>
+        <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+          <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.accent, boxShadow: `0 0 10px ${T.accent}`, animation: "pulse 2s ease infinite" }} />
+          <span style={{ fontFamily: T.fontDisplay, fontSize: 18, fontWeight: 800, letterSpacing: -0.5, color: T.text }}>
+            CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES
+          </span>
+        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+          <Link href={`/${locale}/blog`} style={{ color: T.textSoft, fontSize: 13, textDecoration: "none", transition: "color 0.2s" }}>
+            {lang === "ru" ? "Путеводитель" : lang === "az" ? "Bələdçi" : lang === "tr" ? "Rehber" : "Travel Guide"}
+          </Link>
+          <Link href={`/${locale}/contact`} style={{ color: T.textSoft, fontSize: 13, textDecoration: "none" }}>
+            {lang === "ru" ? "Контакт" : "Contact"}
+          </Link>
+          <div style={{ display: "flex", gap: 4, padding: "4px 6px", borderRadius: 6, background: "rgba(255,255,255,0.03)", border: `1px solid ${T.border}` }}>
+            {["ru", "en", "az", "tr"].map(l => (
+              <Link key={l} href={`/${l}`} style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, color: locale === l ? T.accent : T.textMuted, background: locale === l ? "rgba(0,212,170,0.08)" : "transparent", textDecoration: "none", fontWeight: locale === l ? 600 : 400 }}>{l.toUpperCase()}</Link>
+            ))}
+          </div>
+          <Link href={`/${locale}/planner`} className="home-cta-primary" style={{ padding: "9px 20px", fontSize: 12 }}>
+            {t.cta} →
+          </Link>
+        </div>
+      </nav>
 
       {/* Hero */}
       <section style={{ position: "relative", zIndex: 5, minHeight: "100vh", display: "flex", alignItems: "center", padding: "0 48px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", width: "100%", paddingTop: 80 }}>
+
+          {/* Live data chips */}
           <FadeIn delay={0}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.accent, animation: "pulse 2s ease infinite" }} />
-              <span style={{ fontSize: 11, color: T.accent, letterSpacing: 3, textTransform: "uppercase", fontWeight: 600 }}>{t.badge}</span>
+            <div className="chips-row" style={{ display: "flex", gap: 10, marginBottom: 40 }}>
+              {weather.temp !== null && (
+                <div className="data-chip">
+                  <span style={{ fontSize: 16 }}>🌤</span>
+                  <div>
+                    <div style={{ fontSize: 10, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.8 }}>{t.weatherLabel}</div>
+                    <div style={{ fontSize: 13, color: T.accent, fontWeight: 600 }}>{weather.temp}°C, {weather.description}</div>
+                  </div>
+                </div>
+              )}
+              {currency.rub && (
+                <div className="data-chip">
+                  <span style={{ fontSize: 16 }}>💱</span>
+                  <div>
+                    <div style={{ fontSize: 10, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.8 }}>{t.rubLabel}</div>
+                    <div style={{ fontSize: 13, color: T.accent, fontWeight: 600 }}>{currency.rub} ₽ · ${currency.usd}</div>
+                  </div>
+                </div>
+              )}
+              <div className="data-chip">
+                <span style={{ fontSize: 16 }}>✈️</span>
+                <div>
+                  <div style={{ fontSize: 10, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.8 }}>Aviasales</div>
+                  <div style={{ fontSize: 13, color: T.accent, fontWeight: 600 }}>
+                    <a href="https://aviasales.tpk.ro/qyjqiTHn" target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none" }}>
+                      {lang === "ru" ? "Найти билеты →" : "Find tickets →"}
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </FadeIn>
 
           <FadeIn delay={100}>
-            <h1 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(2.5rem, 5vw, 5rem)", fontWeight: 700, lineHeight: 0.95, margin: "0 0 16px", letterSpacing: -2, whiteSpace: "pre-line" }}>
-              {t.headline}<br />
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.accent, animation: "pulse 2s ease infinite" }} />
+              <span style={{ fontSize: 11, color: T.accent, letterSpacing: 3, textTransform: "uppercase", fontWeight: 600 }}>{t.badge}</span>
+            </div>
+            <h1 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(2.5rem, 5vw, 5rem)", fontWeight: 700, lineHeight: 1.0, margin: "0 0 16px", letterSpacing: -1, whiteSpace: "pre-line" }}>
+              {t.headline}{"\n"}
               <span style={{ color: "white", borderBottom: `3px solid ${T.accent}`, paddingBottom: 2 }}>{t.accent}</span>
             </h1>
           </FadeIn>
 
           <FadeIn delay={200}>
-            <div className="hero-cols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "flex-end", marginTop: 40 }}>
+            <div className="hero-cols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center", marginTop: 32 }}>
               <p style={{ color: T.textSoft, fontSize: 16, lineHeight: 1.7, maxWidth: 420, margin: 0 }}>{t.sub}</p>
-              <div style={{ display: "flex", gap: 12, justifyContent: "flex-end", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
                 <Link href={`/${locale}/planner`} className="home-cta-primary">{t.cta} →</Link>
-                <Link href={`/${locale}/blog`} className="home-cta-secondary">{t.cta2}</Link>
               </div>
-            </div>
-          </FadeIn>
-
-          <div style={{ height: 1, background: T.border, marginTop: 48 }} />
-
-          <FadeIn delay={300}>
-            <div className="stat-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 0 }}>
-              {[
-                { val: t.stat1val, label: t.stat1label },
-                { val: t.stat2val, label: t.stat2label },
-                { val: t.stat3val, label: t.stat3label },
-              ].map((s, i) => (
-                <div key={i} style={{ padding: "24px 0", borderRight: i < 2 ? `1px solid ${T.border}` : "none", paddingLeft: i > 0 ? 40 : 0 }}>
-                  <p style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.8rem, 4vw, 2.8rem)", color: T.accent, fontWeight: 800, margin: 0, lineHeight: 1 }}>{s.val}</p>
-                  <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.3em", textTransform: "uppercase", margin: "8px 0 0" }}>{s.label}</p>
-                </div>
-              ))}
             </div>
           </FadeIn>
         </div>
       </section>
 
+      {/* Map */}
+      <section style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "0 48px 80px" }}>
+        <FadeIn>
+          <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 20 }}>✦ {t.mapTitle}</p>
+          <div style={{ borderRadius: 16, overflow: "hidden", border: `1px solid ${T.border}`, height: 400 }}>
+            <iframe
+              src={mapEmbedUrl}
+              width="100%"
+              height="100%"
+              style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+        </FadeIn>
+      </section>
+
       {/* How it works */}
-      <section style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "80px 48px" }}>
+      <section style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "0 48px 80px" }}>
         <FadeIn>
           <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 48 }}>✦ {t.howTitle}</p>
         </FadeIn>
         <div className="how-grid-new" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0 }}>
           {t.steps.map((step, i) => (
-            <div key={i} className="how-step-new" style={{ position: "relative", padding: "0 40px 0 0", borderLeft: i > 0 ? `1px solid ${T.border}` : "none", paddingLeft: i > 0 ? 40 : 0 }}>
+            <div key={i} style={{ position: "relative", padding: "0 40px 0 0", borderLeft: i > 0 ? `1px solid ${T.border}` : "none", paddingLeft: i > 0 ? 40 : 0 }}>
               <p style={{ position: "absolute", top: -20, right: i === 2 ? 0 : 40, fontFamily: T.fontDisplay, fontSize: "clamp(5rem, 8vw, 8rem)", color: "rgba(255,255,255,0.03)", fontWeight: 800, lineHeight: 1, margin: 0, userSelect: "none", pointerEvents: "none" }}>{step.num}</p>
               <p style={{ color: T.accent, fontSize: 9, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 16, fontWeight: 600 }}>{step.label}</p>
-              <h3 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.4rem, 2vw, 1.8rem)", color: T.text, fontWeight: 800, margin: "0 0 12px", lineHeight: 1.2 }}>{step.title}</h3>
+              <h3 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.2rem, 2vw, 1.6rem)", color: T.text, fontWeight: 800, margin: "0 0 12px", lineHeight: 1.2 }}>{step.title}</h3>
               <p style={{ color: T.textMuted, fontSize: 13, lineHeight: 1.7, margin: 0, maxWidth: 260 }}>{step.desc}</p>
             </div>
           ))}
@@ -266,15 +331,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       {/* Blog */}
       <section style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "0 48px 120px" }}>
         <FadeIn>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 40, borderBottom: `1px solid ${T.border}`, paddingBottom: 24 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 32, borderBottom: `1px solid ${T.border}`, paddingBottom: 20 }}>
             <div>
               <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 8 }}>✦ {t.editorialLabel}</p>
-              <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.8rem, 4vw, 3rem)", color: T.text, fontWeight: 800, margin: 0 }}>{t.blogTitle}</h2>
+              <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.6rem, 3vw, 2.4rem)", color: T.text, fontWeight: 800, margin: 0 }}>{t.blogTitle}</h2>
             </div>
             <Link href={`/${locale}/blog`} style={{ color: T.textMuted, fontSize: 11, textDecoration: "none", letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: `1px solid ${T.border}`, paddingBottom: 2 }}>{t.allArticles}</Link>
           </div>
         </FadeIn>
-
         <BlogCards>
           <div className="blog-grid-new" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 16 }}>
             <Link href={`/${locale}/blog/${blogPosts[0].slug[lang]}`} className="blog-card-new" style={{ gridRow: "span 2" }}>
@@ -283,7 +347,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </div>
               <div style={{ padding: "20px 24px 28px" }}>
                 <span style={{ color: T.accent, fontSize: 9, letterSpacing: "0.4em", textTransform: "uppercase" }}>{blogPosts[0].tag[lang]}</span>
-                <h3 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.3rem, 2vw, 1.8rem)", color: T.text, fontWeight: 700, margin: "10px 0 12px", lineHeight: 1.2 }}>{blogPosts[0].title[lang]}</h3>
+                <h3 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.2rem, 2vw, 1.6rem)", color: T.text, fontWeight: 700, margin: "10px 0 12px", lineHeight: 1.2 }}>{blogPosts[0].title[lang]}</h3>
                 <p style={{ color: T.textSoft, fontSize: 13, lineHeight: 1.7, margin: 0 }}>{blogPosts[0].desc[lang]}</p>
               </div>
             </Link>
