@@ -237,7 +237,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <section style={{ position: "relative", zIndex: 5, minHeight: "100vh", display: "flex", alignItems: "center", padding: "0 48px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", width: "100%", paddingTop: 80 }}>
 
-          {/* Live data chips */}
+         {/* Live data chips */}
           <FadeIn delay={0}>
             <div className="chips-row" style={{ display: "flex", gap: 10, marginBottom: 40 }}>
               {weather.temp !== null && (
@@ -245,13 +245,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   <span style={{ fontSize: 16 }}>🌤</span>
                   <div>
                     <div style={{ fontSize: 10, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.8 }}>{t.weatherLabel}</div>
-                    <div style={{ fontSize: 11, color: T.accent, fontWeight: 600, lineHeight: 1.6 }}>
-  {currency.rub && <span>{currency.rub} ₽</span>}
-  {currency.usd && <span> · ${currency.usd}</span>}
-  {currency.eur && <span> · €{currency.eur}</span>}
-  {currency.try_ && <span> · ₺{currency.try_}</span>}
-  {currency.aed && <span> · {currency.aed} د.إ</span>}
-</div>
+                    <div style={{ fontSize: 13, color: T.accent, fontWeight: 600 }}>{weather.temp}°C, {weather.description}</div>
                   </div>
                 </div>
               )}
@@ -260,18 +254,17 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   <span style={{ fontSize: 16 }}>💱</span>
                   <div>
                     <div style={{ fontSize: 10, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.8 }}>{t.rubLabel}</div>
-                    <div style={{ fontSize: 13, color: T.accent, fontWeight: 600 }}>
-  {currency.rub && `${currency.rub} ₽`}
-  {currency.usd && ` · $${currency.usd}`}
-  {currency.eur && ` · €${currency.eur}`}
-  {currency.try_ && ` · ₺${currency.try_}`}
-  {currency.aed && ` · ${currency.aed} د.إ`}
-</div>
+                    <div style={{ fontSize: 11, color: T.accent, fontWeight: 600, lineHeight: 1.6 }}>
+                      {currency.rub && <span>{currency.rub} ₽</span>}
+                      {currency.usd && <span> · ${currency.usd}</span>}
+                      {currency.eur && <span> · €{currency.eur}</span>}
+                      {currency.try_ && <span> · ₺{currency.try_}</span>}
+                      {currency.aed && <span> · {currency.aed} د.إ</span>}
+                    </div>
                   </div>
                 </div>
               )}
-              
-            </div>
+           </div>
           </FadeIn>
 
           <FadeIn delay={100}>
