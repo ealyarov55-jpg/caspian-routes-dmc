@@ -254,21 +254,17 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   <span style={{ fontSize: 16 }}>💱</span>
                   <div>
                     <div style={{ fontSize: 10, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.8 }}>{t.rubLabel}</div>
-                    <div style={{ fontSize: 13, color: T.accent, fontWeight: 600 }}>{currency.rub} ₽ · ${currency.usd}</div>
+                    <div style={{ fontSize: 13, color: T.accent, fontWeight: 600 }}>
+  {currency.rub && `${currency.rub} ₽`}
+  {currency.usd && ` · $${currency.usd}`}
+  {currency.eur && ` · €${currency.eur}`}
+  {currency.try_ && ` · ₺${currency.try_}`}
+  {currency.aed && ` · ${currency.aed} د.إ`}
+</div>
                   </div>
                 </div>
               )}
-              <div className="data-chip">
-                <span style={{ fontSize: 16 }}>✈️</span>
-                <div>
-                  <div style={{ fontSize: 10, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.8 }}>Aviasales</div>
-                  <div style={{ fontSize: 13, color: T.accent, fontWeight: 600 }}>
-                    <a href="https://aviasales.tpk.ro/qyjqiTHn" target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none" }}>
-                      {lang === "ru" ? "Найти билеты →" : "Find tickets →"}
-                    </a>
-                  </div>
-                </div>
-              </div>
+              
             </div>
           </FadeIn>
 
