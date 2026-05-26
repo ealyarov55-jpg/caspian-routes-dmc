@@ -162,11 +162,15 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         .blog-card-editorial:hover { border-color: rgba(45,212,191,0.3); }
         .blog-card-editorial img { transition: transform 0.6s ease; display: block; width: 100%; }
         .blog-card-editorial:hover img { transform: scale(1.04); }
+        .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+        .how-step:hover { opacity: 0.85; }
         @media (max-width: 767px) {
           .hero-headline { font-size: clamp(2.5rem, 10vw, 4rem) !important; }
           .hero-cols { grid-template-columns: 1fr !important; gap: 24px !important; }
           .stat-row { grid-template-columns: 1fr 1fr !important; }
           .blog-grid { grid-template-columns: 1fr !important; }
+          .how-grid { grid-template-columns: 1fr !important; }
+          .how-step { border-left: none !important; border-top: 0.5px solid rgba(255,255,255,0.08) !important; padding-left: 0 !important; padding-top: 40px !important; }
         }
       `}</style>
 
@@ -219,7 +223,23 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </FadeIn>
         </div>
       </section>
-
+{/* How it works */}
+      <section style={{ maxWidth: 1280, margin: "0 auto", padding: "120px 48px 80px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0 }} className="how-grid">
+          {[
+            { num: "01", phase: lang === "ru" ? "Фаза 01 · Инициация" : "Phase 01 · Init", title: lang === "ru" ? "Выбор ритма" : "Set the rhythm", desc: lang === "ru" ? "Интересы, темп и состав группы — за 60 секунд." : "Interests, pace and group — in 60 seconds." },
+            { num: "02", phase: lang === "ru" ? "Фаза 02 · Анализ" : "Phase 02 · Analysis", title: lang === "ru" ? "Кураторский просчёт" : "Curated processing", desc: lang === "ru" ? "ИИ исключает туристический шум, выбирая живые локации." : "AI cuts tourist noise, selecting only real places." },
+            { num: "03", phase: lang === "ru" ? "Фаза 03 · Результат" : "Phase 03 · Output", title: lang === "ru" ? "Цифровой буклет" : "Digital booklet", desc: lang === "ru" ? "Персональный маршрут с инсайдами и прямыми ссылками." : "Personal itinerary with insider tips and direct links." },
+          ].map((step, i) => (
+            <div key={i} className="how-step" style={{ position: "relative", padding: "48px 40px 48px 0", borderLeft: i > 0 ? "0.5px solid rgba(255,255,255,0.08)" : "none", paddingLeft: i > 0 ? 40 : 0, transition: "all 0.4s ease", cursor: "default" }}>
+              <p style={{ position: "absolute", top: 0, right: i === 2 ? 0 : 40, fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(6rem, 10vw, 10rem)", color: "rgba(255,255,255,0.04)", fontWeight: 300, lineHeight: 1, margin: 0, userSelect: "none", transition: "color 0.4s ease", pointerEvents: "none" }}>{step.num}</p>
+              <p style={{ color: "rgba(45,212,191,0.7)", fontSize: 9, fontFamily: "DM Sans, sans-serif", letterSpacing: "0.35em", textTransform: "uppercase", marginBottom: 20, position: "relative" }}>{step.phase}</p>
+              <h3 style={{ fontFamily: "Cormorant Garamond, serif", fontSize: "clamp(1.8rem, 2.5vw, 2.4rem)", color: "white", fontWeight: 300, margin: "0 0 16px", lineHeight: 1.1, position: "relative" }}>{step.title}</h3>
+              <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, fontFamily: "DM Sans, sans-serif", lineHeight: 1.8, margin: 0, maxWidth: 280, position: "relative" }}>{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
       {/* Editorial Blog Section */}
       <section style={{ maxWidth: 1280, margin: "0 auto", padding: "120px 48px 120px" }}>
         <FadeIn>
