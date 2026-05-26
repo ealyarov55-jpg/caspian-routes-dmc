@@ -7,7 +7,7 @@ const content = {
     badge: "AI Travel Planner",
     headline: "Спланируй\nАзербайджан",
     accent: "за 2 минуты",
-    sub: "Реальные локации. Партнёрские ссылки на отели и экскурсии. Без регистрации.",
+    sub: "Реальные места Азербайджана. Прямые ссылки на отели и экскурсии. Без регистрации и лишних шагов.",
     cta: "Создать маршрут",
     cta2: "Путеводитель",
     weatherLabel: "Баку сейчас",
@@ -245,7 +245,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   <span style={{ fontSize: 16 }}>🌤</span>
                   <div>
                     <div style={{ fontSize: 10, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.8 }}>{t.weatherLabel}</div>
-                    <div style={{ fontSize: 13, color: T.accent, fontWeight: 600 }}>{weather.temp}°C, {weather.description}</div>
+                    <div style={{ fontSize: 11, color: T.accent, fontWeight: 600, lineHeight: 1.6 }}>
+  {currency.rub && <span>{currency.rub} ₽</span>}
+  {currency.usd && <span> · ${currency.usd}</span>}
+  {currency.eur && <span> · €{currency.eur}</span>}
+  {currency.try_ && <span> · ₺{currency.try_}</span>}
+  {currency.aed && <span> · {currency.aed} د.إ</span>}
+</div>
                   </div>
                 </div>
               )}
