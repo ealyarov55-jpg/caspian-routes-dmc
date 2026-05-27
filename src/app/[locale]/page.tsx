@@ -222,7 +222,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           .blog-section { padding: 0 20px 100px !important; }
           .mobile-cta-fixed { display: flex !important; }
           .nav-desktop-links { display: none !important; }
-          .nav-lang { display: none !important; }
+          .nav-lang { display: flex !important; }
+          .nav-logo-text { font-size: 13px !important; }
           .nav-cta { display: none !important; }
         }
       `}</style>
@@ -238,9 +239,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 24px", borderBottom: `1px solid ${T.border}`, backdropFilter: "blur(12px)", background: "rgba(6,9,15,0.85)" }}>
         <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
           <div style={{ width: 7, height: 7, borderRadius: "50%", background: T.accent, boxShadow: `0 0 8px ${T.accent}`, animation: "pulse 2s ease infinite" }} />
-          <span style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 800, letterSpacing: -0.5, color: T.text }}>
-            CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES
-          </span>
+          <span className="nav-logo-text" style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 800, letterSpacing: -0.5, color: T.text }}>
+  CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES
+</span>
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
           <Link href={`/${locale}/blog`} className="nav-desktop-links" style={{ color: T.textSoft, fontSize: 13, textDecoration: "none" }}>
