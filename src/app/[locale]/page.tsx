@@ -233,9 +233,11 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </div>
       </nav>
 
-      {/* Hero */}
-      <section style={{ position: "relative", zIndex: 5, minHeight: "100vh", display: "flex", alignItems: "center", padding: "0 48px" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", width: "100%", paddingTop: 80 }}>
+    {/* Hero */}
+<section style={{ position: "relative", zIndex: 5, minHeight: "100vh", display: "flex", alignItems: "center", padding: "0 48px", overflow: "hidden" }}>
+  <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/images/baku-hero.jpg')", backgroundSize: "cover", backgroundPosition: "center 40%", opacity: 0.25, zIndex: 0 }} />
+  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(6,9,15,0.98) 0%, rgba(6,9,15,0.85) 50%, rgba(6,9,15,0.6) 100%)", zIndex: 1 }} />
+  <div style={{ position: "relative", zIndex: 2, maxWidth: 1280, margin: "0 auto", width: "100%", paddingTop: 80 }}>
 
          {/* Live data chips */}
           <FadeIn delay={0}>
@@ -272,15 +274,15 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.accent, animation: "pulse 2s ease infinite" }} />
               <span style={{ fontSize: 11, color: T.accent, letterSpacing: 3, textTransform: "uppercase", fontWeight: 600 }}>{t.badge}</span>
             </div>
-            <h1 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(2.5rem, 5vw, 5rem)", fontWeight: 700, lineHeight: 1.0, margin: "0 0 16px", letterSpacing: -1, whiteSpace: "pre-line" }}>
+            <h1 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(3rem, 6vw, 6.5rem)", fontWeight: 800, lineHeight: 0.95, margin: "0 0 16px", letterSpacing: -2, whiteSpace: "pre-line" }}>
               {t.headline}{"\n"}
-              <span style={{ color: "white", borderBottom: `3px solid ${T.accent}`, paddingBottom: 2 }}>{t.accent}</span>
+              <span style={{ color: T.accent }}>{t.accent}</span>
             </h1>
           </FadeIn>
 
           <FadeIn delay={200}>
             <div className="hero-cols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center", marginTop: 32 }}>
-              <p style={{ color: T.textSoft, fontSize: 16, lineHeight: 1.7, maxWidth: 420, margin: 0 }}>{t.sub}</p>
+              <p style={{ color: T.textSoft, fontSize: 18, lineHeight: 1.7, maxWidth: 420, margin: 0 }}>{t.sub}</p>
               <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
                 <Link href={`/${locale}/planner`} className="home-cta-primary">{t.cta} →</Link>
               </div>
