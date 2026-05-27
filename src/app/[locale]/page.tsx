@@ -206,9 +206,11 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           .hero-section { padding: 0 20px !important; }
           .hero-content { padding-top: 72px !important; padding-bottom: 120px !important; }
           .hero-headline { font-size: clamp(2.6rem, 11vw, 3.8rem) !important; letter-spacing: -1px !important; line-height: 1.0 !important; }
-          .hero-accent { font-size: clamp(2.6rem, 11vw, 3.8rem) !important; letter-spacing: -1px !important; }
+          .hero-accent { font-size: clamp(2rem, 9vw, 3rem) !important; letter-spacing: -1px !important; }
+.hero-headline { font-size: clamp(2rem, 9vw, 3rem) !important; letter-spacing: -1px !important; line-height: 1.05 !important; }
           .hero-sub { font-size: 15px !important; line-height: 1.6 !important; max-width: 100% !important; }
-          .hero-cta { width: 100% !important; padding: 18px 24px !important; font-size: 16px !important; border-radius: 12px !important; }
+          .hero-cta { display: none !important; }
+.hero-cta-mobile-show { display: none !important; }
           .chips-row { flex-direction: column !important; gap: 8px !important; margin-bottom: 32px !important; }
           .data-chip { width: 100% !important; }
           .blog-grid-new { grid-template-columns: 1fr !important; gap: 12px !important; }
