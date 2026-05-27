@@ -235,8 +235,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
     {/* Hero */}
 <section style={{ position: "relative", zIndex: 5, minHeight: "100vh", display: "flex", alignItems: "center", padding: "0 48px", overflow: "hidden" }}>
-  <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/images/baku-hero.jpg')", backgroundSize: "cover", backgroundPosition: "center 40%", opacity: 0.25, zIndex: 0 }} />
-  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(6,9,15,0.98) 0%, rgba(6,9,15,0.85) 50%, rgba(6,9,15,0.6) 100%)", zIndex: 1 }} />
+  <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/images/baku-hero.jpg')", backgroundSize: "cover", backgroundPosition: "center 40%", opacity: 0.45, zIndex: 0 }} />
+  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(6,9,15,0.85) 0%, rgba(6,9,15,0.6) 50%, rgba(6,9,15,0.3) 100%)", zIndex: 1 }} />
   <div style={{ position: "relative", zIndex: 2, maxWidth: 1280, margin: "0 auto", width: "100%", paddingTop: 80 }}>
 
          {/* Live data chips */}
