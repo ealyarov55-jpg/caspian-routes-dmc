@@ -9,7 +9,6 @@ const content = {
     accent: "за 2 минуты",
     sub: "Реальные места Азербайджана. Прямые ссылки на отели и экскурсии. Без регистрации и лишних шагов.",
     cta: "Создать маршрут",
-    cta2: "Путеводитель",
     weatherLabel: "Баку сейчас",
     rubLabel: "1 AZN",
     blogTitle: "Путеводитель",
@@ -29,7 +28,6 @@ const content = {
     accent: "in 2 minutes",
     sub: "Real locations. Partner links for hotels and tours. No signup required.",
     cta: "Create Itinerary",
-    cta2: "Travel Guide",
     weatherLabel: "Baku now",
     rubLabel: "1 AZN",
     blogTitle: "Travel Guide",
@@ -49,7 +47,6 @@ const content = {
     accent: "2 dəqiqədə",
     sub: "Real lokasiyalar. Otel və tur üçün tərəfdaş linklər. Qeydiyyatsız.",
     cta: "Marşrut Yarat",
-    cta2: "Bələdçi",
     weatherLabel: "Bakı indi",
     rubLabel: "1 AZN",
     blogTitle: "Bələdçi",
@@ -69,7 +66,6 @@ const content = {
     accent: "2 dakikada",
     sub: "Gerçek lokasyonlar. Otel ve tur için ortak linkler. Kayıt gerekmez.",
     cta: "Rota Oluştur",
-    cta2: "Seyahat Rehberi",
     weatherLabel: "Bakü şimdi",
     rubLabel: "1 AZN",
     blogTitle: "Seyahat Rehberi",
@@ -166,41 +162,59 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
         @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
         @keyframes gridPulse { 0%, 100% { opacity: 0.03; } 50% { opacity: 0.06; } }
-        .home-cta-primary {
-          display: inline-block; padding: 13px 32px;
-          background: #00d4aa; color: #06090f;
-          border: none; border-radius: 8px;
-          font-size: 13px; font-weight: 700;
+        .nav-cta {
+          display: inline-block; padding: 9px 20px;
+          background: transparent; color: #00d4aa;
+          border: 1px solid rgba(0,212,170,0.4); border-radius: 8px;
+          font-size: 12px; font-weight: 600;
           font-family: 'DM Sans', sans-serif;
           text-decoration: none; cursor: pointer;
           letter-spacing: 0.05em; transition: all 0.2s ease;
         }
-        .home-cta-primary:hover { background: #00b894; transform: translateY(-2px); }
+        .nav-cta:hover { background: rgba(0,212,170,0.08); border-color: #00d4aa; }
+        .hero-cta {
+          display: inline-flex; align-items: center; gap: 10px;
+          padding: 18px 48px;
+          background: #00d4aa; color: #06090f;
+          border: none; border-radius: 10px;
+          font-size: 16px; font-weight: 800;
+          font-family: 'DM Sans', sans-serif;
+          text-decoration: none; cursor: pointer;
+          letter-spacing: 0.02em; transition: all 0.2s ease;
+          box-shadow: 0 0 40px rgba(0,212,170,0.3);
+        }
+        .hero-cta:hover { background: #00b894; transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0,212,170,0.4); }
         .blog-card-new {
           display: block; text-decoration: none;
-          border-radius: 12px; overflow: hidden;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 10px; overflow: hidden;
+          background: rgba(255,255,255,0.02);
+          border: 1px solid rgba(255,255,255,0.05);
           transition: border-color 0.25s ease;
         }
-        .blog-card-new:hover { border-color: rgba(0,212,170,0.3); }
+        .blog-card-new:hover { border-color: rgba(0,212,170,0.2); }
         .blog-card-new img { transition: transform 0.6s ease; display: block; width: 100%; }
-        .blog-card-new:hover img { transform: scale(1.04); }
+        .blog-card-new:hover img { transform: scale(1.03); }
         .data-chip {
           display: flex; align-items: center; gap: 8px;
           padding: 8px 14px; border-radius: 10px;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.06);
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.08);
+          backdrop-filter: blur(8px);
         }
         @media (max-width: 767px) {
-          .hero-cols { grid-template-columns: 1fr !important; gap: 24px !important; }
+          .hero-headline { font-size: clamp(2.8rem, 10vw, 4rem) !important; }
+          .hero-sub { font-size: 15px !important; }
+          .hero-cta { padding: 16px 32px !important; font-size: 15px !important; }
           .blog-grid-new { grid-template-columns: 1fr !important; }
           .how-grid-new { grid-template-columns: 1fr !important; }
           .chips-row { flex-wrap: wrap; }
+          .how-step-new { border-left: none !important; border-top: 1px solid rgba(255,255,255,0.06) !important; padding-left: 0 !important; padding-top: 32px !important; margin-top: 32px; }
+          .mobile-cta-fixed { display: flex !important; }
         }
+        .mobile-cta-fixed { display: none; }
       `}</style>
 
-      {/* Background */}
+      {/* Background grid */}
       <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}>
         <div style={{ position: "absolute", top: "-5%", left: "70%", width: 400, height: 400, borderRadius: "50%", background: "rgba(0,212,170,0.04)", filter: "blur(80px)" }} />
         <div style={{ position: "absolute", top: "40%", left: "-10%", width: 350, height: 350, borderRadius: "50%", background: "rgba(0,100,200,0.03)", filter: "blur(80px)" }} />
@@ -208,7 +222,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       </div>
 
       {/* Navbar */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 28px", borderBottom: `1px solid ${T.border}`, backdropFilter: "blur(12px)", background: "rgba(6,9,15,0.8)" }}>
+      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 28px", borderBottom: `1px solid ${T.border}`, backdropFilter: "blur(12px)", background: "rgba(6,9,15,0.85)" }}>
         <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.accent, boxShadow: `0 0 10px ${T.accent}`, animation: "pulse 2s ease infinite" }} />
           <span style={{ fontFamily: T.fontDisplay, fontSize: 18, fontWeight: 800, letterSpacing: -0.5, color: T.text }}>
@@ -216,7 +230,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </span>
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-          <Link href={`/${locale}/blog`} style={{ color: T.textSoft, fontSize: 13, textDecoration: "none", transition: "color 0.2s" }}>
+          <Link href={`/${locale}/blog`} style={{ color: T.textSoft, fontSize: 13, textDecoration: "none" }}>
             {lang === "ru" ? "Путеводитель" : lang === "az" ? "Bələdçi" : lang === "tr" ? "Rehber" : "Travel Guide"}
           </Link>
           <Link href={`/${locale}/contact`} style={{ color: T.textSoft, fontSize: 13, textDecoration: "none" }}>
@@ -227,83 +241,72 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               <Link key={l} href={`/${l}`} style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, color: locale === l ? T.accent : T.textMuted, background: locale === l ? "rgba(0,212,170,0.08)" : "transparent", textDecoration: "none", fontWeight: locale === l ? 600 : 400 }}>{l.toUpperCase()}</Link>
             ))}
           </div>
-          <Link href={`/${locale}/planner`} className="home-cta-primary" style={{ padding: "9px 20px", fontSize: 12 }}>
-            {t.cta} →
-          </Link>
+          <Link href={`/${locale}/planner`} className="nav-cta">{t.cta} →</Link>
         </div>
       </nav>
 
-    {/* Hero */}
-<section style={{ position: "relative", zIndex: 5, minHeight: "100vh", display: "flex", alignItems: "center", padding: "0 48px", overflow: "hidden" }}>
-  <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/images/baku-hero.jpg')", backgroundSize: "cover", backgroundPosition: "center 40%", opacity: 0.45, zIndex: 0 }} />
-  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(6,9,15,0.85) 0%, rgba(6,9,15,0.6) 50%, rgba(6,9,15,0.3) 100%)", zIndex: 1 }} />
-  <div style={{ position: "relative", zIndex: 2, maxWidth: 1280, margin: "0 auto", width: "100%", paddingTop: 80 }}>
+      {/* Hero */}
+      <section style={{ position: "relative", zIndex: 5, minHeight: "100vh", display: "flex", alignItems: "center", padding: "0 48px", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "url('/images/baku-hero.jpg')", backgroundSize: "cover", backgroundPosition: "center 40%", opacity: 0.45, zIndex: 0 }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(6,9,15,0.92) 0%, rgba(6,9,15,0.75) 50%, rgba(6,9,15,0.4) 100%)", zIndex: 1 }} />
+        <div style={{ position: "relative", zIndex: 2, maxWidth: 1280, margin: "0 auto", width: "100%", paddingTop: 80 }}>
 
-         {/* Live data chips */}
+          {/* Data chips */}
           <FadeIn delay={0}>
-            <div className="chips-row" style={{ display: "flex", gap: 10, marginBottom: 40 }}>
+            <div className="chips-row" style={{ display: "flex", gap: 10, marginBottom: 48 }}>
               {weather.temp !== null && (
                 <div className="data-chip">
-                  <span style={{ fontSize: 16 }}>🌤</span>
+                  <span style={{ fontSize: 15 }}>🌤</span>
                   <div>
-                    <div style={{ fontSize: 10, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.8 }}>{t.weatherLabel}</div>
-                    <div style={{ fontSize: 13, color: T.accent, fontWeight: 600 }}>{weather.temp}°C, {weather.description}</div>
+                    <div style={{ fontSize: 9, color: T.textMuted, textTransform: "uppercase", letterSpacing: 1 }}>{t.weatherLabel}</div>
+                    <div style={{ fontSize: 12, color: T.accent, fontWeight: 600 }}>{weather.temp}°C, {weather.description}</div>
                   </div>
                 </div>
               )}
               {currency.rub && (
                 <div className="data-chip">
-                  <span style={{ fontSize: 16 }}>💱</span>
+                  <span style={{ fontSize: 15 }}>💱</span>
                   <div>
-                    <div style={{ fontSize: 10, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.8 }}>{t.rubLabel}</div>
-                    <div style={{ fontSize: 11, color: T.accent, fontWeight: 600, lineHeight: 1.6 }}>
-                      {currency.rub && <span>{currency.rub} ₽</span>}
-                      {currency.usd && <span> · ${currency.usd}</span>}
-                      {currency.eur && <span> · €{currency.eur}</span>}
-                      {currency.try_ && <span> · ₺{currency.try_}</span>}
-                      {currency.aed && <span> · {currency.aed} د.إ</span>}
+                    <div style={{ fontSize: 9, color: T.textMuted, textTransform: "uppercase", letterSpacing: 1 }}>{t.rubLabel}</div>
+                    <div style={{ fontSize: 12, color: T.accent, fontWeight: 600 }}>
+                      {currency.rub} ₽ · ${currency.usd} · €{currency.eur} · ₺{currency.try_} · {currency.aed} د.إ
                     </div>
                   </div>
                 </div>
               )}
-           </div>
+            </div>
           </FadeIn>
 
+          {/* Headline */}
           <FadeIn delay={100}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.accent, animation: "pulse 2s ease infinite" }} />
               <span style={{ fontSize: 11, color: T.accent, letterSpacing: 3, textTransform: "uppercase", fontWeight: 600 }}>{t.badge}</span>
             </div>
-            <h1 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(3rem, 6vw, 6.5rem)", fontWeight: 800, lineHeight: 0.95, margin: "0 0 16px", letterSpacing: -2, whiteSpace: "pre-line" }}>
-              {t.headline}{"\n"}
-              <span style={{ color: T.accent }}>{t.accent}</span>
+            <h1 className="hero-headline" style={{ fontFamily: T.fontDisplay, fontSize: "clamp(3.5rem, 7vw, 7rem)", fontWeight: 800, lineHeight: 0.95, margin: "0 0 8px", letterSpacing: -2, whiteSpace: "pre-line" }}>
+              {t.headline}
+            </h1>
+            <h1 className="hero-headline" style={{ fontFamily: T.fontDisplay, fontSize: "clamp(3.5rem, 7vw, 7rem)", fontWeight: 800, lineHeight: 0.95, margin: "0 0 32px", letterSpacing: -2, color: T.accent }}>
+              {t.accent}
             </h1>
           </FadeIn>
 
+          {/* Sub + CTA */}
           <FadeIn delay={200}>
-            <div className="hero-cols" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center", marginTop: 32 }}>
-              <p style={{ color: T.textSoft, fontSize: 18, lineHeight: 1.7, maxWidth: 420, margin: 0 }}>{t.sub}</p>
-              <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
-                <Link href={`/${locale}/planner`} className="home-cta-primary">{t.cta} →</Link>
-              </div>
-            </div>
+            <p className="hero-sub" style={{ color: T.textSoft, fontSize: 18, lineHeight: 1.7, maxWidth: 480, margin: "0 0 40px" }}>{t.sub}</p>
+            <Link href={`/${locale}/planner`} className="hero-cta">
+              {t.cta} →
+            </Link>
           </FadeIn>
         </div>
       </section>
 
       {/* Map */}
-      <section style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "0 48px 80px" }}>
+      <section style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "80px 48px 60px" }}>
         <FadeIn>
           <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 20 }}>✦ {t.mapTitle}</p>
-          <div style={{ borderRadius: 16, overflow: "hidden", border: `1px solid ${T.border}`, height: 400 }}>
-            <iframe
-              src={mapEmbedUrl}
-              width="100%"
-              height="100%"
-              style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
-              allowFullScreen
-              loading="lazy"
-            />
+          <div style={{ borderRadius: 16, overflow: "hidden", border: `1px solid ${T.border}`, height: 380 }}>
+            <iframe src={mapEmbedUrl} width="100%" height="100%" style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }} allowFullScreen loading="lazy" />
           </div>
         </FadeIn>
       </section>
@@ -315,7 +318,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </FadeIn>
         <div className="how-grid-new" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0 }}>
           {t.steps.map((step, i) => (
-            <div key={i} style={{ position: "relative", padding: "0 40px 0 0", borderLeft: i > 0 ? `1px solid ${T.border}` : "none", paddingLeft: i > 0 ? 40 : 0 }}>
+            <div key={i} className="how-step-new" style={{ position: "relative", padding: "0 40px 0 0", borderLeft: i > 0 ? `1px solid ${T.border}` : "none", paddingLeft: i > 0 ? 40 : 0 }}>
               <p style={{ position: "absolute", top: -20, right: i === 2 ? 0 : 40, fontFamily: T.fontDisplay, fontSize: "clamp(5rem, 8vw, 8rem)", color: "rgba(255,255,255,0.03)", fontWeight: 800, lineHeight: 1, margin: 0, userSelect: "none", pointerEvents: "none" }}>{step.num}</p>
               <p style={{ color: T.accent, fontSize: 9, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 16, fontWeight: 600 }}>{step.label}</p>
               <h3 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.2rem, 2vw, 1.6rem)", color: T.text, fontWeight: 800, margin: "0 0 12px", lineHeight: 1.2 }}>{step.title}</h3>
@@ -328,40 +331,47 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       {/* Blog */}
       <section style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "0 48px 120px" }}>
         <FadeIn>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 32, borderBottom: `1px solid ${T.border}`, paddingBottom: 20 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 28, borderBottom: `1px solid ${T.border}`, paddingBottom: 16 }}>
             <div>
-              <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 8 }}>✦ {t.editorialLabel}</p>
-              <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.6rem, 3vw, 2.4rem)", color: T.text, fontWeight: 800, margin: 0 }}>{t.blogTitle}</h2>
+              <p style={{ color: T.textMuted, fontSize: 9, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 6 }}>✦ {t.editorialLabel}</p>
+              <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.2rem, 2vw, 1.8rem)", color: T.textSoft, fontWeight: 700, margin: 0 }}>{t.blogTitle}</h2>
             </div>
             <Link href={`/${locale}/blog`} style={{ color: T.textMuted, fontSize: 11, textDecoration: "none", letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: `1px solid ${T.border}`, paddingBottom: 2 }}>{t.allArticles}</Link>
           </div>
         </FadeIn>
         <BlogCards>
-          <div className="blog-grid-new" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 16 }}>
+          <div className="blog-grid-new" style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 12 }}>
             <Link href={`/${locale}/blog/${blogPosts[0].slug[lang]}`} className="blog-card-new" style={{ gridRow: "span 2" }}>
-              <div style={{ overflow: "hidden", height: 320 }}>
+              <div style={{ overflow: "hidden", height: 260 }}>
                 <img src={blogPosts[0].image} alt={blogPosts[0].title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
-              <div style={{ padding: "20px 24px 28px" }}>
+              <div style={{ padding: "16px 20px 24px" }}>
                 <span style={{ color: T.accent, fontSize: 9, letterSpacing: "0.4em", textTransform: "uppercase" }}>{blogPosts[0].tag[lang]}</span>
-                <h3 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.2rem, 2vw, 1.6rem)", color: T.text, fontWeight: 700, margin: "10px 0 12px", lineHeight: 1.2 }}>{blogPosts[0].title[lang]}</h3>
-                <p style={{ color: T.textSoft, fontSize: 13, lineHeight: 1.7, margin: 0 }}>{blogPosts[0].desc[lang]}</p>
+                <h3 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1rem, 1.8vw, 1.4rem)", color: T.text, fontWeight: 700, margin: "8px 0 10px", lineHeight: 1.2 }}>{blogPosts[0].title[lang]}</h3>
+                <p style={{ color: T.textSoft, fontSize: 12, lineHeight: 1.7, margin: 0 }}>{blogPosts[0].desc[lang]}</p>
               </div>
             </Link>
             {blogPosts.slice(1).map(post => (
               <Link key={post.slug[lang]} href={`/${locale}/blog/${post.slug[lang]}`} className="blog-card-new">
-                <div style={{ overflow: "hidden", height: 180 }}>
+                <div style={{ overflow: "hidden", height: 140 }}>
                   <img src={post.image} alt={post.title[lang]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
-                <div style={{ padding: "16px 20px 20px" }}>
+                <div style={{ padding: "12px 16px 16px" }}>
                   <span style={{ color: T.accent, fontSize: 9, letterSpacing: "0.4em", textTransform: "uppercase" }}>{post.tag[lang]}</span>
-                  <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1rem", color: T.text, fontWeight: 700, margin: "8px 0 0", lineHeight: 1.3 }}>{post.title[lang]}</h3>
+                  <h3 style={{ fontFamily: T.fontDisplay, fontSize: "0.9rem", color: T.textSoft, fontWeight: 600, margin: "6px 0 0", lineHeight: 1.3 }}>{post.title[lang]}</h3>
                 </div>
               </Link>
             ))}
           </div>
         </BlogCards>
       </section>
+
+      {/* Mobile fixed CTA */}
+      <div className="mobile-cta-fixed" style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 99, padding: "12px 20px", background: "rgba(6,9,15,0.95)", borderTop: `1px solid ${T.border}`, backdropFilter: "blur(12px)", justifyContent: "center" }}>
+        <Link href={`/${locale}/planner`} className="hero-cta" style={{ width: "100%", justifyContent: "center", padding: "16px", fontSize: 15 }}>
+          {t.cta} →
+        </Link>
+      </div>
 
       <Footer locale={locale} />
     </main>
