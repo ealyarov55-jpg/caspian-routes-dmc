@@ -2,6 +2,16 @@
 
 import Link from "next/link";
 
+const T = {
+  accent: "#00d4aa",
+  border: "rgba(255,255,255,0.06)",
+  text: "#e8edf5",
+  textSoft: "#94a3b8",
+  textMuted: "#475569",
+  fontDisplay: "'Syne', 'DM Sans', system-ui, sans-serif",
+  font: "'DM Sans', system-ui, sans-serif",
+};
+
 const content = {
   ru: {
     description: "AI-планировщик путешествий по Азербайджану и Кавказу.",
@@ -21,6 +31,7 @@ const content = {
     copyright: "© 2026 Caspian Routes. Все права защищены.",
     privacy: "Политика конфиденциальности",
     terms: "Условия использования",
+    tagline: "Исследуйте Азербайджан с умом",
   },
   en: {
     description: "AI travel planner for Azerbaijan and the Caucasus.",
@@ -40,6 +51,7 @@ const content = {
     copyright: "© 2026 Caspian Routes. All rights reserved.",
     privacy: "Privacy Policy",
     terms: "Terms of Service",
+    tagline: "Explore Azerbaijan intelligently",
   },
   az: {
     description: "Azərbaycan və Qafqaz üçün AI səyahət planlayıcısı.",
@@ -59,6 +71,7 @@ const content = {
     copyright: "© 2026 Caspian Routes. Bütün hüquqlar qorunur.",
     privacy: "Məxfilik Siyasəti",
     terms: "İstifadə Şərtləri",
+    tagline: "Azərbaycanı ağıllı kəşf edin",
   },
   tr: {
     description: "Azerbaycan ve Kafkasya için AI seyahat planlayıcısı.",
@@ -78,6 +91,7 @@ const content = {
     copyright: "© 2026 Caspian Routes. Tüm hakları saklıdır.",
     privacy: "Gizlilik Politikası",
     terms: "Kullanım Koşulları",
+    tagline: "Azerbaycan'ı akıllıca keşfedin",
   },
 };
 
@@ -86,39 +100,55 @@ export default function Footer({ locale = "en" }: { locale?: string }) {
   const t = content[lang as keyof typeof content];
 
   return (
-    <footer style={{ background: "#021a1a", borderTop: "1px solid rgba(255,255,255,0.06)", fontFamily: "DM Sans, sans-serif" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "64px 24px 48px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 40 }}>
+    <footer style={{ background: "#06090f", borderTop: `1px solid ${T.border}`, fontFamily: T.font }}>
+      <style>{`
+        .footer-link { color: ${T.textMuted}; font-size: 13px; text-decoration: none; transition: color 0.2s; line-height: 1; }
+        .footer-link:hover { color: ${T.accent}; }
+        .footer-col-title { color: ${T.textSoft}; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 20px; }
+        @media(max-width: 767px) { .footer-grid { grid-template-columns: 1fr 1fr !important; } .footer-brand { grid-column: 1 / -1; } }
+      `}</style>
 
-          <div>
-            <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", marginBottom: 16 }}>
-              <img src="/favicon.png" alt="Caspian Routes" style={{ width: 40, height: 40, objectFit: "contain" }} />
-              <div>
-                <p style={{ fontFamily: "Cormorant Garamond, serif", color: "white", fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>Caspian Routes</p>
-                <p style={{ color: "#2dd4bf", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.15em" }}>AI Travel Planner</p>
-              </div>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "64px 48px 48px" }}>
+
+        {/* Top divider with glow */}
+        <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(0,212,170,0.3), transparent)", marginBottom: 48 }} />
+
+        <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 48 }}>
+
+          {/* Brand */}
+          <div className="footer-brand">
+            <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none", marginBottom: 16 }}>
+              <div style={{ width: 7, height: 7, borderRadius: "50%", background: T.accent, boxShadow: `0 0 8px ${T.accent}` }} />
+              <span style={{ fontFamily: T.fontDisplay, fontSize: 18, fontWeight: 800, letterSpacing: -0.5, color: T.text }}>
+                CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES
+              </span>
             </Link>
-            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, lineHeight: 1.7, maxWidth: 240 }}>
+            <p style={{ color: T.textMuted, fontSize: 13, lineHeight: 1.7, maxWidth: 280, margin: "0 0 20px" }}>
               {t.description}
+            </p>
+            <p style={{ color: "rgba(0,212,170,0.4)", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", margin: 0 }}>
+              {t.tagline}
             </p>
           </div>
 
+          {/* Guide links */}
           <div>
-            <h4 style={{ color: "white", fontSize: 13, fontWeight: 500, marginBottom: 16, textTransform: "uppercase", letterSpacing: "0.05em" }}>{t.guide}</h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <p className="footer-col-title">{t.guide}</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {t.links.map(link => (
-                <Link key={link.href} href={link.href} style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textDecoration: "none" }}>
+                <Link key={link.href} href={link.href} className="footer-link">
                   {link.label}
                 </Link>
               ))}
             </div>
           </div>
 
+          {/* Planner links */}
           <div>
-            <h4 style={{ color: "white", fontSize: 13, fontWeight: 500, marginBottom: 16, textTransform: "uppercase", letterSpacing: "0.05em" }}>{t.planner}</h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <p className="footer-col-title">{t.planner}</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {t.plannerLinks.map(link => (
-                <Link key={link.href} href={link.href} style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textDecoration: "none" }}>
+                <Link key={link.href} href={link.href} className="footer-link">
                   {link.label}
                 </Link>
               ))}
@@ -126,16 +156,16 @@ export default function Footer({ locale = "en" }: { locale?: string }) {
           </div>
 
         </div>
-      </div>
 
-      <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "20px 24px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>{t.copyright}</p>
-          <div style={{ display: "flex", gap: 20 }}>
-            <Link href={`/${locale}/privacy`} style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textDecoration: "none" }}>{t.privacy}</Link>
-            <Link href={`/${locale}/terms`} style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textDecoration: "none" }}>{t.terms}</Link>
+        {/* Bottom bar */}
+        <div style={{ marginTop: 48, paddingTop: 24, borderTop: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+          <p style={{ color: T.textMuted, fontSize: 12, margin: 0 }}>{t.copyright}</p>
+          <div style={{ display: "flex", gap: 24 }}>
+            <Link href={`/${locale}/privacy`} className="footer-link" style={{ fontSize: 12 }}>{t.privacy}</Link>
+            <Link href={`/${locale}/terms`} className="footer-link" style={{ fontSize: 12 }}>{t.terms}</Link>
           </div>
         </div>
+
       </div>
     </footer>
   );
