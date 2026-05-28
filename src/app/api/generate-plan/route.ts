@@ -70,7 +70,15 @@ Return ONLY valid JSON:
         throw new Error("Invalid JSON");
       }
     }
-
+// Force affiliate links regardless of what Claude generated
+plan.flights = {
+  tip: plan.flights?.tip || "Ищите билеты заранее для лучших цен",
+  url: "https://aviasales.tpk.ro/qyjqiTHn"
+};
+plan.car_rental = {
+  tip: plan.car_rental?.tip || "Аренда авто от надёжных партнёров",
+  url: "https://localrent.tpk.ro/BAFUsMGN"
+};
     if (plan.days) {
       plan.days = plan.days.map((day: any) => ({
         ...day,
