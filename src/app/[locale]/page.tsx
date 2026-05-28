@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Footer from "@/components/sections/Footer";
 import { FadeIn, BlogCards } from "@/components/sections/HomeAnimations";
-
+import AzerbaijanMap from "@/components/sections/AzerbaijanMap";
 const content = {
   ru: {
     badge: "AI Travel Planner",
@@ -356,6 +356,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 ))}
         </div>
       </section>
+     <AzerbaijanMap locale={locale} lang={lang} />
       {/* Map */}
       <section className="map-section" style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "80px 48px 60px" }}>
         <FadeIn>
