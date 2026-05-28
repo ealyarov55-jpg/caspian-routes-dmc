@@ -355,23 +355,113 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       </section>
      <AzerbaijanMap locale={locale} lang={lang} />
     
+{/* What you get */}
+<section style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "80px 48px 60px" }}>
+  <style>{`
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .feature-card { padding: 28px 24px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.3s ease, transform 0.3s ease; }
+    .feature-card:hover { border-color: rgba(0,212,170,0.2) !important; transform: translateY(-3px); }
+    .feature-icon { width: 56px; height: 56px; border-radius: 12px; background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.12); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    @media(max-width: 1024px) { .features-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+    @media(max-width: 767px) { .features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; } .feature-card { padding: 20px 16px; } }
+  `}</style>
 
-      {/* How it works */}
-      <section className="how-section" style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "0 48px 80px" }}>
-        <FadeIn>
-          <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 48 }}>✦ {t.howTitle}</p>
-        </FadeIn>
-        <div className="how-grid-new" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0 }}>
-          {t.steps.map((step, i) => (
-            <div key={i} className="how-step-new" style={{ position: "relative", padding: "0 40px 0 0", borderLeft: i > 0 ? `1px solid ${T.border}` : "none", paddingLeft: i > 0 ? 40 : 0 }}>
-              <p style={{ position: "absolute", top: -20, right: i === 2 ? 0 : 40, fontFamily: T.fontDisplay, fontSize: "clamp(5rem, 8vw, 8rem)", color: "rgba(255,255,255,0.03)", fontWeight: 800, lineHeight: 1, margin: 0, userSelect: "none", pointerEvents: "none" }}>{step.num}</p>
-              <p style={{ color: T.accent, fontSize: 9, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 16, fontWeight: 600 }}>{step.label}</p>
-              <h3 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.2rem, 2vw, 1.6rem)", color: T.text, fontWeight: 800, margin: "0 0 12px", lineHeight: 1.2 }}>{step.title}</h3>
-              <p style={{ color: T.textMuted, fontSize: 13, lineHeight: 1.7, margin: 0, maxWidth: 260 }}>{step.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+  <FadeIn>
+    <div style={{ marginBottom: 48 }}>
+      <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 12 }}>
+        ✦ {lang === "ru" ? "Преимущества" : lang === "az" ? "Üstünlüklər" : lang === "tr" ? "Avantajlar" : "Features"}
+      </p>
+      <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.6rem, 3vw, 2.4rem)", color: T.text, fontWeight: 800, margin: "0 0 8px" }}>
+        {lang === "ru" ? "Что вы получите" : lang === "az" ? "Nə əldə edəcəksiniz" : lang === "tr" ? "Ne elde edeceksiniz" : "What you will get"}
+      </h2>
+      <p style={{ color: T.textMuted, fontSize: 14, margin: 0 }}>
+        {lang === "ru" ? "Всё необходимое для идеальной поездки по Азербайджану" : lang === "az" ? "Azərbaycana mükəmməl səyahət üçün hər şey" : lang === "tr" ? "Azerbaycan'a mükemmel bir gezi için her şey" : "Everything you need for a perfect trip to Azerbaijan"}
+      </p>
+    </div>
+  </FadeIn>
+
+  <div className="features-grid">
+
+    {/* 1 */}
+    <div className="feature-card">
+      <div className="feature-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 3C14 3 7 8.5 7 15a7 7 0 0014 0c0-6.5-7-12-7-12z" stroke="#00d4aa" strokeWidth="1.6" strokeLinejoin="round"/><circle cx="14" cy="15" r="2.5" fill="rgba(0,212,170,0.2)" stroke="#00d4aa" strokeWidth="1.4"/></svg>
+      </div>
+      <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1rem", color: T.text, fontWeight: 800, margin: "0 0 8px", lineHeight: 1.3 }}>
+        {lang === "ru" ? "Персональный маршрут за 2 минуты" : lang === "az" ? "2 dəqiqədə fərdi marşrut" : lang === "tr" ? "2 dakikada kişisel rota" : "Personal itinerary in 2 minutes"}
+      </h3>
+      <p style={{ color: T.textMuted, fontSize: 13, margin: 0, lineHeight: 1.6 }}>
+        {lang === "ru" ? "ИИ учитывает ваши предпочтения, количество дней и стиль путешествия." : lang === "az" ? "AI sizin seçimlərinizi və səyahət üslubunu nəzərə alır." : lang === "tr" ? "AI tercihlerinizi ve seyahat tarzınızı dikkate alır." : "AI considers your preferences, trip duration and travel style."}
+      </p>
+    </div>
+
+    {/* 2 */}
+    <div className="feature-card">
+      <div className="feature-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="6" width="20" height="16" rx="3" stroke="#00d4aa" strokeWidth="1.6"/><path d="M4 11h20" stroke="#00d4aa" strokeWidth="1.4"/><circle cx="10" cy="17" r="2" fill="rgba(0,212,170,0.2)" stroke="#00d4aa" strokeWidth="1.4"/><path d="M14 16.5h6M14 18.5h4" stroke="#00d4aa" strokeWidth="1.2" strokeLinecap="round"/></svg>
+      </div>
+      <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1rem", color: T.text, fontWeight: 800, margin: "0 0 8px", lineHeight: 1.3 }}>
+        {lang === "ru" ? "Только реальные локации" : lang === "az" ? "Yalnız real lokasiyalar" : lang === "tr" ? "Sadece gerçek lokasyonlar" : "Only real locations"}
+      </h3>
+      <p style={{ color: T.textMuted, fontSize: 13, margin: 0, lineHeight: 1.6 }}>
+        {lang === "ru" ? "Проверенные места Азербайджана с актуальной информацией." : lang === "az" ? "Azərbaycanın yoxlanılmış yerləri." : lang === "tr" ? "Azerbaycan'ın doğrulanmış yerleri." : "Verified places in Azerbaijan with up-to-date information."}
+      </p>
+    </div>
+
+    {/* 3 */}
+    <div className="feature-card">
+      <div className="feature-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 14h18M17 8l6 6-6 6" stroke="#00d4aa" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/><path d="M9 6v16" stroke="#00d4aa" strokeWidth="1.4" strokeLinecap="round" strokeDasharray="2 3"/></svg>
+      </div>
+      <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1rem", color: T.text, fontWeight: 800, margin: "0 0 8px", lineHeight: 1.3 }}>
+        {lang === "ru" ? "Прямые ссылки на бронирование" : lang === "az" ? "Birbaşa rezervasiya linkləri" : lang === "tr" ? "Doğrudan rezervasyon bağlantıları" : "Direct booking links"}
+      </h3>
+      <p style={{ color: T.textMuted, fontSize: 13, margin: 0, lineHeight: 1.6 }}>
+        {lang === "ru" ? "Отели, экскурсии и активности от партнёров." : lang === "az" ? "Tərəfdaşlardan otellər, ekskursiyalar." : lang === "tr" ? "Partnerlerden oteller, turlar ve aktiviteler." : "Hotels, tours and activities from our partners."}
+      </p>
+    </div>
+
+    {/* 4 */}
+    <div className="feature-card">
+      <div className="feature-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="10" stroke="#00d4aa" strokeWidth="1.6"/><path d="M14 9v5l3.5 2" stroke="#00d4aa" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      </div>
+      <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1rem", color: T.text, fontWeight: 800, margin: "0 0 8px", lineHeight: 1.3 }}>
+        {lang === "ru" ? "Умный учёт пожеланий" : lang === "az" ? "Ağıllı istək uçotu" : lang === "tr" ? "Akıllı tercih eşleştirme" : "Smart preference matching"}
+      </h3>
+      <p style={{ color: T.textMuted, fontSize: 13, margin: 0, lineHeight: 1.6 }}>
+        {lang === "ru" ? "Природа, история, еда, отдых с детьми или активный отдых." : lang === "az" ? "Təbiət, tarix, qida, uşaqlarla istirahət." : lang === "tr" ? "Doğa, tarih, yemek, aile veya aktif seyahat." : "Nature, history, food, family or active travel."}
+      </p>
+    </div>
+
+    {/* 5 */}
+    <div className="feature-card">
+      <div className="feature-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M9 3h10l6 6v16H3V3h6z" stroke="#00d4aa" strokeWidth="1.6" strokeLinejoin="round"/><path d="M19 3v6h6" stroke="#00d4aa" strokeWidth="1.4" strokeLinejoin="round"/><path d="M7 14h14M7 18h10M7 22h6" stroke="#00d4aa" strokeWidth="1.2" strokeLinecap="round"/></svg>
+      </div>
+      <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1rem", color: T.text, fontWeight: 800, margin: "0 0 8px", lineHeight: 1.3 }}>
+        {lang === "ru" ? "Красивый PDF-экспорт" : lang === "az" ? "Gözəl PDF ixracı" : lang === "tr" ? "Güzel PDF dışa aktarma" : "Beautiful PDF export"}
+      </h3>
+      <p style={{ color: T.textMuted, fontSize: 13, margin: 0, lineHeight: 1.6 }}>
+        {lang === "ru" ? "Полный маршрут с картой, рекомендациями и контактами." : lang === "az" ? "Xəritə və məsləhətlərlə tam marşrut." : lang === "tr" ? "Harita ve ipuçlarıyla tam rota." : "Full itinerary with map, tips and contacts."}
+      </p>
+    </div>
+
+    {/* 6 */}
+    <div className="feature-card">
+      <div className="feature-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 3l2.2 4.5 5 .7-3.6 3.5.85 4.9L14 14.2l-4.45 2.4.85-4.9L6.8 8.2l5-.7L14 3z" stroke="#00d4aa" strokeWidth="1.6" strokeLinejoin="round"/><path d="M9 22h10M11 25h6" stroke="#00d4aa" strokeWidth="1.4" strokeLinecap="round"/></svg>
+      </div>
+      <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1rem", color: T.text, fontWeight: 800, margin: "0 0 8px", lineHeight: 1.3 }}>
+        {lang === "ru" ? "Без регистрации" : lang === "az" ? "Qeydiyyat tələb olunmur" : lang === "tr" ? "Kayıt gerekmez" : "No registration needed"}
+      </h3>
+      <p style={{ color: T.textMuted, fontSize: 13, margin: 0, lineHeight: 1.6 }}>
+        {lang === "ru" ? "Полностью бесплатно и без лишних шагов." : lang === "az" ? "Tamamilə pulsuz və əlavə addımlar yoxdur." : lang === "tr" ? "Tamamen ücretsiz ve ekstra adım yok." : "Completely free and no extra steps."}
+      </p>
+    </div>
+
+  </div>
+</section>
 
       {/* Blog */}
       <section className="blog-section" style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "0 48px 120px" }}>
