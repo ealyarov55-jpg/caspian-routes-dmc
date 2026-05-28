@@ -224,7 +224,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           .nav-desktop-links { display: none !important; }
           .nav-lang { display: flex !important; }
           .nav-logo-text { font-size: 13px !important; }
-          .nav-cta { display: none !important; }
        .dest-card { border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.3s ease, transform 0.3s ease; }
         .dest-card:hover { border-color: rgba(0,212,170,0.3); transform: translateY(-4px); }
         .dest-card:hover .dest-img { transform: scale(1.06); }
