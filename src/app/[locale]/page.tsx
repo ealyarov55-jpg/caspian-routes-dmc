@@ -328,14 +328,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </FadeIn>
         <div className="dest-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
           {[
-  { name: lang === "ru" ? "Баку" : "Baku", desc: lang === "ru" ? "Столица и сердце Азербайджана" : "Capital of Azerbaijan", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "/images/Baku city aerial view.jpeg" },
-  { name: lang === "ru" ? "Габала" : "Gabala", desc: lang === "ru" ? "Швейцария Азербайджана" : "Switzerland of Azerbaijan", days: lang === "ru" ? "от 3 дней" : "from 3 days", img: "/images/Gabala mountains winter skiing.jpg" },
+{ name: lang === "ru" ? "Баку" : "Baku", desc: lang === "ru" ? "Столица и сердце Азербайджана" : "Capital of Azerbaijan", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "/images/Baku city aerial view.jpeg" },
+  { name: lang === "ru" ? "Габала" : "Gabala", desc: lang === "ru" ? "Швейцария Азербайджана" : "Switzerland of Azerbaijan", days: lang === "ru" ? "от 3 дней" : "from 3 days", img: "/images/gabala azerbaijan nature forest.jpg" },
   { name: lang === "ru" ? "Шеки" : "Sheki", desc: lang === "ru" ? "Древний город Шёлкового пути" : "Ancient Silk Road city", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "/images/Sheki palace Azerbaijan.jpg" },
-  { name: lang === "ru" ? "Гобустан" : "Gobustan", desc: lang === "ru" ? "Петроглифы и грязевые вулканы" : "Petroglyphs and mud volcanoes", days: lang === "ru" ? "от 1 дня" : "from 1 day", img: "/images/Gobustan petroglyphs mud volcanoes.jpg" },
-  { name: lang === "ru" ? "Хыналыг" : "Khinalug", desc: lang === "ru" ? "Высокогорное село" : "High mountain village", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "/images/pozziss-azerbaijan-4856054_1920.jpg" },
-  { name: lang === "ru" ? "Лагич" : "Lahij", desc: lang === "ru" ? "Деревня мастеров" : "Village of craftsmen", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "/images/sheki.jpg" },
-  { name: lang === "ru" ? "Шахдаг" : "Shahdag", desc: lang === "ru" ? "Горный курорт" : "Mountain resort", days: lang === "ru" ? "от 3 дней" : "from 3 days", img: "/images/Baku winter Azerbaijan.jpg" },
-  { name: lang === "ru" ? "Губа" : "Guba", desc: lang === "ru" ? "Яблочный край" : "Apple region", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "/images/Azerbaijan.jpg" },
+  { name: lang === "ru" ? "Гобустан" : "Gobustan", desc: lang === "ru" ? "Петроглифы и грязевые вулканы" : "Petroglyphs and mud volcanoes", days: lang === "ru" ? "от 1 дня" : "from 1 day", img: "/images/gobustan mud volcanoes petroglyphs.jpg" },
+  { name: lang === "ru" ? "Хыналыг" : "Khinalug", desc: lang === "ru" ? "Высокогорное село" : "High mountain village", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "/images/khinalug village azerbaijan mountains.jpg" },
+  { name: lang === "ru" ? "Лагич" : "Lahij", desc: lang === "ru" ? "Деревня мастеров" : "Village of craftsmen", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "/images/lahij village craftsmen azerbaijan copper.jpg" },
+  { name: lang === "ru" ? "Шахдаг" : "Shahdag", desc: lang === "ru" ? "Горный курорт" : "Mountain resort", days: lang === "ru" ? "от 3 дней" : "from 3 days", img: "/images/shahdag ski resort azerbaijan winter.jpg" },
+  { name: lang === "ru" ? "Губа" : "Guba", desc: lang === "ru" ? "Яблочный край" : "Apple region", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "/images/Quba.jpg" },
 ].map((dest, i) => (
   <Link key={i} href={`/${locale}/planner`} className="dest-card" style={{ textDecoration: "none", borderRadius: 12, overflow: "hidden", position: "relative", display: "block", background: "#0a0f1a" }}>
     <div style={{ position: "relative", height: 200, overflow: "hidden" }}>
