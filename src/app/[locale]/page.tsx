@@ -357,15 +357,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </div>
       </section>
      <AzerbaijanMap locale={locale} lang={lang} />
-      {/* Map */}
-      <section className="map-section" style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "80px 48px 60px" }}>
-        <FadeIn>
-          <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 20 }}>✦ {t.mapTitle}</p>
-          <div style={{ borderRadius: 16, overflow: "hidden", border: `1px solid ${T.border}`, height: 380 }}>
-            <iframe src={mapEmbedUrl} width="100%" height="100%" style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }} allowFullScreen loading="lazy" />
-          </div>
-        </FadeIn>
-      </section>
+    
 
       {/* How it works */}
       <section className="how-section" style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "0 48px 80px" }}>
