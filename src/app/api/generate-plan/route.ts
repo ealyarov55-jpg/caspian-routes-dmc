@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const dietLine = diet && diet.length > 0 ? `- Diet/Restrictions: ${diet.join(", ")}` : "";
     const paceLine = pace ? `- Pace/Rhythm: ${pace}` : "";
 
-    const prompt = `${langInstruction} ALL content must be in this language — every word. Zero English if locale is not English.
+   const prompt = `${langInstruction} ALL content must be in this language — every word. Zero English if locale is not English.
 
 You are a premium travel curator for Azerbaijan. Create an editorial itinerary.
 
@@ -26,6 +26,7 @@ RULES:
 - NO hotels in daily schedule — only in curated_stays
 - curated_stays: 3 real hotels matching budget and regions visited
 - All hotel/cafe/street names must be real and exist in Azerbaijan
+- lat/lng must be REAL GPS coordinates of the actual location in Azerbaijan
 
 Return ONLY valid JSON:
 {
@@ -35,9 +36,9 @@ Return ONLY valid JSON:
     {
       "day": 1,
       "title": "editorial day title",
-      "morning": { "activity": "location", "description": "max 15 words", "tip": "practical tip", "curator_note": "1 insider secret" },
-      "afternoon": { "activity": "location", "description": "max 15 words", "tip": "tip", "curator_note": "insider secret" },
-      "evening": { "activity": "location", "description": "max 15 words", "tip": "tip", "curator_note": "insider secret" },
+      "morning": { "activity": "real place name", "description": "max 15 words", "tip": "practical tip", "curator_note": "1 insider secret", "lat": 40.3953, "lng": 49.8822 },
+      "afternoon": { "activity": "real place name", "description": "max 15 words", "tip": "tip", "curator_note": "insider secret", "lat": 40.3667, "lng": 49.8370 },
+      "evening": { "activity": "real place name", "description": "max 15 words", "tip": "tip", "curator_note": "insider secret", "lat": 40.3777, "lng": 49.8920 },
       "excursion": { "name": "experience name", "search_query": "English search query" }
     }
   ],

@@ -328,42 +328,39 @@ export default function CaspianCommandCenter() {
   };
 
   const geocodePlan = async (planData: Plan): Promise<GeoDay[]> => {
-    setGeocoding(true);
-    try {
-      const allPlaces: string[] = [];
-      planData.days.forEach(day => {
-        allPlaces.push(day.morning.activity);
-        allPlaces.push(day.afternoon.activity);
-        allPlaces.push(day.evening.activity);
-      });
-
-      const res = await fetch("/api/geocode", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ places: allPlaces }),
-      });
-      const data = await res.json();
-      const geoMap: Record<string, { lat: number; lng: number }> = {};
-      data.results?.forEach((r: any) => { geoMap[r.place] = { lat: r.lat, lng: r.lng }; });
-
-      const days: GeoDay[] = planData.days.map((day, di) => ({
-        day: day.day,
-        title: day.title,
-        color: DAY_COLORS[di % DAY_COLORS.length],
-        stops: [
-          { time: "Утро", label: "morning", activity: day.morning.activity, description: day.morning.description, tip: day.morning.tip, ...(geoMap[day.morning.activity] || { lat: 40.4093, lng: 49.8671 }) },
-          { time: "День", label: "afternoon", activity: day.afternoon.activity, description: day.afternoon.description, tip: day.afternoon.tip, ...(geoMap[day.afternoon.activity] || { lat: 40.4093, lng: 49.8671 }) },
-          { time: "Вечер", label: "evening", activity: day.evening.activity, description: day.evening.description, tip: day.evening.tip, ...(geoMap[day.evening.activity] || { lat: 40.4093, lng: 49.8671 }) },
-        ],
-      }));
-
-      return days;
-    } catch {
-      return [];
-    } finally {
-      setGeocoding(false);
-    }
-  };
+  const days: GeoDay[] = planData.days.map((day, di) => ({
+    day: day.day,
+    title: day.title,
+    color: DAY_COLORS[di % DAY_COLORS.length],
+    stops: [
+      {
+        time: "Утро", label: "morning",
+        activity: day.morning.activity,
+        description: day.morning.description,
+        tip: day.morning.tip,
+        lat: (day.morning as any).lat || 40.4093,
+        lng: (day.morning as any).lng || 49.8671,
+      },
+      {
+        time: "День", label: "afternoon",
+        activity: day.afternoon.activity,
+        description: day.afternoon.description,
+        tip: day.afternoon.tip,
+        lat: (day.afternoon as any).lat || 40.4093,
+        lng: (day.afternoon as any).lng || 49.8671,
+      },
+      {
+        time: "Вечер", label: "evening",
+        activity: day.evening.activity,
+        description: day.evening.description,
+        tip: day.evening.tip,
+        lat: (day.evening as any).lat || 40.4093,
+        lng: (day.evening as any).lng || 49.8671,
+      },
+    ],
+  }));
+  return days;
+};
 
   const generatePlan = async (finalPrefs: Prefs) => {
     aiSay("Отлично! У меня всё есть. Составляю персональный маршрут... ✨", 400);
