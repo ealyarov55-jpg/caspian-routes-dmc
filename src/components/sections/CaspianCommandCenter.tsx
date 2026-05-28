@@ -29,10 +29,9 @@ type Prefs = {
   pace: string | null;
 };
 
-type Message = {
-  role: "ai" | "user";
-  text: string;
-};
+type Message = { role: "ai" | "user"; text: string };
+
+type ActiveOptions = "duration" | "group" | "budget" | "interests" | "pace" | "post" | null;
 
 type Plan = {
   plan_title: string;
@@ -51,8 +50,6 @@ type Plan = {
   car_rental?: { tip: string; url: string };
 };
 
-const STEPS = ["duration", "group", "budget", "interests", "pace"] as const;
-
 const OPTIONS = {
   duration: [
     { icon: "🌸", label: "1–3 дня", value: "3" },
@@ -61,10 +58,10 @@ const OPTIONS = {
     { icon: "🌍", label: "8+ дней", value: "10+" },
   ],
   group: [
-    { icon: "🙋", label: "Один / одна" },
-    { icon: "💑", label: "Пара" },
-    { icon: "👨‍👩‍👧‍👦", label: "С детьми" },
-    { icon: "👫", label: "Друзья" },
+    { icon: "🙋", label: "Один / одна", value: "Один" },
+    { icon: "💑", label: "Пара", value: "Пара" },
+    { icon: "👨‍👩‍👧‍👦", label: "С детьми", value: "С детьми" },
+    { icon: "👫", label: "Друзья", value: "Друзья" },
   ],
   budget: [
     { icon: "💚", label: "Эконом", value: "$300-500" },
@@ -77,14 +74,14 @@ const OPTIONS = {
     { icon: "⚡", label: "Насыщенный", value: "Насыщенный" },
     { icon: "⚖️", label: "Сбалансированный", value: "Сбалансированный" },
   ],
-};
-
-const QUESTIONS = {
-  duration: "Когда планируете поехать и на сколько дней?",
-  group: "С кем едете?",
-  budget: "Какой примерный бюджет на человека?",
-  interests: "Что вас привлекает в Азербайджане? Выберите всё, что нравится:",
-  pace: "Последний вопрос — какой темп вам ближе?",
+  post: [
+    { icon: "✏️", label: "Изменить маршрут", value: "Изменить маршрут" },
+    { icon: "💰", label: "Сделать дешевле", value: "Сделать дешевле" },
+    { icon: "🏨", label: "Посоветуй отели", value: "Посоветуй отели" },
+    { icon: "🍽", label: "Рестораны на маршруте", value: "Рестораны на маршруте" },
+    { icon: "🚕", label: "Как добраться", value: "Как добраться" },
+    { icon: "📋", label: "Новый маршрут", value: "Новый маршрут" },
+  ],
 };
 
 const INTERESTS_OPTIONS = [
@@ -104,7 +101,6 @@ function DayCard({ day }: { day: Plan["days"][0] }) {
   const labels = { morning: "Утро", afternoon: "День", evening: "Вечер" };
   const colors = { morning: T.accent, afternoon: "#c9a84c", evening: "#a78bfa" };
   const active = slots[activeSlot];
-
   return (
     <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 12, overflow: "hidden", marginBottom: 12 }}>
       <div style={{ padding: "12px 16px", borderBottom: `1px solid ${T.border}` }}>
@@ -141,7 +137,6 @@ export default function CaspianCommandCenter() {
   const locale = (params?.locale as string) || "ru";
 
   const [messages, setMessages] = useState<Message[]>([]);
-  const [step, setStep] = useState(0);
   const [prefs, setPrefs] = useState<Prefs>({ duration: null, group: null, budget: null, interests: [], pace: null });
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -149,85 +144,81 @@ export default function CaspianCommandCenter() {
   const [plan, setPlan] = useState<Plan | null>(null);
   const [generating, setGenerating] = useState(false);
   const [chatHistory, setChatHistory] = useState<{ role: string; content: string }[]>([]);
-  const [postPlanOptions, setPostPlanOptions] = useState(false);
   const [activeDay, setActiveDay] = useState<number | null>(null);
+  const [step, setStep] = useState(0); // 0-4 анкета, 5 = план готов
+  const [activeOptions, setActiveOptions] = useState<ActiveOptions>(null);
 
   const chatRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const scrollBottom = () => {
-    setTimeout(() => {
-      if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }, 50);
-  };
+  const scrollBottom = () => setTimeout(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, 80);
 
-  const addAIMessage = (text: string, delay = 800) => {
+  const pushAI = (text: string) => setMessages(prev => [...prev, { role: "ai", text }]);
+  const pushUser = (text: string) => setMessages(prev => [...prev, { role: "user", text }]);
+
+  const aiSay = (text: string, delay = 900, then?: () => void) => {
+    setActiveOptions(null);
     setIsTyping(true);
     setTimeout(() => {
       setIsTyping(false);
-      setMessages(prev => [...prev, { role: "ai", text }]);
+      pushAI(text);
       scrollBottom();
+      if (then) setTimeout(then, 300);
     }, delay);
-  };
-
-  const addUserMessage = (text: string) => {
-    setMessages(prev => [...prev, { role: "user", text }]);
-    scrollBottom();
   };
 
   // Init
   useEffect(() => {
-    setTimeout(() => {
-      addAIMessage("Привет! Я помогу составить маршрут по Азербайджану специально под вас.\n\nПодготовлю персональный итинерарий за 5 вопросов — это займёт меньше минуты. 🗺", 600);
-      setTimeout(() => addAIMessage(QUESTIONS.duration), 1800);
-    }, 400);
+    aiSay("Привет! Я помогу составить маршрут по Азербайджану специально под вас.\n\nПодготовлю персональный итинерарий за 5 вопросов — займёт меньше минуты. 🗺", 700, () => {
+      aiSay("Когда планируете поехать и на сколько дней?", 800, () => setActiveOptions("duration"));
+    });
   }, []);
 
-  const handleOption = async (value: string, label: string) => {
+  const handleOption = (value: string, label: string) => {
     if (generating) return;
-    addUserMessage(label);
+    setActiveOptions(null);
+    pushUser(label);
 
-    const currentStep = STEPS[step];
+    if (step === 0) {
+      const np = { ...prefs, duration: value };
+      setPrefs(np); setStep(1);
+      aiSay("С кем едете?", 700, () => setActiveOptions("group"));
 
-    if (currentStep === "duration") {
-      const newPrefs = { ...prefs, duration: value };
-      setPrefs(newPrefs);
-      setStep(1);
-      setTimeout(() => addAIMessage(QUESTIONS.group), 600);
+    } else if (step === 1) {
+      const np = { ...prefs, group: value };
+      setPrefs(np); setStep(2);
+      aiSay("Какой примерный бюджет на человека?", 700, () => setActiveOptions("budget"));
 
-    } else if (currentStep === "group") {
-      const newPrefs = { ...prefs, group: label };
-      setPrefs(newPrefs);
-      setStep(2);
-      setTimeout(() => addAIMessage(QUESTIONS.budget), 600);
+    } else if (step === 2) {
+      const np = { ...prefs, budget: value };
+      setPrefs(np); setStep(3);
+      aiSay("Что вас привлекает в Азербайджане? Выберите всё что нравится:", 700, () => setActiveOptions("interests"));
 
-    } else if (currentStep === "budget") {
-      const newPrefs = { ...prefs, budget: value };
-      setPrefs(newPrefs);
-      setStep(3);
-      setTimeout(() => addAIMessage(QUESTIONS.interests), 600);
+    } else if (step === 3) {
+      // pace
+      const np = { ...prefs, pace: value };
+      setPrefs(np); setStep(5);
+      generatePlan({ ...prefs, pace: value });
 
-    } else if (currentStep === "pace") {
-      const newPrefs = { ...prefs, pace: value };
-      setPrefs(newPrefs);
-      setStep(5);
-      setTimeout(() => generatePlan(newPrefs), 600);
+    } else if (step === 5) {
+      if (value === "Новый маршрут") { window.location.reload(); return; }
+      setActiveOptions(null);
+      pushUser(label);
+      continueChat(value);
     }
   };
 
   const handleInterestsDone = () => {
     const interests = selectedInterests.length > 0 ? selectedInterests : ["Разное"];
-    addUserMessage(interests.join(", "));
-    const newPrefs = { ...prefs, interests };
-    setPrefs(newPrefs);
-    setStep(4);
-    setTimeout(() => addAIMessage(QUESTIONS.pace), 600);
+    setActiveOptions(null);
+    pushUser(interests.join(", "));
+    const np = { ...prefs, interests };
+    setPrefs(np); setStep(4); // step 4 = pace
+    aiSay("Последний вопрос — какой темп вам ближе?", 700, () => setActiveOptions("pace"));
   };
 
   const generatePlan = async (finalPrefs: Prefs) => {
-    addAIMessage("Отлично! У меня всё есть. Составляю персональный маршрут... ✨", 400);
+    aiSay("Отлично! У меня всё есть. Составляю персональный маршрут... ✨", 400);
     setGenerating(true);
-
     try {
       const res = await fetch("/api/generate-plan", {
         method: "POST",
@@ -247,15 +238,13 @@ export default function CaspianCommandCenter() {
       if (data.plan) {
         setPlan(data.plan);
         setActiveDay(1);
-        setTimeout(() => {
-          addAIMessage("Маршрут готов! 🎉\n\nМогу скорректировать под ваши пожелания — добавить день, убрать место или найти альтернативу.", 600);
-          setTimeout(() => setPostPlanOptions(true), 1200);
-        }, 800);
+        scrollBottom();
+        aiSay("Маршрут готов! 🎉\n\nМогу скорректировать — добавить день, убрать место или найти альтернативу.", 1200, () => setActiveOptions("post"));
       } else {
-        addAIMessage("Ошибка генерации. Попробуйте ещё раз.");
+        aiSay("Ошибка генерации. Попробуйте ещё раз.");
       }
     } catch {
-      addAIMessage("Ошибка сети. Проверьте подключение.");
+      aiSay("Ошибка сети. Проверьте подключение.");
     }
     setGenerating(false);
   };
@@ -263,29 +252,26 @@ export default function CaspianCommandCenter() {
   const continueChat = async (userMsg: string) => {
     if (generating) return;
     setGenerating(true);
-    setPostPlanOptions(false);
     setIsTyping(true);
-
-    const systemPrompt = `Ты — travel-консультант по Азербайджану. Контекст: ${prefs.duration} дней, ${prefs.group}, бюджет ${prefs.budget}, интересы: ${prefs.interests.join(", ")}, темп ${prefs.pace}. Отвечай конкретно, по-русски. Максимум 150 слов.`;
-
+    setActiveOptions(null);
+    const system = `Ты — travel-консультант по Азербайджану. Контекст поездки: ${prefs.duration} дней, ${prefs.group}, бюджет ${prefs.budget}, интересы: ${prefs.interests.join(", ")}, темп ${prefs.pace}. Отвечай конкретно, по-русски. Максимум 150 слов.`;
     const newHistory = [...chatHistory, { role: "user", content: userMsg }];
-
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newHistory, system: systemPrompt }),
+        body: JSON.stringify({ messages: newHistory, system }),
       });
       const data = await res.json();
       const text = data.text || "Попробуйте переформулировать.";
       setChatHistory([...newHistory, { role: "assistant", content: text }]);
       setIsTyping(false);
-      setMessages(prev => [...prev, { role: "ai", text }]);
+      pushAI(text);
       scrollBottom();
-      setTimeout(() => setPostPlanOptions(true), 600);
+      setTimeout(() => setActiveOptions("post"), 400);
     } catch {
       setIsTyping(false);
-      addAIMessage("Ошибка. Попробуйте снова.");
+      aiSay("Ошибка. Попробуйте снова.");
     }
     setGenerating(false);
   };
@@ -294,73 +280,64 @@ export default function CaspianCommandCenter() {
     const text = inputValue.trim();
     if (!text || generating) return;
     setInputValue("");
-    addUserMessage(text);
+    pushUser(text);
+    setActiveOptions(null);
     if (step >= 5) {
       continueChat(text);
     } else {
-      addAIMessage("Понял! Давайте продолжим.");
+      // Свободный ввод во время анкеты — принимаем как ответ на текущий шаг
+      if (step === 0) { handleOption(text, text); }
+      else if (step === 1) { handleOption(text, text); }
+      else if (step === 2) { handleOption(text, text); }
+      else if (step === 4) { handleOption(text, text); }
+      else { aiSay("Выберите вариант выше или напишите свой ответ."); }
     }
   };
 
-  const postOptions = [
-    { icon: "✏️", label: "Изменить маршрут" },
-    { icon: "💰", label: "Сделать дешевле" },
-    { icon: "🏨", label: "Посоветуй отели" },
-    { icon: "🍽", label: "Рестораны на маршруте" },
-    { icon: "🚕", label: "Как добраться" },
-    { icon: "📋", label: "Новый маршрут" },
-  ];
+  const stepCount = 5;
+  const progressSteps = [0, 1, 2, 3, 4];
 
   return (
     <div style={{ display: "flex", height: "100vh", background: T.bg, color: T.text, fontFamily: T.font, overflow: "hidden" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
-        @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
         @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
         @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
-        * { box-sizing: border-box; }
-        .opt-btn:hover { border-color: ${T.accent} !important; color: ${T.accent} !important; background: ${T.accentGlow} !important; transform: translateY(-1px); }
-        .post-opt:hover { border-color: ${T.accent} !important; color: ${T.accent} !important; background: ${T.accentGlow} !important; }
-        .interest-btn.selected { border-color: ${T.accent} !important; color: ${T.accent} !important; background: ${T.accentGlow} !important; }
-        .day-tab.active { border-color: ${T.accent} !important; color: ${T.accent} !important; }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-thumb { background: rgba(0,212,170,0.2); border-radius: 2px; }
-        @media(max-width:767px) { .sidebar { display: none !important; } .planner-main { border-left: none !important; } }
+        *{box-sizing:border-box;}
+        .cr-opt:hover{border-color:${T.accent}!important;color:${T.accent}!important;background:${T.accentGlow}!important;transform:translateY(-1px);}
+        .cr-int.sel{border-color:${T.accent}!important;color:${T.accent}!important;background:${T.accentGlow}!important;}
+        .cr-daytab.act{border-color:${T.accent}!important;color:${T.accent}!important;background:${T.accentGlow}!important;}
+        ::-webkit-scrollbar{width:4px;height:4px;}
+        ::-webkit-scrollbar-thumb{background:rgba(0,212,170,0.2);border-radius:2px;}
+        @media(max-width:767px){.cr-sidebar{display:none!important;}.cr-main{border-left:none!important;}}
       `}</style>
 
       {/* Sidebar */}
-      <aside className="sidebar" style={{ width: 260, flexShrink: 0, background: T.sidebar, borderRight: `1px solid ${T.border}`, display: "flex", flexDirection: "column", padding: "24px 20px", position: "relative", overflow: "hidden" }}>
+      <aside className="cr-sidebar" style={{ width: 260, flexShrink: 0, background: T.sidebar, borderRight: `1px solid ${T.border}`, display: "flex", flexDirection: "column", padding: "24px 20px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -60, right: -60, width: 180, height: 180, borderRadius: "50%", background: "rgba(0,212,170,0.04)", filter: "blur(40px)", pointerEvents: "none" }} />
-
         <Link href={`/${locale}`} style={{ textDecoration: "none", marginBottom: 32 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.accent, boxShadow: `0 0 8px ${T.accent}`, animation: "pulse 2s ease infinite" }} />
-            <span style={{ fontFamily: T.fontDisplay, fontSize: 14, fontWeight: 800, color: T.text, letterSpacing: -0.3 }}>
-              CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES
-            </span>
+            <span style={{ fontFamily: T.fontDisplay, fontSize: 14, fontWeight: 800, color: T.text, letterSpacing: -0.3 }}>CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES</span>
           </div>
         </Link>
-
         <p style={{ fontSize: 9, letterSpacing: "0.25em", textTransform: "uppercase", color: T.textMuted, marginBottom: 16 }}>Профиль поездки</p>
-
         {[
-          { icon: "🗓", key: "duration", label: "Длительность", value: prefs.duration ? `${prefs.duration} дней` : null },
-          { icon: "👥", key: "group", label: "Состав", value: prefs.group },
-          { icon: "💳", key: "budget", label: "Бюджет", value: prefs.budget },
-          { icon: "🎯", key: "interests", label: "Интересы", value: prefs.interests.length > 0 ? prefs.interests.slice(0, 2).join(", ") + (prefs.interests.length > 2 ? "..." : "") : null },
-          { icon: "🚶", key: "pace", label: "Темп", value: prefs.pace },
-        ].map(item => (
-          <div key={item.key} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: `1px solid ${T.border}` }}>
+          { icon: "🗓", label: "Длительность", value: prefs.duration ? `${prefs.duration} дней` : null },
+          { icon: "👥", label: "Состав", value: prefs.group },
+          { icon: "💳", label: "Бюджет", value: prefs.budget },
+          { icon: "🎯", label: "Интересы", value: prefs.interests.length > 0 ? prefs.interests.slice(0, 2).join(", ") + (prefs.interests.length > 2 ? "..." : "") : null },
+          { icon: "🚶", label: "Темп", value: prefs.pace },
+        ].map((item, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: `1px solid ${T.border}` }}>
             <div style={{ width: 30, height: 30, borderRadius: 8, background: T.bgCard, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, flexShrink: 0 }}>{item.icon}</div>
             <div>
               <span style={{ fontSize: 10, color: T.textMuted, display: "block", marginBottom: 1 }}>{item.label}</span>
-              <span style={{ fontSize: 12, color: item.value ? T.textSoft : T.textMuted, fontStyle: item.value ? "normal" : "italic" }}>
-                {item.value || "Не указано"}
-              </span>
+              <span style={{ fontSize: 12, color: item.value ? T.textSoft : T.textMuted, fontStyle: item.value ? "normal" : "italic" }}>{item.value || "Не указано"}</span>
             </div>
           </div>
         ))}
-
         <div style={{ marginTop: "auto", paddingTop: 20 }}>
           <div style={{ display: "flex", gap: 6, padding: "6px 8px", borderRadius: 8, background: T.bgCard, border: `1px solid ${T.border}` }}>
             {["ru", "en", "az", "tr"].map(l => (
@@ -371,27 +348,25 @@ export default function CaspianCommandCenter() {
       </aside>
 
       {/* Main */}
-      <div className="planner-main" style={{ flex: 1, display: "flex", flexDirection: "column", borderLeft: `1px solid ${T.border}`, overflow: "hidden" }}>
+      <div className="cr-main" style={{ flex: 1, display: "flex", flexDirection: "column", borderLeft: `1px solid ${T.border}`, overflow: "hidden" }}>
 
         {/* Topbar */}
         <div style={{ padding: "14px 20px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-          <div>
-            <span style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 800, color: T.text }}>AI <span style={{ color: T.accent }}>планер</span> маршрутов</span>
-          </div>
+          <span style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 800, color: T.text }}>AI <span style={{ color: T.accent }}>планер</span> маршрутов</span>
           <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", borderRadius: 20, background: T.accentGlow, border: `1px solid ${T.accentBorder}` }}>
             <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.accent, animation: "pulse 2s ease infinite" }} />
             <span style={{ fontSize: 11, color: T.accent, fontWeight: 500 }}>ИИ активен</span>
           </div>
         </div>
 
-        {/* Progress bar */}
-        <div style={{ display: "flex", gap: 3, padding: "0 20px", paddingTop: 10, paddingBottom: 6, flexShrink: 0 }}>
-          {STEPS.map((_, i) => (
+        {/* Progress */}
+        <div style={{ display: "flex", gap: 3, padding: "10px 20px 6px", flexShrink: 0 }}>
+          {progressSteps.map(i => (
             <div key={i} style={{ flex: 1, height: 2, borderRadius: 2, background: i < step ? T.accent : i === step ? T.accentDim : T.bgCard, transition: "all 0.3s" }} />
           ))}
         </div>
 
-        {/* Chat area */}
+        {/* Chat */}
         <div ref={chatRef} style={{ flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 12 }}>
 
           {messages.map((msg, i) => (
@@ -405,23 +380,22 @@ export default function CaspianCommandCenter() {
             </div>
           ))}
 
-          {/* Typing indicator */}
+          {/* Typing */}
           {isTyping && (
             <div style={{ display: "flex", gap: 10, alignItems: "center", animation: "fadeUp 0.3s ease" }}>
               <div style={{ width: 30, height: 30, borderRadius: 8, background: T.accent, color: "#06090f", fontSize: 10, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center" }}>CR</div>
               <div style={{ display: "flex", gap: 4, padding: "10px 14px", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: "4px 12px 12px 12px" }}>
-                {[0, 1, 2].map(i => (
-                  <div key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: T.textMuted, animation: `bounce 0.9s ease-in-out ${i * 0.15}s infinite` }} />
-                ))}
+                {[0, 1, 2].map(i => <div key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: T.textMuted, animation: `bounce 0.9s ease-in-out ${i * 0.15}s infinite` }} />)}
               </div>
             </div>
           )}
 
-          {/* Quick options */}
-          {!generating && !isTyping && step < STEPS.length && STEPS[step] !== "interests" && STEPS[step] !== "pace" && step === messages.filter(m => m.role === "ai").length - 1 && (
-            <div style={{ paddingLeft: 40, display: "flex", flexWrap: "wrap", gap: 7, animation: "fadeUp 0.35s ease 0.1s both" }}>
-              {OPTIONS[STEPS[step] as keyof typeof OPTIONS]?.map((opt: any) => (
-                <button key={opt.label} className="opt-btn" onClick={() => handleOption(opt.value || opt.label, opt.label)}
+          {/* Options — управляются через activeOptions */}
+          {!isTyping && !generating && activeOptions && activeOptions !== "interests" && activeOptions !== "post" && (
+            <div style={{ paddingLeft: 40, display: "flex", flexWrap: "wrap", gap: 7, animation: "fadeUp 0.3s ease" }}>
+              {OPTIONS[activeOptions as keyof typeof OPTIONS]?.map((opt: any) => (
+                <button key={opt.label} className="cr-opt"
+                  onClick={() => handleOption(opt.value || opt.label, opt.label)}
                   style={{ padding: "7px 14px", border: `1px solid ${T.border}`, borderRadius: 20, background: T.bgCard, color: T.text, fontSize: 13, fontFamily: T.font, cursor: "pointer", transition: "all 0.18s", display: "flex", alignItems: "center", gap: 6 }}>
                   <span>{opt.icon}</span>{opt.label}
                 </button>
@@ -429,79 +403,54 @@ export default function CaspianCommandCenter() {
             </div>
           )}
 
-          {/* Pace options */}
-          {!generating && !isTyping && STEPS[step] === "pace" && step === messages.filter(m => m.role === "ai").length - 1 && (
-            <div style={{ paddingLeft: 40, display: "flex", flexWrap: "wrap", gap: 7, animation: "fadeUp 0.35s ease 0.1s both" }}>
-              {OPTIONS.pace.map(opt => (
-                <button key={opt.label} className="opt-btn" onClick={() => handleOption(opt.value, opt.label)}
-                  style={{ padding: "7px 14px", border: `1px solid ${T.border}`, borderRadius: 20, background: T.bgCard, color: T.text, fontSize: 13, fontFamily: T.font, cursor: "pointer", transition: "all 0.18s", display: "flex", alignItems: "center", gap: 6 }}>
-                  <span>{opt.icon}</span>{opt.label}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Interests multi-select */}
-          {!generating && !isTyping && STEPS[step] === "interests" && step === messages.filter(m => m.role === "ai").length - 1 && (
-            <div style={{ paddingLeft: 40, animation: "fadeUp 0.35s ease 0.1s both" }}>
+          {/* Interests */}
+          {!isTyping && !generating && activeOptions === "interests" && (
+            <div style={{ paddingLeft: 40, animation: "fadeUp 0.3s ease" }}>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginBottom: 10 }}>
                 {INTERESTS_OPTIONS.map(opt => (
-                  <button key={opt.label} className={`interest-btn${selectedInterests.includes(opt.label) ? " selected" : ""}`}
-                    onClick={() => setSelectedInterests(prev => prev.includes(opt.label) ? prev.filter(i => i !== opt.label) : [...prev, opt.label])}
+                  <button key={opt.label} className={`cr-int${selectedInterests.includes(opt.label) ? " sel" : ""}`}
+                    onClick={() => setSelectedInterests(prev => prev.includes(opt.label) ? prev.filter(x => x !== opt.label) : [...prev, opt.label])}
                     style={{ padding: "7px 14px", border: `1px solid ${T.border}`, borderRadius: 20, background: T.bgCard, color: T.text, fontSize: 13, fontFamily: T.font, cursor: "pointer", transition: "all 0.18s", display: "flex", alignItems: "center", gap: 6 }}>
                     <span>{opt.icon}</span>{opt.label}
                   </button>
                 ))}
               </div>
-              <button onClick={handleInterestsDone}
-                style={{ padding: "8px 20px", borderRadius: 20, background: T.accent, color: "#06090f", border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: T.font }}>
+              <button onClick={handleInterestsDone} style={{ padding: "8px 20px", borderRadius: 20, background: T.accent, color: "#06090f", border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: T.font }}>
                 ✓ Готово
               </button>
             </div>
           )}
 
-          {/* Plan result */}
+          {/* Plan */}
           {plan && (
             <div style={{ animation: "fadeUp 0.5s ease", marginTop: 8 }}>
-              {/* Plan header */}
               <div style={{ background: T.accentGlow, border: `1px solid ${T.accentBorder}`, borderRadius: 12, padding: "14px 16px", marginBottom: 12 }}>
                 <p style={{ fontSize: 10, color: T.accent, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 4 }}>✦ Ваш маршрут готов</p>
                 <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1rem, 2vw, 1.3rem)", color: T.text, fontWeight: 800, margin: "0 0 4px" }}>{plan.plan_title}</h2>
                 <p style={{ color: T.textSoft, fontSize: 12, margin: 0 }}>{plan.total_budget_estimate}</p>
               </div>
-
-              {/* Day tabs */}
               <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
                 {plan.days.map(day => (
-                  <button key={day.day} className={`day-tab${activeDay === day.day ? " active" : ""}`}
+                  <button key={day.day} className={`cr-daytab${activeDay === day.day ? " act" : ""}`}
                     onClick={() => setActiveDay(day.day)}
                     style={{ padding: "5px 12px", borderRadius: 8, border: `1px solid ${activeDay === day.day ? T.accent : T.border}`, background: activeDay === day.day ? T.accentGlow : T.bgCard, color: activeDay === day.day ? T.accent : T.textMuted, fontSize: 12, cursor: "pointer", fontFamily: T.font, transition: "all 0.2s" }}>
                     День {day.day}
                   </button>
                 ))}
               </div>
-
-              {/* Active day card */}
-              {activeDay && plan.days.find(d => d.day === activeDay) && (
-                <DayCard day={plan.days.find(d => d.day === activeDay)!} />
-              )}
-
-              {/* Logistics */}
+              {activeDay && plan.days.find(d => d.day === activeDay) && <DayCard day={plan.days.find(d => d.day === activeDay)!} />}
               {plan.logistics && (
                 <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 16px", marginBottom: 12 }}>
                   <p style={{ color: T.accent, fontSize: 10, letterSpacing: 2, textTransform: "uppercase", marginBottom: 6 }}>🚕 {plan.logistics.title}</p>
                   <p style={{ color: T.textSoft, fontSize: 13, lineHeight: 1.7, margin: 0 }}>{plan.logistics.content}</p>
                 </div>
               )}
-
-              {/* Hotels */}
               {plan.curated_stays && plan.curated_stays.length > 0 && (
                 <div style={{ marginBottom: 12 }}>
                   <p style={{ color: T.accent, fontSize: 10, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8, fontWeight: 600 }}>🏨 Рекомендуемые отели</p>
                   <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4 }}>
                     {plan.curated_stays.map(hotel => (
-                      <a key={hotel.name} href={hotel.booking_url} target="_blank" rel="noopener noreferrer"
-                        style={{ textDecoration: "none", minWidth: 200, background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "12px 14px", display: "block" }}>
+                      <a key={hotel.name} href={hotel.booking_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", minWidth: 200, background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "12px 14px", display: "block" }}>
                         <p style={{ color: T.text, fontSize: 13, fontWeight: 600, margin: "0 0 4px" }}>{hotel.name}</p>
                         <p style={{ color: T.textSoft, fontSize: 12, lineHeight: 1.5, margin: "0 0 8px" }}>{hotel.description}</p>
                         <span style={{ color: T.accent, fontSize: 11 }}>Найти номер →</span>
@@ -510,8 +459,6 @@ export default function CaspianCommandCenter() {
                   </div>
                 </div>
               )}
-
-              {/* Flights & Car */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
                 {plan.flights && (
                   <a href={plan.flights.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "12px 14px" }}>
@@ -532,18 +479,15 @@ export default function CaspianCommandCenter() {
           )}
 
           {/* Post-plan options */}
-          {postPlanOptions && (
-            <div style={{ paddingLeft: 40, display: "flex", flexWrap: "wrap", gap: 7, animation: "fadeUp 0.35s ease both" }}>
-              {postOptions.map(opt => (
-                <button key={opt.label} className="post-opt"
+          {!isTyping && !generating && activeOptions === "post" && (
+            <div style={{ paddingLeft: 40, display: "flex", flexWrap: "wrap", gap: 7, animation: "fadeUp 0.3s ease" }}>
+              {OPTIONS.post.map(opt => (
+                <button key={opt.label} className="cr-opt"
                   onClick={() => {
-                    setPostPlanOptions(false);
-                    if (opt.label === "Новый маршрут") {
-                      window.location.reload();
-                    } else {
-                      addUserMessage(opt.label);
-                      continueChat(opt.label);
-                    }
+                    setActiveOptions(null);
+                    if (opt.value === "Новый маршрут") { window.location.reload(); return; }
+                    pushUser(opt.label);
+                    continueChat(opt.value);
                   }}
                   style={{ padding: "7px 14px", border: `1px solid ${T.border}`, borderRadius: 20, background: T.bgCard, color: T.text, fontSize: 13, fontFamily: T.font, cursor: "pointer", transition: "all 0.18s", display: "flex", alignItems: "center", gap: 6 }}>
                   <span>{opt.icon}</span>{opt.label}
@@ -554,17 +498,12 @@ export default function CaspianCommandCenter() {
 
         </div>
 
-        {/* Input area */}
+        {/* Input */}
         <div style={{ padding: "12px 20px 16px", borderTop: `1px solid ${T.border}`, flexShrink: 0 }}>
           <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
             <textarea
-              ref={inputRef}
               value={inputValue}
-              onChange={e => {
-                setInputValue(e.target.value);
-                e.target.style.height = "auto";
-                e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
-              }}
+              onChange={e => { setInputValue(e.target.value); e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px"; }}
               onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
               placeholder="Напишите или выберите вариант выше..."
               rows={1}
@@ -573,10 +512,9 @@ export default function CaspianCommandCenter() {
               onBlur={e => e.target.style.borderColor = T.border}
             />
             <button onClick={handleSend} disabled={generating || !inputValue.trim()}
-              style={{ width: 44, height: 44, borderRadius: 12, background: T.accent, border: "none", cursor: generating ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, opacity: generating || !inputValue.trim() ? 0.4 : 1, transition: "all 0.18s" }}>
+              style={{ width: 44, height: 44, borderRadius: 12, background: T.accent, border: "none", cursor: generating || !inputValue.trim() ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, opacity: generating || !inputValue.trim() ? 0.4 : 1, transition: "all 0.18s" }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#06090f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13" />
-                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" />
               </svg>
             </button>
           </div>
