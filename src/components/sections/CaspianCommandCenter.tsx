@@ -174,38 +174,35 @@ export default function CaspianCommandCenter() {
   }, []);
 
   const handleOption = (value: string, label: string) => {
-    if (generating) return;
-    setActiveOptions(null);
-    pushUser(label);
+  if (generating) return;
+  setActiveOptions(null);
+  pushUser(label);
 
-    if (step === 0) {
-      const np = { ...prefs, duration: value };
-      setPrefs(np); setStep(1);
-      aiSay("С кем едете?", 700, () => setActiveOptions("group"));
+  if (step === 0) {
+    const np = { ...prefs, duration: value };
+    setPrefs(np); setStep(1);
+    aiSay("С кем едете?", 700, () => setActiveOptions("group"));
 
-    } else if (step === 1) {
-      const np = { ...prefs, group: value };
-      setPrefs(np); setStep(2);
-      aiSay("Какой примерный бюджет на человека?", 700, () => setActiveOptions("budget"));
+  } else if (step === 1) {
+    const np = { ...prefs, group: value };
+    setPrefs(np); setStep(2);
+    aiSay("Какой примерный бюджет на человека?", 700, () => setActiveOptions("budget"));
 
-    } else if (step === 2) {
-      const np = { ...prefs, budget: value };
-      setPrefs(np); setStep(3);
-      aiSay("Что вас привлекает в Азербайджане? Выберите всё что нравится:", 700, () => setActiveOptions("interests"));
+  } else if (step === 2) {
+    const np = { ...prefs, budget: value };
+    setPrefs(np); setStep(3);
+    aiSay("Что вас привлекает в Азербайджане? Выберите всё что нравится:", 700, () => setActiveOptions("interests"));
 
-    } else if (step === 3) {
-      // pace
-      const np = { ...prefs, pace: value };
-      setPrefs(np); setStep(5);
-      generatePlan({ ...prefs, pace: value });
+  } else if (step === 4) {
+    const np = { ...prefs, pace: value };
+    setPrefs(np); setStep(5);
+    generatePlan({ ...prefs, pace: value });
 
-    } else if (step === 5) {
-      if (value === "Новый маршрут") { window.location.reload(); return; }
-      setActiveOptions(null);
-      pushUser(label);
-      continueChat(value);
-    }
-  };
+  } else if (step === 5) {
+    if (value === "Новый маршрут") { window.location.reload(); return; }
+    continueChat(value);
+  }
+};
 
   const handleInterestsDone = () => {
     const interests = selectedInterests.length > 0 ? selectedInterests : ["Разное"];
