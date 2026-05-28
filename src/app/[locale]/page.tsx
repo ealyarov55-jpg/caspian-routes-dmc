@@ -368,6 +368,15 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 .feature-card { padding: 16px 14px !important; }
     @media(max-width: 1024px) { .features-grid { grid-template-columns: repeat(2, 1fr) !important; } }
     @media(max-width: 767px) { .features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; } .feature-card { padding: 20px 16px; } }
+  @media (max-width: 767px) {
+  .dest-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  .features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  .feature-card { padding: 16px 14px !important; }
+  .az-map-section { padding: 40px 20px 40px !important; }
+@media (max-width: 767px) {
+  section { padding-left: 20px !important; padding-right: 20px !important; padding-top: 48px !important; padding-bottom: 40px !important; }
+}
+  }
   `}</style>
 
   <FadeIn>

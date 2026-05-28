@@ -147,7 +147,7 @@ export default function AzerbaijanMap({ locale, lang }: { locale: string; lang: 
 
       <div style={{ position: "relative", borderRadius: 20, overflow: "hidden", border: `1px solid ${T.border}` }}>
         {/* Карта */}
-        <div ref={mapRef} style={{ width: "100%", height: 500 }} />
+        <div ref={mapRef} style={{ width: "100%", height: "clamp(300px, 60vw, 500px)" }} />
 
         {/* Тултип */}
         {active && (
