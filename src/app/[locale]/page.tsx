@@ -343,7 +343,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(6,9,15,0.95) 0%, rgba(6,9,15,0.3) 60%, transparent 100%)" }} />
     </div>
     <div style={{ padding: "14px 16px 16px", borderTop: `1px solid ${T.border}`, background: "rgba(255,255,255,0.02)" }}>
-      <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1.1rem", color: T.text, fontWeight: 800, margin: "0 0 4px", lineHeight: 1.2 }}>{dest.name}</h3>
+      <h3 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(0.85rem, 4vw, 1.1rem)", color: T.text, fontWeight: 800, margin: "0 0 4px", lineHeight: 1.2, wordBreak: "break-word" }}>{dest.name}</h3>
       <p style={{ color: T.textMuted, fontSize: 12, margin: "0 0 12px", lineHeight: 1.4 }}>{dest.desc}</p>
       <span style={{ fontSize: 11, color: T.accent, fontWeight: 600 }}>
         {lang === "ru" ? "Построить маршрут →" : lang === "az" ? "Marşrut yarat →" : lang === "tr" ? "Rota oluştur →" : "Build itinerary →"}
@@ -362,6 +362,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     .feature-card { padding: 28px 24px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.3s ease, transform 0.3s ease; }
     .feature-card:hover { border-color: rgba(0,212,170,0.2) !important; transform: translateY(-3px); }
     .feature-icon { width: 56px; height: 56px; border-radius: 12px; background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.12); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .dest-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; padding: 0 !important; }
+.dest-card h3 { font-size: 0.95rem !important; }
+.features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+.feature-card { padding: 16px 14px !important; }
     @media(max-width: 1024px) { .features-grid { grid-template-columns: repeat(2, 1fr) !important; } }
     @media(max-width: 767px) { .features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; } .feature-card { padding: 20px 16px; } }
   `}</style>
