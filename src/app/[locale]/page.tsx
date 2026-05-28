@@ -328,32 +328,32 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </FadeIn>
         <div className="dest-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
           {[
-            { name: lang === "ru" ? "Баку" : "Baku", desc: lang === "ru" ? "Столица и сердце Азербайджана" : "Capital of Azerbaijan", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop", query: lang === "ru" ? "Баку" : "Baku" },
-            { name: lang === "ru" ? "Габала" : "Gabala", desc: lang === "ru" ? "Швейцария Азербайджана" : "Switzerland of Azerbaijan", days: lang === "ru" ? "от 3 дней" : "from 3 days", img: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop", query: lang === "ru" ? "Баку + Габала" : "Baku + Gabala" },
-            { name: lang === "ru" ? "Шеки" : "Sheki", desc: lang === "ru" ? "Древний город Шёлкового пути" : "Ancient Silk Road city", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=600&h=400&fit=crop", query: lang === "ru" ? "Баку + Шеки" : "Baku + Sheki" },
-            { name: lang === "ru" ? "Гобустан" : "Gobustan", desc: lang === "ru" ? "Петроглифы и грязевые вулканы" : "Petroglyphs and mud volcanoes", days: lang === "ru" ? "от 1 дня" : "from 1 day", img: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop", query: lang === "ru" ? "Только Баку" : "Baku only" },
-            { name: lang === "ru" ? "Хыналыг" : "Khinalug", desc: lang === "ru" ? "Высокогорное село" : "High mountain village", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&h=400&fit=crop", query: lang === "ru" ? "Весь Азербайджан" : "All Azerbaijan" },
-            { name: lang === "ru" ? "Лагич" : "Lahij", desc: lang === "ru" ? "Деревня мастеров" : "Village of craftsmen", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=600&h=400&fit=crop", query: lang === "ru" ? "Весь Азербайджан" : "All Azerbaijan" },
-            { name: lang === "ru" ? "Шахдаг" : "Shahdag", desc: lang === "ru" ? "Горный курорт" : "Mountain resort", days: lang === "ru" ? "от 3 дней" : "from 3 days", img: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=600&h=400&fit=crop", query: lang === "ru" ? "Весь Азербайджан" : "All Azerbaijan" },
-            { name: lang === "ru" ? "Губа" : "Guba", desc: lang === "ru" ? "Яблочный край" : "Apple region", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop&sat=-20", query: lang === "ru" ? "Весь Азербайджан" : "All Azerbaijan" },
-          ].map((dest, i) => (
-            <Link key={i} href={`/${locale}/planner`} className="dest-card" style={{ textDecoration: "none", borderRadius: 12, overflow: "hidden", position: "relative", display: "block", background: "#0a0f1a" }}>
-              <div style={{ position: "relative", height: 200, overflow: "hidden" }}>
-                <img src={dest.img} alt={dest.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s ease", display: "block" }} className="dest-img" />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(6,9,15,0.95) 0%, rgba(6,9,15,0.3) 60%, transparent 100%)" }} />
-                <div style={{ position: "absolute", top: 12, left: 12, padding: "4px 10px", borderRadius: 20, background: "rgba(0,212,170,0.15)", border: "1px solid rgba(0,212,170,0.3)", fontSize: 10, color: T.accent, fontWeight: 600, letterSpacing: 1 }}>
-                  {dest.days}
-                </div>
-              </div>
-              <div style={{ padding: "14px 16px 16px", borderTop: `1px solid ${T.border}`, background: "rgba(255,255,255,0.02)" }}>
-                <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1.1rem", color: T.text, fontWeight: 800, margin: "0 0 4px", lineHeight: 1.2 }}>{dest.name}</h3>
-                <p style={{ color: T.textMuted, fontSize: 12, margin: "0 0 12px", lineHeight: 1.4 }}>{dest.desc}</p>
-                <span style={{ fontSize: 11, color: T.accent, fontWeight: 600, letterSpacing: 0.5 }}>
-                  {lang === "ru" ? "Построить маршрут →" : "Build itinerary →"}
-                </span>
-              </div>
-            </Link>
-          ))}
+  { name: lang === "ru" ? "Баку" : "Baku", desc: lang === "ru" ? "Столица и сердце Азербайджана" : "Capital of Azerbaijan", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?w=600&h=400&fit=crop" },
+  { name: lang === "ru" ? "Габала" : "Gabala", desc: lang === "ru" ? "Швейцария Азербайджана" : "Switzerland of Azerbaijan", days: lang === "ru" ? "от 3 дней" : "from 3 days", img: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&h=400&fit=crop" },
+  { name: lang === "ru" ? "Шеки" : "Sheki", desc: lang === "ru" ? "Древний город Шёлкового пути" : "Ancient Silk Road city", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=600&h=400&fit=crop" },
+  { name: lang === "ru" ? "Гобустан" : "Gobustan", desc: lang === "ru" ? "Петроглифы и грязевые вулканы" : "Petroglyphs and mud volcanoes", days: lang === "ru" ? "от 1 дня" : "from 1 day", img: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=600&h=400&fit=crop" },
+  { name: lang === "ru" ? "Хыналыг" : "Khinalug", desc: lang === "ru" ? "Высокогорное село" : "High mountain village", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&h=400&fit=crop" },
+  { name: lang === "ru" ? "Лагич" : "Lahij", desc: lang === "ru" ? "Деревня мастеров" : "Village of craftsmen", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop" },
+  { name: lang === "ru" ? "Шахдаг" : "Shahdag", desc: lang === "ru" ? "Горный курорт" : "Mountain resort", days: lang === "ru" ? "от 3 дней" : "from 3 days", img: "https://images.unsplash.com/photo-1551524164-687a55dd1126?w=600&h=400&fit=crop" },
+  { name: lang === "ru" ? "Губа" : "Guba", desc: lang === "ru" ? "Яблочный край" : "Apple region", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=600&h=400&fit=crop" },
+].map((dest, i) => (
+  <Link key={i} href={`/${locale}/planner`} className="dest-card" style={{ textDecoration: "none", borderRadius: 12, overflow: "hidden", position: "relative", display: "block", background: "#0a0f1a" }}>
+    <div style={{ position: "relative", height: 200, overflow: "hidden" }}>
+      <img src={dest.img} alt={dest.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s ease", display: "block" }} className="dest-img" />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(6,9,15,0.95) 0%, rgba(6,9,15,0.3) 60%, transparent 100%)" }} />
+      <div style={{ position: "absolute", top: 12, left: 12, padding: "3px 8px", borderRadius: 4, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", fontSize: 10, color: "rgba(255,255,255,0.7)", letterSpacing: 0.5 }}>
+        {dest.days}
+      </div>
+    </div>
+    <div style={{ padding: "14px 16px 16px", borderTop: `1px solid ${T.border}`, background: "rgba(255,255,255,0.02)" }}>
+      <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1.1rem", color: T.text, fontWeight: 800, margin: "0 0 4px", lineHeight: 1.2 }}>{dest.name}</h3>
+      <p style={{ color: T.textMuted, fontSize: 12, margin: "0 0 12px", lineHeight: 1.4 }}>{dest.desc}</p>
+      <span style={{ fontSize: 11, color: T.accent, fontWeight: 600 }}>
+        {lang === "ru" ? "Построить маршрут →" : "Build itinerary →"}
+      </span>
+    </div>
+  </Link>
+))}
         </div>
       </section>
       {/* Map */}
