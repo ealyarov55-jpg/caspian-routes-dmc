@@ -225,7 +225,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           .nav-lang { display: flex !important; }
           .nav-logo-text { font-size: 13px !important; }
           .nav-cta { display: none !important; }
-        }
+       .dest-card { border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.3s ease, transform 0.3s ease; }
+        .dest-card:hover { border-color: rgba(0,212,170,0.3); transform: translateY(-4px); }
+        .dest-card:hover .dest-img { transform: scale(1.06); }
+        @media (max-width: 767px) { .dest-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; } }
+        @media (max-width: 1024px) and (min-width: 768px) { .dest-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+          }
       `}</style>
 
       {/* Background */}
@@ -308,7 +313,49 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </FadeIn>
         </div>
       </section>
-
+{/* Popular Destinations */}
+      <section style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "80px 48px 60px" }}>
+        <FadeIn>
+          <div style={{ marginBottom: 48 }}>
+            <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 12 }}>✦ {lang === "ru" ? "Популярные направления" : "Popular destinations"}</p>
+            <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.6rem, 3vw, 2.4rem)", color: T.text, fontWeight: 800, margin: "0 0 8px" }}>
+              {lang === "ru" ? "Популярные направления" : "Popular destinations"}
+            </h2>
+            <p style={{ color: T.textMuted, fontSize: 14, margin: 0 }}>
+              {lang === "ru" ? "Выберите регион — и ИИ построит для вас готовый маршрут" : "Choose a region and AI will build your itinerary"}
+            </p>
+          </div>
+        </FadeIn>
+        <div className="dest-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+          {[
+            { name: lang === "ru" ? "Баку" : "Baku", desc: lang === "ru" ? "Столица и сердце Азербайджана" : "Capital of Azerbaijan", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop", query: lang === "ru" ? "Баку" : "Baku" },
+            { name: lang === "ru" ? "Габала" : "Gabala", desc: lang === "ru" ? "Швейцария Азербайджана" : "Switzerland of Azerbaijan", days: lang === "ru" ? "от 3 дней" : "from 3 days", img: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop", query: lang === "ru" ? "Баку + Габала" : "Baku + Gabala" },
+            { name: lang === "ru" ? "Шеки" : "Sheki", desc: lang === "ru" ? "Древний город Шёлкового пути" : "Ancient Silk Road city", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=600&h=400&fit=crop", query: lang === "ru" ? "Баку + Шеки" : "Baku + Sheki" },
+            { name: lang === "ru" ? "Гобустан" : "Gobustan", desc: lang === "ru" ? "Петроглифы и грязевые вулканы" : "Petroglyphs and mud volcanoes", days: lang === "ru" ? "от 1 дня" : "from 1 day", img: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop", query: lang === "ru" ? "Только Баку" : "Baku only" },
+            { name: lang === "ru" ? "Хыналыг" : "Khinalug", desc: lang === "ru" ? "Высокогорное село" : "High mountain village", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&h=400&fit=crop", query: lang === "ru" ? "Весь Азербайджан" : "All Azerbaijan" },
+            { name: lang === "ru" ? "Лагич" : "Lahij", desc: lang === "ru" ? "Деревня мастеров" : "Village of craftsmen", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=600&h=400&fit=crop", query: lang === "ru" ? "Весь Азербайджан" : "All Azerbaijan" },
+            { name: lang === "ru" ? "Шахдаг" : "Shahdag", desc: lang === "ru" ? "Горный курорт" : "Mountain resort", days: lang === "ru" ? "от 3 дней" : "from 3 days", img: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=600&h=400&fit=crop", query: lang === "ru" ? "Весь Азербайджан" : "All Azerbaijan" },
+            { name: lang === "ru" ? "Губа" : "Guba", desc: lang === "ru" ? "Яблочный край" : "Apple region", days: lang === "ru" ? "от 2 дней" : "from 2 days", img: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop&sat=-20", query: lang === "ru" ? "Весь Азербайджан" : "All Azerbaijan" },
+          ].map((dest, i) => (
+            <Link key={i} href={`/${locale}/planner`} className="dest-card" style={{ textDecoration: "none", borderRadius: 12, overflow: "hidden", position: "relative", display: "block", background: "#0a0f1a" }}>
+              <div style={{ position: "relative", height: 200, overflow: "hidden" }}>
+                <img src={dest.img} alt={dest.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s ease", display: "block" }} className="dest-img" />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(6,9,15,0.95) 0%, rgba(6,9,15,0.3) 60%, transparent 100%)" }} />
+                <div style={{ position: "absolute", top: 12, left: 12, padding: "4px 10px", borderRadius: 20, background: "rgba(0,212,170,0.15)", border: "1px solid rgba(0,212,170,0.3)", fontSize: 10, color: T.accent, fontWeight: 600, letterSpacing: 1 }}>
+                  {dest.days}
+                </div>
+              </div>
+              <div style={{ padding: "14px 16px 16px", borderTop: `1px solid ${T.border}`, background: "rgba(255,255,255,0.02)" }}>
+                <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1.1rem", color: T.text, fontWeight: 800, margin: "0 0 4px", lineHeight: 1.2 }}>{dest.name}</h3>
+                <p style={{ color: T.textMuted, fontSize: 12, margin: "0 0 12px", lineHeight: 1.4 }}>{dest.desc}</p>
+                <span style={{ fontSize: 11, color: T.accent, fontWeight: 600, letterSpacing: 0.5 }}>
+                  {lang === "ru" ? "Построить маршрут →" : "Build itinerary →"}
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
       {/* Map */}
       <section className="map-section" style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "80px 48px 60px" }}>
         <FadeIn>
