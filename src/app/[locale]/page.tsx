@@ -249,28 +249,28 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       </div>
 
       {/* Navbar */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 24px", borderBottom: `1px solid ${T.border}`, backdropFilter: "blur(12px)", background: "rgba(6,9,15,0.85)" }}>
-        <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-          <div style={{ width: 7, height: 7, borderRadius: "50%", background: T.accent, boxShadow: `0 0 8px ${T.accent}`, animation: "pulse 2s ease infinite" }} />
-          <span className="nav-logo-text" style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 800, letterSpacing: -0.5, color: T.text }}>
-  CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES
-</span>
-        </Link>
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <Link href={`/${locale}/blog`} className="nav-desktop-links" style={{ color: T.textSoft, fontSize: 13, textDecoration: "none" }}>
-            {lang === "ru" ? "Путеводитель" : lang === "az" ? "Bələdçi" : lang === "tr" ? "Rehber" : "Travel Guide"}
-          </Link>
-          <Link href={`/${locale}/contact`} className="nav-desktop-links" style={{ color: T.textSoft, fontSize: 13, textDecoration: "none" }}>
-            {lang === "ru" ? "Контакт" : "Contact"}
-          </Link>
-          <div className="nav-lang" style={{ display: "flex", gap: 4, padding: "4px 6px", borderRadius: 6, background: "rgba(255,255,255,0.03)", border: `1px solid ${T.border}` }}>
-            {["ru", "en", "az", "tr"].map(l => (
-              <Link key={l} href={`/${l}`} style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, color: locale === l ? T.accent : T.textMuted, background: locale === l ? "rgba(0,212,170,0.08)" : "transparent", textDecoration: "none", fontWeight: locale === l ? 600 : 400 }}>{l.toUpperCase()}</Link>
-            ))}
-          </div>
-          <Link href={`/${locale}/planner`} className="nav-cta">{t.cta} →</Link>
-        </div>
-      </nav>
+<nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", borderBottom: `1px solid ${T.border}`, backdropFilter: "blur(12px)", background: "rgba(6,9,15,0.85)", gap: 8 }}>
+  <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", flexShrink: 0 }}>
+    <div style={{ width: 7, height: 7, borderRadius: "50%", background: T.accent, boxShadow: `0 0 8px ${T.accent}`, animation: "pulse 2s ease infinite" }} />
+    <span className="nav-logo-text" style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 800, letterSpacing: -0.5, color: T.text, whiteSpace: "nowrap" }}>
+      CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES
+    </span>
+  </Link>
+  <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
+    <Link href={`/${locale}/blog`} className="nav-desktop-links" style={{ color: T.textSoft, fontSize: 13, textDecoration: "none" }}>
+      {lang === "ru" ? "Путеводитель" : lang === "az" ? "Bələdçi" : lang === "tr" ? "Rehber" : "Travel Guide"}
+    </Link>
+    <Link href={`/${locale}/contact`} className="nav-desktop-links" style={{ color: T.textSoft, fontSize: 13, textDecoration: "none" }}>
+      {lang === "ru" ? "Контакт" : "Contact"}
+    </Link>
+    <div className="nav-lang" style={{ display: "flex", gap: 4, padding: "4px 6px", borderRadius: 6, background: "rgba(255,255,255,0.03)", border: `1px solid ${T.border}` }}>
+      {["ru", "en", "az", "tr"].map(l => (
+        <Link key={l} href={`/${l}`} style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, color: locale === l ? T.accent : T.textMuted, background: locale === l ? "rgba(0,212,170,0.08)" : "transparent", textDecoration: "none", fontWeight: locale === l ? 600 : 400 }}>{l.toUpperCase()}</Link>
+      ))}
+    </div>
+    <Link href={`/${locale}/planner`} className="nav-cta">{t.cta} →</Link>
+  </div>
+</nav>
 
       {/* Hero */}
       <section className="hero-section" style={{ position: "relative", zIndex: 5, minHeight: "100vh", display: "flex", alignItems: "center", padding: "0 48px", overflow: "hidden" }}>

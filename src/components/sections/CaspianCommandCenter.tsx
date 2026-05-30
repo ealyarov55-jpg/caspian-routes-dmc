@@ -463,14 +463,14 @@ export default function CaspianCommandCenter() {
         `}</style>
 
         {/* Top nav */}
-        <div style={{ height: 52, background: T.sidebar, borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 20px", flexShrink: 0, zIndex: 10 }}>
+        <div style={{ height: 52, background: T.sidebar, borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 12px 0 16px", flexShrink: 0, zIndex: 10, gap: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <Link href={`/${locale}`} style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.accent, animation: "pulse 2s ease infinite" }} />
               <span style={{ fontFamily: T.fontDisplay, fontSize: 13, fontWeight: 800, color: T.text }}>CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES</span>
             </Link>
             <div style={{ width: 1, height: 16, background: T.border }} />
-            <span style={{ fontSize: 12, color: T.textMuted }}>AI маршрут</span>
+            <span style={{ fontSize: 12, color: T.textMuted, whiteSpace: "nowrap" }}>AI маршрут</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {geocoding && <span style={{ fontSize: 11, color: T.textMuted }}>Загружаем карту...</span>}
@@ -613,7 +613,7 @@ export default function CaspianCommandCenter() {
           </div>
 
           {/* Right: Map */}
-          <div className="itin-map" style={{ flex: 1, position: "relative" }}>
+          <div className="itin-map" style={{ flex: 1, position: "relative", minHeight: 0 }}>
             {geoDays.length > 0 ? (
               <ItineraryMap
                 geoDays={geoDays}
@@ -668,11 +668,11 @@ export default function CaspianCommandCenter() {
         ::-webkit-scrollbar{width:4px;height:4px;}
         ::-webkit-scrollbar-thumb{background:rgba(0,212,170,0.2);border-radius:2px;}
         @media(max-width:767px){
-        @media(min-width:768px){ .itin-split{ flex-direction: row !important; } }
+        .nav-lang { display: none !important; }
   .cr-sidebar{display:none!important;}
   .cr-main{border-left:none!important;}
-  .itin-left{width:100%!important;}
-  .itin-map{height:300px!important;display:block!important;position:relative!important;}
+  .itin-left{width:100%!important;flex:none!important;}
+  .itin-map{height:350px!important;flex:none!important;display:block!important;}
 }
       `}</style>
 
