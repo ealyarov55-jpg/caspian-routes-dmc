@@ -637,15 +637,20 @@ export default function CaspianCommandCenter() {
               День {currentGeoDay.day} — {currentGeoDay.title}
             </div>
           )}
-
-          {activeStopIdx !== null && currentGeoDay?.stops[activeStopIdx] && (
-            <div style={{ position: "absolute", bottom: 20, left: 20, width: 260, background: "rgba(6,9,15,0.96)", border: `1px solid ${T.accentBorder}`, borderRadius: 12, padding: "14px 16px", backdropFilter: "blur(16px)", boxShadow: "0 8px 32px rgba(0,0,0,0.5)", zIndex: 10, animation: "fadeUp 0.2s ease" }}>
-              <p style={{ fontSize: 10, color: T.textMuted, marginBottom: 4 }}>{currentGeoDay.stops[activeStopIdx].time}</p>
-              <p style={{ fontSize: 13, fontWeight: 700, color: currentGeoDay.color, margin: "0 0 4px" }}>{currentGeoDay.stops[activeStopIdx].activity}</p>
-              <p style={{ fontSize: 12, color: T.textSoft, lineHeight: 1.5, margin: "0 0 8px" }}>{currentGeoDay.stops[activeStopIdx].description}</p>
-              <p style={{ fontSize: 11, color: T.textMuted, fontStyle: "italic", margin: 0 }}>💡 {currentGeoDay.stops[activeStopIdx].tip}</p>
-            </div>
-          )}
+{activeStopIdx !== null && currentGeoDay && currentGeoDay.stops[activeStopIdx as number] && (
+  <div
+    onClick={() => setActiveStopIdx(null)}
+    style={{ position: "absolute", bottom: 16, left: 12, right: 12, maxWidth: 320, background: "rgba(6,9,15,0.96)", border: `1px solid ${T.accentBorder}`, borderRadius: 12, padding: "10px 14px", backdropFilter: "blur(16px)", boxShadow: "0 8px 32px rgba(0,0,0,0.5)", zIndex: 10, animation: "fadeUp 0.2s ease", cursor: "pointer" }}>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p style={{ fontSize: 10, color: T.textMuted, marginBottom: 2 }}>{currentGeoDay.stops[activeStopIdx as number].time}</p>
+        <p style={{ fontSize: 13, fontWeight: 700, color: currentGeoDay.color, margin: "0 0 3px", lineHeight: 1.3 }}>{currentGeoDay.stops[activeStopIdx as number].activity}</p>
+        <p style={{ fontSize: 12, color: T.textSoft, lineHeight: 1.4, margin: 0 }}>{currentGeoDay.stops[activeStopIdx as number].description}</p>
+      </div>
+      <button onClick={(e) => { e.stopPropagation(); setActiveStopIdx(null); }} style={{ background: "none", border: "none", color: T.textMuted, cursor: "pointer", fontSize: 16, padding: 0, flexShrink: 0 }}>×</button>
+    </div>
+  </div>
+)}
         </div>
       </div>
     </div>
