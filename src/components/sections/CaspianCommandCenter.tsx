@@ -475,16 +475,16 @@ export default function CaspianCommandCenter() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {geocoding && <span style={{ fontSize: 11, color: T.textMuted }}>Загружаем карту...</span>}
             <button
-              onClick={() => setView("chat")}
-              style={{ padding: "6px 14px", borderRadius: 8, background: T.accentGlow, border: `1px solid ${T.accentBorder}`, color: T.accent, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.font }}
-            >
-              💬 Вернуться к чату
-            </button>
+  onClick={() => setView("chat")}
+  style={{ padding: "6px 14px", borderRadius: 8, background: T.accentGlow, border: `1px solid ${T.accentBorder}`, color: T.accent, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.font, whiteSpace: "nowrap" }}
+>
+  💬 Чат
+</button>
           </div>
         </div>
 
         {/* Split */}
-        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+        <div style={{ display: "flex", flex: 1, overflow: "hidden", flexDirection: "column" }} className="itin-split">
 
           {/* Left: Itinerary */}
           <div className="itin-left" style={{ width: 420, flexShrink: 0, display: "flex", flexDirection: "column", borderRight: `1px solid ${T.border}`, overflow: "hidden" }}>
@@ -667,7 +667,13 @@ export default function CaspianCommandCenter() {
         .cr-int.sel{border-color:${T.accent}!important;color:${T.accent}!important;background:${T.accentGlow}!important;}
         ::-webkit-scrollbar{width:4px;height:4px;}
         ::-webkit-scrollbar-thumb{background:rgba(0,212,170,0.2);border-radius:2px;}
-        @media(max-width:767px){.cr-sidebar{display:none!important;}.cr-main{border-left:none!important;}}
+        @media(max-width:767px){
+        @media(min-width:768px){ .itin-split{ flex-direction: row !important; } }
+  .cr-sidebar{display:none!important;}
+  .cr-main{border-left:none!important;}
+  .itin-left{width:100%!important;}
+  .itin-map{height:300px!important;display:block!important;position:relative!important;}
+}
       `}</style>
 
       {/* Sidebar */}
@@ -809,7 +815,7 @@ export default function CaspianCommandCenter() {
               </svg>
             </button>
           </div>
-          <p style={{ fontSize: 11, color: T.textMuted, marginTop: 6, textAlign: "center" }}>Enter для отправки · Shift+Enter для переноса строки</p>
+          
         </div>
       </div>
     </div>
