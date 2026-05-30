@@ -145,24 +145,25 @@ function ItineraryMap({ geoDays, activeDay, onMarkerClick }: {
       if (!mapRef.current || !window.google) return;
 
       const map = new window.google.maps.Map(mapRef.current, {
-        center: { lat: 40.4, lng: 47.5 },
-        zoom: 7,
-        mapTypeId: "roadmap",
-        disableDefaultUI: true,
-        zoomControl: true,
-        styles: [
-          { elementType: "geometry", stylers: [{ color: "#07111e" }] },
-          { elementType: "labels.text.fill", stylers: [{ color: "#94a3b8" }] },
-          { elementType: "labels.text.stroke", stylers: [{ color: "#07111e" }] },
-          { featureType: "administrative.country", elementType: "geometry.stroke", stylers: [{ color: "#334155" }] },
-          { featureType: "landscape", elementType: "geometry", stylers: [{ color: "#0d1f2d" }] },
-          { featureType: "poi", stylers: [{ visibility: "off" }] },
-          { featureType: "road", elementType: "geometry", stylers: [{ color: "#1e3a4a" }] },
-          { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#1e4060" }] },
-          { featureType: "transit", stylers: [{ visibility: "off" }] },
-          { featureType: "water", elementType: "geometry", stylers: [{ color: "#051525" }] },
-        ],
-      });
+  center: { lat: 40.4, lng: 47.5 },
+  zoom: 7,
+  mapTypeId: "roadmap",
+  disableDefaultUI: true,
+  zoomControl: true,
+  gestureHandling: "greedy",
+  styles: [
+    { elementType: "geometry", stylers: [{ color: "#07111e" }] },
+    { elementType: "labels.text.fill", stylers: [{ color: "#94a3b8" }] },
+    { elementType: "labels.text.stroke", stylers: [{ color: "#07111e" }] },
+    { featureType: "administrative.country", elementType: "geometry.stroke", stylers: [{ color: "#334155" }] },
+    { featureType: "landscape", elementType: "geometry", stylers: [{ color: "#0d1f2d" }] },
+    { featureType: "poi", stylers: [{ visibility: "off" }] },
+    { featureType: "road", elementType: "geometry", stylers: [{ color: "#1e3a4a" }] },
+    { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#1e4060" }] },
+    { featureType: "transit", stylers: [{ visibility: "off" }] },
+    { featureType: "water", elementType: "geometry", stylers: [{ color: "#051525" }] },
+  ],
+});
 
       mapInstanceRef.current = map;
       drawMarkersAndRoutes(map);
@@ -269,7 +270,13 @@ export default function CaspianCommandCenter() {
   const [geocoding, setGeocoding] = useState(false);
 
   const chatRef = useRef<HTMLDivElement>(null);
-  const scrollBottom = () => setTimeout(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, 80);
+  const scrollBottom = () => {
+  setTimeout(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" });
+    }
+  }, 100);
+};
 
   const pushAI = (text: string) => setMessages(prev => [...prev, { role: "ai", text }]);
   const pushUser = (text: string) => setMessages(prev => [...prev, { role: "user", text }]);
@@ -281,51 +288,51 @@ export default function CaspianCommandCenter() {
       setIsTyping(false);
       pushAI(text);
       scrollBottom();
-      if (then) setTimeout(then, 300);
+      if (then) setTimeout(() => { then(); setTimeout(scrollBottom, 150); }, 300);
     }, delay);
   };
 
   useEffect(() => {
     aiSay("Привет! Я помогу составить маршрут по Азербайджану специально под вас.\n\nПодготовлю персональный итинерарий за 5 вопросов — займёт меньше минуты. 🗺", 700, () => {
-      aiSay("Когда планируете поехать и на сколько дней?", 800, () => setActiveOptions("duration"));
+      aiSay("Когда планируете поехать и на сколько дней?", 800, () => { scrollBottom(); setActiveOptions("duration"); });
     });
   }, []);
 
   const handleOption = (value: string, label: string) => {
-    if (generating) return;
-    setActiveOptions(null);
-    pushUser(label);
+  if (generating) return;
+  setActiveOptions(null);
+  pushUser(label);
 
-    if (step === 0) {
-      const np = { ...prefs, duration: value };
-      setPrefs(np); setStep(1);
-      aiSay("С кем едете?", 700, () => setActiveOptions("group"));
-    } else if (step === 1) {
-      const np = { ...prefs, group: value };
-      setPrefs(np); setStep(2);
-      aiSay("Какой примерный бюджет на человека?", 700, () => setActiveOptions("budget"));
-    } else if (step === 2) {
-      const np = { ...prefs, budget: value };
-      setPrefs(np); setStep(3);
-      aiSay("Что вас привлекает в Азербайджане? Выберите всё что нравится:", 700, () => setActiveOptions("interests"));
-    } else if (step === 4) {
-      const np = { ...prefs, pace: value };
-      setPrefs(np); setStep(5);
-      generatePlan({ ...prefs, pace: value });
-    } else if (step === 5) {
-      if (value === "Новый маршрут") { window.location.reload(); return; }
-      continueChat(value);
-    }
-  };
+  if (step === 0) {
+    const np = { ...prefs, duration: value };
+    setPrefs(np); setStep(1);
+    aiSay("С кем едете?", 700, () => { scrollBottom(); setActiveOptions("group"); });
+  } else if (step === 1) {
+    const np = { ...prefs, group: value };
+    setPrefs(np); setStep(2);
+    aiSay("Какой примерный бюджет на человека?", 700, () => { scrollBottom(); setActiveOptions("budget"); });
+  } else if (step === 2) {
+    const np = { ...prefs, budget: value };
+    setPrefs(np); setStep(3);
+    aiSay("Что вас привлекает в Азербайджане? Выберите всё что нравится:", 700, () => { scrollBottom(); setActiveOptions("interests"); });
+  } else if (step === 4) {
+    const np = { ...prefs, pace: value };
+    setPrefs(np); setStep(5);
+    generatePlan({ ...prefs, pace: value });
+  } else if (step === 5) {
+    if (value === "Новый маршрут") { window.location.reload(); return; }
+    continueChat(value);
+  }
+};
 
-  const handleInterestsDone = () => {
-    const interests = selectedInterests.length > 0 ? selectedInterests : ["Разное"];
-    setActiveOptions(null);
-    pushUser(interests.join(", "));
-    const np = { ...prefs, interests };
-    setPrefs(np); setStep(4);
-    aiSay("Последний вопрос — какой темп вам ближе?", 700, () => setActiveOptions("pace"));
-  };
+const handleInterestsDone = () => {
+  const interests = selectedInterests.length > 0 ? selectedInterests : ["Разное"];
+  setActiveOptions(null);
+  pushUser(interests.join(", "));
+  const np = { ...prefs, interests };
+  setPrefs(np); setStep(4);
+  aiSay("Последний вопрос — какой темп вам ближе?", 700, () => { scrollBottom(); setActiveOptions("pace"); });
+};
 
   const geocodePlan = async (planData: Plan): Promise<GeoDay[]> => {
   const days: GeoDay[] = planData.days.map((day, di) => ({
@@ -420,7 +427,7 @@ export default function CaspianCommandCenter() {
       setIsTyping(false);
       pushAI(text);
       scrollBottom();
-      setTimeout(() => setActiveOptions("post"), 400);
+      setTimeout(() => { scrollBottom(); setActiveOptions("post"); }, 400);
     } catch {
       setIsTyping(false);
       aiSay("Ошибка. Попробуйте снова.");
@@ -448,7 +455,7 @@ export default function CaspianCommandCenter() {
   // ── ITINERARY VIEW ─────────────────────────────────────────────────
   if (view === "itinerary" && plan) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh", background: T.bg, color: T.text, fontFamily: T.font, overflow: "hidden" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100dvh", background: T.bg, color: T.text, fontFamily: T.font, overflow: "hidden" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
         @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -658,7 +665,7 @@ export default function CaspianCommandCenter() {
 }
   // ── CHAT VIEW ──────────────────────────────────────────────────────
   return (
-    <div style={{ display: "flex", height: "100vh", background: T.bg, color: T.text, fontFamily: T.font, overflow: "hidden" }}>
+    <div style={{ display: "flex", height: "100dvh", background: T.bg, color: T.text, fontFamily: T.font, overflow: "hidden" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
         @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
