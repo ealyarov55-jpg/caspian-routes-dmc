@@ -264,10 +264,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       {lang === "ru" ? "Контакт" : "Contact"}
     </Link>
     <div className="nav-lang" style={{ display: "flex", gap: 4, padding: "4px 6px", borderRadius: 6, background: "rgba(255,255,255,0.03)", border: `1px solid ${T.border}` }}>
-      {["ru", "en", "az", "tr"].map(l => (
-        <Link key={l} href={`/${l}`} style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, color: locale === l ? T.accent : T.textMuted, background: locale === l ? "rgba(0,212,170,0.08)" : "transparent", textDecoration: "none", fontWeight: locale === l ? 600 : 400 }}>{l.toUpperCase()}</Link>
-      ))}
-    </div>
+  {["ru", "en", "az", "tr"].map(l => (
+    <Link key={l} href={`/${l}`} className={locale === l ? "" : "nav-lang-item"} style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, color: locale === l ? T.accent : T.textMuted, background: locale === l ? "rgba(0,212,170,0.08)" : "transparent", textDecoration: "none", fontWeight: locale === l ? 600 : 400 }}>{l.toUpperCase()}</Link>
+  ))}
+</div>
     <Link href={`/${locale}/planner`} className="nav-cta">{t.cta} →</Link>
   </div>
 </nav>
@@ -366,26 +366,24 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 {/* What you get */}
 <section style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "80px 48px 60px" }}>
   <style>{`
-    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .feature-card { padding: 28px 24px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.3s ease, transform 0.3s ease; }
-    .feature-card:hover { border-color: rgba(0,212,170,0.2) !important; transform: translateY(-3px); }
-    .feature-icon { width: 56px; height: 56px; border-radius: 12px; background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.12); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
-    .dest-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; padding: 0 !important; }
-.dest-card h3 { font-size: 0.95rem !important; }
-.features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-.feature-card { padding: 16px 14px !important; }
-    @media(max-width: 1024px) { .features-grid { grid-template-columns: repeat(2, 1fr) !important; } }
-    @media(max-width: 767px) { .features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; } .feature-card { padding: 20px 16px; } }
-  @media (max-width: 767px) {
-  .dest-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-  .features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-  .feature-card { padding: 16px 14px !important; }
-  .az-map-section { padding: 40px 20px 40px !important; }
-@media (max-width: 767px) {
-  section { padding-left: 20px !important; padding-right: 20px !important; padding-top: 48px !important; padding-bottom: 40px !important; }
-}
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .feature-card { padding: 28px 24px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); transition: border-color 0.3s ease, transform 0.3s ease; }
+  .feature-card:hover { border-color: rgba(0,212,170,0.2) !important; transform: translateY(-3px); }
+  .feature-icon { width: 56px; height: 56px; border-radius: 12px; background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.12); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  @media(max-width: 1024px) { .features-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+  @media(max-width: 767px) {
+    section { padding-left: 20px !important; padding-right: 20px !important; padding-top: 48px !important; padding-bottom: 40px !important; }
+    .features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .feature-card { padding: 16px 14px !important; }
+    .dest-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .dest-card h3 { font-size: 0.95rem !important; }
+    .az-map-section { padding: 40px 20px !important; }
+    .nav-lang { gap: 2px !important; padding: 3px 4px !important; }
+    .nav-lang a { padding: 2px 4px !important; font-size: 9px !important; }
+    .nav-cta { display: inline-block !important; font-size: 10px !important; padding: 6px 10px !important; }
+    .nav-logo-text { font-size: 12px !important; }
   }
-  `}</style>
+`}</style>
 
   <FadeIn>
     <div style={{ marginBottom: 48 }}>
