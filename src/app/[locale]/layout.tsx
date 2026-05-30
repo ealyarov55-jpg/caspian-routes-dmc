@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { AuthProvider } from "@/context/AuthContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import { ToastContainer } from "@/components/ui/Toast";
@@ -89,7 +90,7 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
 
-return (
+  return (
     <html lang={locale}>
       <head>
         <script
@@ -108,6 +109,22 @@ return (
         />
       </head>
       <body style={{ overflowX: "hidden", margin: 0, padding: 0, background: "#021a1a" }}>
+        
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-SDQFCP764T"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-SDQFCP764T');
+          `}
+        </Script>
+
         <AuthProvider>
           <CurrencyProvider>
             {children}
