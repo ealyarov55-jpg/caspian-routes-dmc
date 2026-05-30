@@ -237,7 +237,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   .mobile-cta-fixed { display: none !important; }
   .nav-desktop-links { display: none !important; }
   .nav-logo-text { font-size: 13px !important; }
-  .nav-lang { display: none !important; }
   .dest-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
 }
 `}</style>
