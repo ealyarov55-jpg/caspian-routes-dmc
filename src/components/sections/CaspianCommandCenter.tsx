@@ -447,213 +447,210 @@ export default function CaspianCommandCenter() {
 
   // ── ITINERARY VIEW ─────────────────────────────────────────────────
   if (view === "itinerary" && plan) {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", height: "100vh", background: T.bg, color: T.text, fontFamily: T.font }}>
-        <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
-          @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-          @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
-          *{box-sizing:border-box;}
-          .stop-row:hover{background:rgba(255,255,255,0.04)!important;border-color:rgba(0,212,170,0.2)!important;}
-          .stop-row.active-stop{background:${T.accentGlow}!important;border-color:${T.accent}!important;}
-          .day-chip:hover{opacity:0.8;}
-          ::-webkit-scrollbar{width:4px;height:4px;}
-          ::-webkit-scrollbar-thumb{background:rgba(0,212,170,0.2);border-radius:2px;}
-          @media(max-width:767px){.itin-map{display:none!important;}.itin-left{width:100%!important;}}
-        `}</style>
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh", background: T.bg, color: T.text, fontFamily: T.font, overflow: "hidden" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
+        @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
+        *{box-sizing:border-box;}
+        .stop-row:hover{background:rgba(255,255,255,0.04)!important;border-color:rgba(0,212,170,0.2)!important;}
+        .stop-row.active-stop{background:${T.accentGlow}!important;border-color:${T.accent}!important;}
+        .day-chip:hover{opacity:0.8;}
+        ::-webkit-scrollbar{width:4px;height:4px;}
+        ::-webkit-scrollbar-thumb{background:rgba(0,212,170,0.2);border-radius:2px;}
+        .itin-split{display:flex;flex:1;overflow:hidden;flex-direction:row;}
+        .itin-left{width:420px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid ${T.border};overflow:hidden;}
+        .itin-map{flex:1;position:relative;min-height:0;}
+        @media(max-width:767px){
+          .itin-split{flex-direction:column;overflow-y:auto;overflow-x:hidden;}
+          .itin-left{width:100%!important;flex-shrink:0;overflow:visible;height:auto;}
+          .itin-map{height:320px;flex:none;flex-shrink:0;position:relative;}
+          .itin-topbar-title{display:none;}
+        }
+      `}</style>
 
-        {/* Top nav */}
-        <div style={{ height: 52, background: T.sidebar, borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 12px 0 16px", flexShrink: 0, zIndex: 10, gap: 8 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Link href={`/${locale}`} style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.accent, animation: "pulse 2s ease infinite" }} />
-              <span style={{ fontFamily: T.fontDisplay, fontSize: 13, fontWeight: 800, color: T.text }}>CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES</span>
-            </Link>
-            <div style={{ width: 1, height: 16, background: T.border }} />
-            <span style={{ fontSize: 12, color: T.textMuted, whiteSpace: "nowrap" }}>AI маршрут</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {geocoding && <span style={{ fontSize: 11, color: T.textMuted }}>Загружаем карту...</span>}
-            <button
-  onClick={() => setView("chat")}
-  style={{ padding: "6px 14px", borderRadius: 8, background: T.accentGlow, border: `1px solid ${T.accentBorder}`, color: T.accent, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.font, whiteSpace: "nowrap" }}
->
-  💬 Чат
-</button>
-          </div>
+      {/* Top nav */}
+      <div style={{ height: 52, background: T.sidebar, borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", flexShrink: 0, zIndex: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+          <Link href={`/${locale}`} style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.accent, animation: "pulse 2s ease infinite" }} />
+            <span style={{ fontFamily: T.fontDisplay, fontSize: 13, fontWeight: 800, color: T.text, whiteSpace: "nowrap" }}>CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES</span>
+          </Link>
+          <div style={{ width: 1, height: 16, background: T.border, flexShrink: 0 }} />
+          <span className="itin-topbar-title" style={{ fontSize: 12, color: T.textMuted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>AI маршрут</span>
         </div>
-
-        {/* Split */}
-        <div style={{ display: "flex", flex: 1, overflow: "hidden", flexDirection: "column" }} className="itin-split">
-
-          {/* Left: Itinerary */}
-          <div className="itin-left" style={{ width: 420, flexShrink: 0, display: "flex", flexDirection: "column", borderRight: `1px solid ${T.border}`, overflow: "hidden" }}>
-
-            {/* Plan header */}
-            <div style={{ padding: "16px 20px 12px", borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
-              <p style={{ fontSize: 9, color: T.accent, letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: 4 }}>✦ Ваш маршрут</p>
-              <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(0.95rem, 2vw, 1.2rem)", color: T.text, fontWeight: 800, margin: "0 0 4px" }}>{plan.plan_title}</h2>
-              <p style={{ color: T.textMuted, fontSize: 12, margin: 0 }}>{plan.total_budget_estimate}</p>
-
-              {/* Prefs pills */}
-              <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
-                {[prefs.group, prefs.budget, prefs.pace].filter(Boolean).map((p, i) => (
-                  <span key={i} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 10, background: T.bgCard, border: `1px solid ${T.border}`, color: T.textMuted }}>{p}</span>
-                ))}
-              </div>
-            </div>
-
-            {/* Day chips */}
-            <div style={{ display: "flex", gap: 6, padding: "10px 20px", borderBottom: `1px solid ${T.border}`, overflowX: "auto", flexShrink: 0 }}>
-              {plan.days.map((day, di) => {
-                const color = DAY_COLORS[di % DAY_COLORS.length];
-                const isActive = day.day === activeDay;
-                return (
-                  <button key={day.day} className="day-chip"
-                    onClick={() => { setActiveDay(day.day); setActiveStopIdx(null); }}
-                    style={{ padding: "5px 14px", borderRadius: 20, border: `1px solid ${isActive ? color : T.border}`, background: isActive ? `${color}15` : T.bgCard, color: isActive ? color : T.textMuted, fontSize: 12, fontWeight: isActive ? 600 : 400, cursor: "pointer", fontFamily: T.font, whiteSpace: "nowrap", transition: "all 0.2s", flexShrink: 0 }}>
-                    День {day.day}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Day content */}
-            <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
-              {currentDay && (
-                <>
-                  <div style={{ marginBottom: 16 }}>
-                    <p style={{ fontSize: 10, color: currentGeoDay?.color || T.accent, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 4 }}>День {currentDay.day}</p>
-                    <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1.1rem", color: T.text, fontWeight: 800, margin: 0 }}>{currentDay.title}</h3>
-                  </div>
-
-                  {/* Stops */}
-                  {[
-                    { slot: "morning" as const, label: "🌅 Утро", data: currentDay.morning },
-                    { slot: "afternoon" as const, label: "☀️ День", data: currentDay.afternoon },
-                    { slot: "evening" as const, label: "🌙 Вечер", data: currentDay.evening },
-                  ].map(({ slot, label, data }, si) => {
-                    const isActive = activeStopIdx === si;
-                    const color = currentGeoDay?.color || T.accent;
-                    return (
-                      <div key={slot} className={`stop-row${isActive ? " active-stop" : ""}`}
-                        onClick={() => { setActiveStopIdx(si); setActiveSlot(slot); }}
-                        style={{ display: "flex", gap: 12, padding: "12px", borderRadius: 10, border: `1px solid ${T.border}`, marginBottom: 8, cursor: "pointer", transition: "all 0.2s", position: "relative" }}>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, width: 32, flexShrink: 0 }}>
-                          <div style={{ width: 28, height: 28, borderRadius: "50%", background: isActive ? color : T.bgCard, border: `1.5px solid ${isActive ? color : T.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: isActive ? "#06090f" : T.textMuted, transition: "all 0.2s" }}>
-                            {si + 1}
-                          </div>
-                          {si < 2 && <div style={{ width: 1, flex: 1, background: isActive ? color : T.border, opacity: 0.4 }} />}
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <p style={{ fontSize: 10, color: T.textMuted, marginBottom: 2 }}>{label}</p>
-                          <p style={{ fontSize: 13, fontWeight: 600, color: isActive ? color : T.text, margin: "0 0 3px" }}>{data.activity}</p>
-                          <p style={{ fontSize: 12, color: T.textSoft, lineHeight: 1.5, margin: 0 }}>{data.description}</p>
-                          {data.curator_note && isActive && (
-                            <p style={{ fontSize: 11, color: T.textMuted, fontStyle: "italic", marginTop: 6, paddingLeft: 8, borderLeft: `2px solid ${T.accentBorder}` }}>{data.curator_note}</p>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-
-                  {/* Excursion */}
-                  {currentDay.excursion && (
-                    <a href={currentDay.excursion.url} target="_blank" rel="noopener noreferrer"
-                      style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", borderRadius: 10, background: T.accentGlow, border: `1px solid ${T.accentBorder}`, textDecoration: "none", marginTop: 4 }}>
-                      <span style={{ fontSize: 16 }}>🎫</span>
-                      <div>
-                        <p style={{ fontSize: 12, color: T.accent, fontWeight: 600, margin: 0 }}>{currentDay.excursion.name}</p>
-                        <p style={{ fontSize: 11, color: T.textMuted, margin: 0 }}>Забронировать экскурсию →</p>
-                      </div>
-                    </a>
-                  )}
-                </>
-              )}
-
-              {/* Hotels */}
-              {plan.curated_stays && plan.curated_stays.length > 0 && (
-                <div style={{ marginTop: 20 }}>
-                  <p style={{ fontSize: 10, color: T.accent, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 8, fontWeight: 600 }}>🏨 Рекомендуемые отели</p>
-                  {plan.curated_stays.map(hotel => (
-                    <a key={hotel.name} href={hotel.booking_url} target="_blank" rel="noopener noreferrer"
-                      style={{ display: "block", textDecoration: "none", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 14px", marginBottom: 8 }}>
-                      <p style={{ color: T.text, fontSize: 13, fontWeight: 600, margin: "0 0 2px" }}>{hotel.name}</p>
-                      <p style={{ color: T.textSoft, fontSize: 12, margin: "0 0 4px" }}>{hotel.description}</p>
-                      <span style={{ color: T.accent, fontSize: 11 }}>Найти номер →</span>
-                    </a>
-                  ))}
-                </div>
-              )}
-
-              {/* Logistics + flights */}
-              {plan.logistics && (
-                <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "12px 14px", marginTop: 12 }}>
-                  <p style={{ color: T.accent, fontSize: 10, letterSpacing: 2, textTransform: "uppercase", marginBottom: 4 }}>🚕 {plan.logistics.title}</p>
-                  <p style={{ color: T.textSoft, fontSize: 12, lineHeight: 1.6, margin: 0 }}>{plan.logistics.content}</p>
-                </div>
-              )}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8, marginBottom: 20 }}>
-                {plan.flights && (
-                  <a href={plan.flights.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 12px" }}>
-                    <p style={{ color: T.accent, fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginBottom: 3 }}>✈️ Билеты</p>
-                    <p style={{ color: T.textSoft, fontSize: 11, margin: "0 0 4px" }}>{plan.flights.tip}</p>
-                    <span style={{ color: T.accent, fontSize: 11 }}>Найти →</span>
-                  </a>
-                )}
-                {plan.car_rental && (
-                  <a href={plan.car_rental.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 12px" }}>
-                    <p style={{ color: "#f59e0b", fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginBottom: 3 }}>🚗 Авто</p>
-                    <p style={{ color: T.textSoft, fontSize: 11, margin: "0 0 4px" }}>{plan.car_rental.tip}</p>
-                    <span style={{ color: "#f59e0b", fontSize: 11 }}>Найти →</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Map */}
-          <div className="itin-map" style={{ flex: 1, position: "relative", minHeight: 0 }}>
-            {geoDays.length > 0 ? (
-              <ItineraryMap
-                geoDays={geoDays}
-                activeDay={activeDay}
-                onMarkerClick={(day, stopIdx) => {
-                  setActiveDay(day);
-                  setActiveStopIdx(stopIdx);
-                }}
-              />
-            ) : (
-              <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#07111e" }}>
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: 32, marginBottom: 12 }}>🗺</div>
-                  <p style={{ color: T.textMuted, fontSize: 13 }}>{geocoding ? "Загружаем карту..." : "Карта недоступна"}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Day badge on map */}
-            {currentGeoDay && (
-              <div style={{ position: "absolute", top: 12, left: 12, padding: "6px 14px", borderRadius: 20, background: currentGeoDay.color, color: "#06090f", fontSize: 12, fontWeight: 600, zIndex: 10, pointerEvents: "none" }}>
-                День {currentGeoDay.day} — {currentGeoDay.title}
-              </div>
-            )}
-
-            {/* Active stop tooltip */}
-            {activeStopIdx !== null && currentGeoDay?.stops[activeStopIdx] && (
-              <div style={{ position: "absolute", bottom: 20, left: 20, width: 260, background: "rgba(6,9,15,0.96)", border: `1px solid ${T.accentBorder}`, borderRadius: 12, padding: "14px 16px", backdropFilter: "blur(16px)", boxShadow: "0 8px 32px rgba(0,0,0,0.5)", zIndex: 10, animation: "fadeUp 0.2s ease" }}>
-                <p style={{ fontSize: 10, color: T.textMuted, marginBottom: 4 }}>{currentGeoDay.stops[activeStopIdx].time}</p>
-                <p style={{ fontSize: 13, fontWeight: 700, color: currentGeoDay.color, margin: "0 0 4px" }}>{currentGeoDay.stops[activeStopIdx].activity}</p>
-                <p style={{ fontSize: 12, color: T.textSoft, lineHeight: 1.5, margin: "0 0 8px" }}>{currentGeoDay.stops[activeStopIdx].description}</p>
-                <p style={{ fontSize: 11, color: T.textMuted, fontStyle: "italic", margin: 0 }}>💡 {currentGeoDay.stops[activeStopIdx].tip}</p>
-              </div>
-            )}
-          </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+          {geocoding && <span style={{ fontSize: 11, color: T.textMuted, whiteSpace: "nowrap" }}>Загружаем...</span>}
+          <button onClick={() => setView("chat")} style={{ padding: "6px 14px", borderRadius: 8, background: T.accentGlow, border: `1px solid ${T.accentBorder}`, color: T.accent, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.font, whiteSpace: "nowrap" }}>
+            💬 Чат
+          </button>
         </div>
       </div>
-    );
-  }
 
+      {/* Split */}
+      <div className="itin-split">
+
+        {/* Left: Itinerary */}
+        <div className="itin-left">
+
+          {/* Plan header */}
+          <div style={{ padding: "16px 20px 12px", borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
+            <p style={{ fontSize: 9, color: T.accent, letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: 4 }}>✦ Ваш маршрут</p>
+            <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(0.95rem, 2vw, 1.2rem)", color: T.text, fontWeight: 800, margin: "0 0 4px" }}>{plan.plan_title}</h2>
+            <p style={{ color: T.textMuted, fontSize: 12, margin: 0 }}>{plan.total_budget_estimate}</p>
+            <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
+              {[prefs.group, prefs.budget, prefs.pace].filter(Boolean).map((p, i) => (
+                <span key={i} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 10, background: T.bgCard, border: `1px solid ${T.border}`, color: T.textMuted }}>{p}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Day chips */}
+          <div style={{ display: "flex", gap: 6, padding: "10px 20px", borderBottom: `1px solid ${T.border}`, overflowX: "auto", flexShrink: 0 }}>
+            {plan.days.map((day, di) => {
+              const color = DAY_COLORS[di % DAY_COLORS.length];
+              const isActive = day.day === activeDay;
+              return (
+                <button key={day.day} className="day-chip"
+                  onClick={() => { setActiveDay(day.day); setActiveStopIdx(null); }}
+                  style={{ padding: "5px 14px", borderRadius: 20, border: `1px solid ${isActive ? color : T.border}`, background: isActive ? `${color}15` : T.bgCard, color: isActive ? color : T.textMuted, fontSize: 12, fontWeight: isActive ? 600 : 400, cursor: "pointer", fontFamily: T.font, whiteSpace: "nowrap", transition: "all 0.2s", flexShrink: 0 }}>
+                  День {day.day}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Day content */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
+            {currentDay && (
+              <>
+                <div style={{ marginBottom: 16 }}>
+                  <p style={{ fontSize: 10, color: currentGeoDay?.color || T.accent, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 4 }}>День {currentDay.day}</p>
+                  <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1.1rem", color: T.text, fontWeight: 800, margin: 0 }}>{currentDay.title}</h3>
+                </div>
+
+                {[
+                  { slot: "morning" as const, label: "🌅 Утро", data: currentDay.morning },
+                  { slot: "afternoon" as const, label: "☀️ День", data: currentDay.afternoon },
+                  { slot: "evening" as const, label: "🌙 Вечер", data: currentDay.evening },
+                ].map(({ slot, label, data }, si) => {
+                  const isActive = activeStopIdx === si;
+                  const color = currentGeoDay?.color || T.accent;
+                  return (
+                    <div key={slot} className={`stop-row${isActive ? " active-stop" : ""}`}
+                      onClick={() => { setActiveStopIdx(si); setActiveSlot(slot); }}
+                      style={{ display: "flex", gap: 12, padding: "12px", borderRadius: 10, border: `1px solid ${T.border}`, marginBottom: 8, cursor: "pointer", transition: "all 0.2s" }}>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, width: 32, flexShrink: 0 }}>
+                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: isActive ? color : T.bgCard, border: `1.5px solid ${isActive ? color : T.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: isActive ? "#06090f" : T.textMuted, transition: "all 0.2s" }}>
+                          {si + 1}
+                        </div>
+                        {si < 2 && <div style={{ width: 1, flex: 1, minHeight: 16, background: isActive ? color : T.border, opacity: 0.4 }} />}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <p style={{ fontSize: 10, color: T.textMuted, marginBottom: 2 }}>{label}</p>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: isActive ? color : T.text, margin: "0 0 3px" }}>{data.activity}</p>
+                        <p style={{ fontSize: 12, color: T.textSoft, lineHeight: 1.5, margin: 0 }}>{data.description}</p>
+                        {data.curator_note && isActive && (
+                          <p style={{ fontSize: 11, color: T.textMuted, fontStyle: "italic", marginTop: 6, paddingLeft: 8, borderLeft: `2px solid ${T.accentBorder}` }}>{data.curator_note}</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {currentDay.excursion && (
+                  <a href={currentDay.excursion.url} target="_blank" rel="noopener noreferrer"
+                    style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", borderRadius: 10, background: T.accentGlow, border: `1px solid ${T.accentBorder}`, textDecoration: "none", marginTop: 4 }}>
+                    <span style={{ fontSize: 16 }}>🎫</span>
+                    <div>
+                      <p style={{ fontSize: 12, color: T.accent, fontWeight: 600, margin: 0 }}>{currentDay.excursion.name}</p>
+                      <p style={{ fontSize: 11, color: T.textMuted, margin: 0 }}>Забронировать экскурсию →</p>
+                    </div>
+                  </a>
+                )}
+              </>
+            )}
+
+            {plan.curated_stays && plan.curated_stays.length > 0 && (
+              <div style={{ marginTop: 20 }}>
+                <p style={{ fontSize: 10, color: T.accent, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 8, fontWeight: 600 }}>🏨 Рекомендуемые отели</p>
+                {plan.curated_stays.map(hotel => (
+                  <a key={hotel.name} href={hotel.booking_url} target="_blank" rel="noopener noreferrer"
+                    style={{ display: "block", textDecoration: "none", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 14px", marginBottom: 8 }}>
+                    <p style={{ color: T.text, fontSize: 13, fontWeight: 600, margin: "0 0 2px" }}>{hotel.name}</p>
+                    <p style={{ color: T.textSoft, fontSize: 12, margin: "0 0 4px" }}>{hotel.description}</p>
+                    <span style={{ color: T.accent, fontSize: 11 }}>Найти номер →</span>
+                  </a>
+                ))}
+              </div>
+            )}
+
+            {plan.logistics && (
+              <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "12px 14px", marginTop: 12 }}>
+                <p style={{ color: T.accent, fontSize: 10, letterSpacing: 2, textTransform: "uppercase", marginBottom: 4 }}>🚕 {plan.logistics.title}</p>
+                <p style={{ color: T.textSoft, fontSize: 12, lineHeight: 1.6, margin: 0 }}>{plan.logistics.content}</p>
+              </div>
+            )}
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8, marginBottom: 20 }}>
+              {plan.flights && (
+                <a href={plan.flights.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 12px" }}>
+                  <p style={{ color: T.accent, fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginBottom: 3 }}>✈️ Билеты</p>
+                  <p style={{ color: T.textSoft, fontSize: 11, margin: "0 0 4px" }}>{plan.flights.tip}</p>
+                  <span style={{ color: T.accent, fontSize: 11 }}>Найти →</span>
+                </a>
+              )}
+              {plan.car_rental && (
+                <a href={plan.car_rental.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 12px" }}>
+                  <p style={{ color: "#f59e0b", fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginBottom: 3 }}>🚗 Авто</p>
+                  <p style={{ color: T.textSoft, fontSize: 11, margin: "0 0 4px" }}>{plan.car_rental.tip}</p>
+                  <span style={{ color: "#f59e0b", fontSize: 11 }}>Найти →</span>
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Map */}
+        <div className="itin-map">
+          {geoDays.length > 0 ? (
+            <ItineraryMap
+              geoDays={geoDays}
+              activeDay={activeDay}
+              onMarkerClick={(day, stopIdx) => {
+                setActiveDay(day);
+                setActiveStopIdx(stopIdx);
+              }}
+            />
+          ) : (
+            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#07111e" }}>
+              <div style={{ textAlign: "center" }}>
+                <div style={{ fontSize: 32, marginBottom: 12 }}>🗺</div>
+                <p style={{ color: T.textMuted, fontSize: 13 }}>{geocoding ? "Загружаем карту..." : "Карта недоступна"}</p>
+              </div>
+            </div>
+          )}
+
+          {currentGeoDay && (
+            <div style={{ position: "absolute", top: 12, left: 12, padding: "6px 14px", borderRadius: 20, background: currentGeoDay.color, color: "#06090f", fontSize: 12, fontWeight: 600, zIndex: 10, pointerEvents: "none" }}>
+              День {currentGeoDay.day} — {currentGeoDay.title}
+            </div>
+          )}
+
+          {activeStopIdx !== null && currentGeoDay?.stops[activeStopIdx] && (
+            <div style={{ position: "absolute", bottom: 20, left: 20, width: 260, background: "rgba(6,9,15,0.96)", border: `1px solid ${T.accentBorder}`, borderRadius: 12, padding: "14px 16px", backdropFilter: "blur(16px)", boxShadow: "0 8px 32px rgba(0,0,0,0.5)", zIndex: 10, animation: "fadeUp 0.2s ease" }}>
+              <p style={{ fontSize: 10, color: T.textMuted, marginBottom: 4 }}>{currentGeoDay.stops[activeStopIdx].time}</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: currentGeoDay.color, margin: "0 0 4px" }}>{currentGeoDay.stops[activeStopIdx].activity}</p>
+              <p style={{ fontSize: 12, color: T.textSoft, lineHeight: 1.5, margin: "0 0 8px" }}>{currentGeoDay.stops[activeStopIdx].description}</p>
+              <p style={{ fontSize: 11, color: T.textMuted, fontStyle: "italic", margin: 0 }}>💡 {currentGeoDay.stops[activeStopIdx].tip}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
   // ── CHAT VIEW ──────────────────────────────────────────────────────
   return (
     <div style={{ display: "flex", height: "100vh", background: T.bg, color: T.text, fontFamily: T.font, overflow: "hidden" }}>
