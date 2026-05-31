@@ -342,7 +342,98 @@ function ItineraryMap({ geoDays, activeDay, onMarkerClick }: {
 
   return <div ref={mapRef} style={{ width: "100%", height: "100%" }} />;
 }
+function GeneratingOverlay({ locale }: { locale: string }) {
+  const [factIdx, setFactIdx] = useState(0);
+  const [progress, setProgress] = useState(0);
 
+  const facts = locale === "ru" ? [
+    "🏛 Баку — один из немногих городов мира, где средневековая крепость соседствует с небоскрёбами",
+    "🌋 В Азербайджане находится более 400 грязевых вулканов — треть всех в мире",
+    "🔥 Азербайджан означает «Страна огня» — здесь тысячи лет горит вечный огонь",
+    "🍷 Азербайджан — одна из древнейших винодельческих стран мира",
+    "🏔 Шахдаг — горнолыжный курорт на высоте 4243 метра над уровнем моря",
+    "🌊 Каспийское море — самое большое озеро в мире по площади",
+    "🕌 Ичэришехер (Старый город Баку) включён в список ЮНЕСКО",
+    "🌿 Ленкорань — субтропический регион с уникальной флорой и чайными плантациями",
+  ] : locale === "az" ? [
+    "🏛 Bakı — orta əsr qalası ilə göydələnlərin qonşuluq etdiyi nadir şəhərlərdən biridir",
+    "🌋 Azərbaycanda dünyanın üçdə birini təşkil edən 400-dən çox palçıq vulkanı var",
+    "🔥 Azərbaycan — «Od Yurdu» deməkdir, burada minilliklər boyu əbədi od yanır",
+    "🏔 Şahdağ — dəniz səviyyəsindən 4243 metr yüksəklikdə dağ-xizək kurortu",
+    "🌊 Xəzər dənizi — sahəsinə görə dünyanın ən böyük gölüdür",
+    "🕌 İçərişəhər YUNESKO-nun siyahısına daxil edilmişdir",
+  ] : locale === "tr" ? [
+    "🏛 Bakü — ortaçağ kalesinin gökdelenlerle komşu olduğu nadir şehirlerden biri",
+    "🌋 Azerbaycan'da dünyanın üçte birini oluşturan 400'den fazla çamur yanardağı var",
+    "🔥 Azerbaycan — «Ateş Ülkesi» anlamına gelir, burada binlerce yıldır ebedi ateş yanıyor",
+    "🏔 Şahdağ — deniz seviyesinden 4243 metre yükseklikte kayak merkezi",
+    "🌊 Hazar Denizi — yüzey alanına göre dünyanın en büyük gölü",
+    "🕌 İçərişəhər UNESCO listesine dahildir",
+  ] : [
+    "🏛 Baku is one of the few cities where a medieval fortress stands next to skyscrapers",
+    "🌋 Azerbaijan has over 400 mud volcanoes — a third of all in the world",
+    "🔥 Azerbaijan means 'Land of Fire' — eternal flames have burned here for thousands of years",
+    "🏔 Shahdag is a ski resort at 4,243 meters above sea level",
+    "🌊 The Caspian Sea is the world's largest lake by surface area",
+    "🕌 Icherisheher (Baku Old City) is a UNESCO World Heritage Site",
+  ];
+
+  useEffect(() => {
+    const factTimer = setInterval(() => {
+      setFactIdx(prev => (prev + 1) % facts.length);
+    }, 3000);
+    const progressTimer = setInterval(() => {
+      setProgress(prev => prev < 90 ? prev + 1 : prev);
+    }, 600);
+    return () => { clearInterval(factTimer); clearInterval(progressTimer); };
+  }, []);
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(6,9,15,0.97)", zIndex: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 32, backdropFilter: "blur(8px)" }}>
+      <style>{`
+        @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        @keyframes factFade { 0%{opacity:0;transform:translateY(10px)} 20%{opacity:1;transform:translateY(0)} 80%{opacity:1;transform:translateY(0)} 100%{opacity:0;transform:translateY(-10px)} }
+        @keyframes pulse2 { 0%,100%{opacity:0.4;transform:scale(1)} 50%{opacity:1;transform:scale(1.1)} }
+      `}</style>
+
+      {/* Logo */}
+      <div style={{ marginBottom: 40, display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#00d4aa", boxShadow: "0 0 20px #00d4aa", animation: "pulse2 2s ease infinite" }} />
+        <span style={{ fontFamily: "'Syne', sans-serif", fontSize: 18, fontWeight: 800, color: "#e8edf5", letterSpacing: -0.5 }}>
+          CASPIAN<span style={{ color: "#00d4aa" }}>.</span>ROUTES
+        </span>
+      </div>
+
+      {/* Spinner */}
+      <div style={{ position: "relative", width: 80, height: 80, marginBottom: 32 }}>
+        <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "2px solid rgba(0,212,170,0.1)" }} />
+        <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "2px solid transparent", borderTopColor: "#00d4aa", animation: "spin 1s linear infinite" }} />
+        <div style={{ position: "absolute", inset: 8, borderRadius: "50%", border: "1.5px solid transparent", borderTopColor: "rgba(0,212,170,0.4)", animation: "spin 1.5s linear infinite reverse" }} />
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>🗺</div>
+      </div>
+
+      {/* Title */}
+      <p style={{ fontSize: 11, color: "#00d4aa", letterSpacing: "0.3em", textTransform: "uppercase", marginBottom: 8, fontFamily: "'DM Sans', sans-serif" }}>
+        {locale === "ru" ? "AI составляет маршрут" : locale === "az" ? "AI marşrut hazırlayır" : locale === "tr" ? "AI rota hazırlıyor" : "AI building itinerary"}
+      </p>
+
+      {/* Progress bar */}
+      <div style={{ width: "100%", maxWidth: 320, height: 3, background: "rgba(255,255,255,0.06)", borderRadius: 99, marginBottom: 40, overflow: "hidden" }}>
+        <div style={{ height: "100%", width: `${progress}%`, background: "linear-gradient(90deg, #00d4aa, #00b894)", borderRadius: 99, transition: "width 0.6s ease" }} />
+      </div>
+
+      {/* Fact */}
+      <div style={{ maxWidth: 400, textAlign: "center", minHeight: 60 }}>
+        <p key={factIdx} style={{ color: "#94a3b8", fontSize: 14, lineHeight: 1.7, animation: "factFade 3s ease", margin: 0 }}>
+          {facts[factIdx]}
+        </p>
+      </div>
+
+      {/* Progress % */}
+      <p style={{ color: "#475569", fontSize: 11, marginTop: 20 }}>{progress}%</p>
+    </div>
+  );
+}
 // ── MAIN COMPONENT ────────────────────────────────────────────────────
 export default function CaspianCommandCenter() {
   const params = useParams();
@@ -842,7 +933,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
             <div key={i} style={{ flex: 1, height: 2, borderRadius: 2, background: i < step ? T.accent : i === step ? T.accentDim : T.bgCard, transition: "all 0.3s" }} />
           ))}
         </div>
-
+{generating && step === 5 && <GeneratingOverlay locale={locale} />}
         <div ref={chatRef} style={{ flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 12 }}>
           {messages.map((msg, i) => (
             <div key={i} style={{ display: "flex", gap: 10, maxWidth: "85%", alignSelf: msg.role === "user" ? "flex-end" : "flex-start", flexDirection: msg.role === "user" ? "row-reverse" : "row", animation: "fadeUp 0.3s ease" }}>
