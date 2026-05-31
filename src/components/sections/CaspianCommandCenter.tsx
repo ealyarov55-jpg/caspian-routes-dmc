@@ -393,11 +393,11 @@ const options = getOptions(locale);
   };
 
   useEffect(() => {
-    aiSay("Привет! Я помогу составить маршрут по Азербайджану специально под вас.\n\nПодготовлю персональный итинерарий за 5 вопросов — займёт меньше минуты. 🗺", 700, () => {
-      aiSay("Когда планируете поехать и на сколько дней?", 800, () => { scrollBottom(); setActiveOptions("duration"); });
-    });
-  }, []);
-
+  const t = getTexts(locale);
+  aiSay(t.greeting, 700, () => {
+    aiSay(t.q_duration, 800, () => { scrollBottom(); setActiveOptions("duration"); });
+  });
+}, [locale]);
   const handleOption = (value: string, label: string) => {
   if (generating) return;
   setActiveOptions(null);
@@ -405,15 +405,15 @@ const options = getOptions(locale);
   if (step === 0) {
     const np = { ...prefs, duration: value };
     setPrefs(np); setStep(1);
-    aiSay(texts.q_group, 700, () => { scrollBottom(); setActiveOptions("group"); });
+    aiSay(getTexts(locale).q_group, 700, () => { scrollBottom(); setActiveOptions("group"); });
   } else if (step === 1) {
     const np = { ...prefs, group: value };
     setPrefs(np); setStep(2);
-    aiSay(texts.q_budget, 700, () => { scrollBottom(); setActiveOptions("budget"); });
+    aiSay(getTexts(locale).q_budget, 700, () => { scrollBottom(); setActiveOptions("budget"); });
   } else if (step === 2) {
     const np = { ...prefs, budget: value };
     setPrefs(np); setStep(3);
-    aiSay(texts.q_interests, 700, () => { scrollBottom(); setActiveOptions("interests"); });
+    aiSay(getTexts(locale).q_interests, 700, () => { scrollBottom(); setActiveOptions("interests"); });
   } else if (step === 4) {
     const np = { ...prefs, pace: value };
     setPrefs(np); setStep(5);
@@ -430,7 +430,7 @@ const handleInterestsDone = () => {
   pushUser(interests.join(", "));
   const np = { ...prefs, interests };
   setPrefs(np); setStep(4);
-  aiSay(texts.q_pace, 700, () => { scrollBottom(); setActiveOptions("pace"); });
+  aiSay(getTexts(locale).q_pace, 700, () => { scrollBottom(); setActiveOptions("pace"); });
 };
 
   const geocodePlan = async (planData: Plan): Promise<GeoDay[]> => {
