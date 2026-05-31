@@ -30,6 +30,7 @@ RULES:
 - maps_url: real Google Maps search URL for the place
 - rating: real approximate rating from Google Maps (e.g. "4.6")
 - tripadvisor_url: real TripAdvisor search URL for the place
+- photo_query: specific English search query for Pexels to find a photo of this exact place. Include place name and country. Examples: "Gobustan mud volcanoes Azerbaijan", "Sheki Khan Palace Azerbaijan", "Old City Baku walls medieval". Never use generic words like "travel", "nature", "tourism".
 
 Return ONLY valid JSON:
 {
@@ -39,9 +40,9 @@ Return ONLY valid JSON:
     {
       "day": 1,
       "title": "editorial day title",
-      "morning": { "activity": "real place name", "description": "max 15 words", "tip": "practical tip", "curator_note": "1 insider secret", "lat": 40.3953, "lng": 49.8822, "maps_url": "https://maps.google.com/?q=Place+Name+Baku+Azerbaijan", "rating": "4.7", "tripadvisor_url": "https://www.tripadvisor.com/Search?q=Place+Name+Baku" },
-      "afternoon": { "activity": "real place name", "description": "max 15 words", "tip": "tip", "curator_note": "insider secret", "lat": 40.3667, "lng": 49.8370, "maps_url": "https://maps.google.com/?q=Place+Name+Baku+Azerbaijan", "rating": "4.5", "tripadvisor_url": "https://www.tripadvisor.com/Search?q=Place+Name+Baku" },
-      "evening": { "activity": "real place name", "description": "max 15 words", "tip": "tip", "curator_note": "insider secret", "lat": 40.3777, "lng": 49.8920, "maps_url": "https://maps.google.com/?q=Place+Name+Baku+Azerbaijan", "rating": "4.4", "tripadvisor_url": "https://www.tripadvisor.com/Search?q=Place+Name+Baku" },
+      "morning": { "activity": "real place name", "description": "max 15 words", "tip": "practical tip", "curator_note": "1 insider secret", "lat": 40.3953, "lng": 49.8822, "maps_url": "https://maps.google.com/?q=Place+Name+Baku+Azerbaijan", "rating": "4.7", "tripadvisor_url": "https://www.tripadvisor.com/Search?q=Place+Name+Baku", "photo_query": "Maiden Tower Baku Azerbaijan" },
+      "afternoon": { "activity": "real place name", "description": "max 15 words", "tip": "tip", "curator_note": "insider secret", "lat": 40.3667, "lng": 49.8370, "maps_url": "https://maps.google.com/?q=Place+Name+Baku+Azerbaijan", "rating": "4.5", "tripadvisor_url": "https://www.tripadvisor.com/Search?q=Place+Name+Baku", "photo_query": "Flame Towers Baku night" },
+      "evening": { "activity": "real place name", "description": "max 15 words", "tip": "tip", "curator_note": "insider secret", "lat": 40.3777, "lng": 49.8920, "maps_url": "https://maps.google.com/?q=Place+Name+Baku+Azerbaijan", "rating": "4.4", "tripadvisor_url": "https://www.tripadvisor.com/Search?q=Place+Name+Baku", "photo_query": "Baku boulevard Caspian Sea evening" },
       "excursion": { "name": "experience name", "search_query": "English search query" }
     }
   ],
@@ -73,15 +74,17 @@ Return ONLY valid JSON:
         throw new Error("Invalid JSON");
       }
     }
-// Force affiliate links regardless of what Claude generated
-plan.flights = {
-  tip: plan.flights?.tip || "Ищите билеты заранее для лучших цен",
-  url: "https://aviasales.tpk.ro/qyjqiTHn"
-};
-plan.car_rental = {
-  tip: plan.car_rental?.tip || "Аренда авто от надёжных партнёров",
-  url: "https://localrent.tpk.ro/BAFUsMGN"
-};
+
+    // Force affiliate links regardless of what Claude generated
+    plan.flights = {
+      tip: plan.flights?.tip || "Ищите билеты заранее для лучших цен",
+      url: "https://aviasales.tpk.ro/qyjqiTHn"
+    };
+    plan.car_rental = {
+      tip: plan.car_rental?.tip || "Аренда авто от надёжных партнёров",
+      url: "https://localrent.tpk.ro/BAFUsMGN"
+    };
+
     if (plan.days) {
       plan.days = plan.days.map((day: any) => ({
         ...day,

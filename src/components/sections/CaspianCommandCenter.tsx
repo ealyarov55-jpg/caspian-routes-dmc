@@ -39,6 +39,13 @@ type Stop = {
   description: string;
   tip: string;
   curator_note?: string;
+  photo_query?: string;
+  photo_url?: string;
+  maps_url?: string;
+  rating?: string;
+  tripadvisor_url?: string;
+  lat?: number;
+  lng?: number;
 };
 
 type PlanDay = {
@@ -465,7 +472,7 @@ const options = getOptions(locale);
   const [activeStopIdx, setActiveStopIdx] = useState<number | null>(null);
   const [activeSlot, setActiveSlot] = useState<"morning" | "afternoon" | "evening">("morning");
   const [geocoding, setGeocoding] = useState(false);
-
+const [stopPhotos, setStopPhotos] = useState<Record<string, string>>({});
   const chatRef = useRef<HTMLDivElement>(null);
   const scrollBottom = () => {
   setTimeout(() => {
@@ -564,7 +571,36 @@ const handleInterestsDone = () => {
   }));
   return days;
 };
+const fetchStopPhotos = async (planData: Plan) => {
+  const queries: { key: string; query: string }[] = [];
+  planData.days.forEach(day => {
+    ["morning", "afternoon", "evening"].forEach(slot => {
+      const stop = day[slot as keyof PlanDay] as Stop;
+      if (stop?.photo_query) {
+        queries.push({
+          key: `${day.day}-${slot}`,
+          query: stop.photo_query,
+        });
+      }
+    });
+  });
 
+  const results = await Promise.allSettled(
+    queries.map(async ({ key, query }) => {
+      const res = await fetch(`/api/unsplash?query=${encodeURIComponent(query)}`);
+      const data = await res.json();
+      return { key, url: data.url };
+    })
+  );
+
+  const photos: Record<string, string> = {};
+  results.forEach(result => {
+    if (result.status === "fulfilled" && result.value.url) {
+      photos[result.value.key] = result.value.url;
+    }
+  });
+  setStopPhotos(photos);
+};
   const generatePlan = async (finalPrefs: Prefs) => {
   aiSay(texts.generating, 400);
   setGenerating(true);
@@ -588,6 +624,7 @@ const handleInterestsDone = () => {
       setPlan(data.plan);
       aiSay(texts.ready, 600);
       const geo = await geocodePlan(data.plan);
+      fetchStopPhotos(data.plan);
       setGeoDays(geo);
       setActiveDay(1);
       setTimeout(() => { setView("itinerary"); }, 1200);
@@ -748,9 +785,25 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
     {si < 2 && <div style={{ width: 1, flex: 1, minHeight: 16, background: isActive ? color : T.border, opacity: 0.4 }} />}
   </div>
   <div style={{ flex: 1 }}>
-    <p style={{ fontSize: 10, color: T.textMuted, marginBottom: 2 }}>{label}</p>
-    <p style={{ fontSize: 13, fontWeight: 600, color: isActive ? color : T.text, margin: "0 0 3px" }}>{data.activity}</p>
-    <p style={{ fontSize: 12, color: T.textSoft, lineHeight: 1.5, margin: 0 }}>{data.description}</p>
+  {/* Photo */}
+  {(() => {
+    const photoKey = `${activeDay}-${slot}`;
+    const photoUrl = stopPhotos[photoKey];
+    return photoUrl ? (
+      <div style={{ marginBottom: 8, borderRadius: 8, overflow: "hidden", height: 90, position: "relative" }}>
+        <img
+          src={photoUrl}
+          alt={data.activity}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          onError={e => { (e.target as HTMLElement).parentElement!.style.display = "none"; }}
+        />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(6,9,15,0.6) 0%, transparent 60%)" }} />
+      </div>
+    ) : null;
+  })()}
+  <p style={{ fontSize: 10, color: T.textMuted, marginBottom: 2 }}>{label}</p>
+  <p style={{ fontSize: 13, fontWeight: 600, color: isActive ? color : T.text, margin: "0 0 3px" }}>{data.activity}</p>
+  <p style={{ fontSize: 12, color: T.textSoft, lineHeight: 1.5, margin: 0 }}>{data.description}</p>
     
     {/* Добавленные кнопки ссылок и рейтинга */}
     {(data as any).maps_url && (
