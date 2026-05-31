@@ -116,13 +116,12 @@ const T = {
   font: "'DM Sans', system-ui, sans-serif",
 };
 
-async function getWeather() {
+async function getWeather(lang: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "https://www.caspian-routes.com"}/api/weather`, { next: { revalidate: 1800 } });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "https://www.caspian-routes.com"}/api/weather?lang=${lang}`, { next: { revalidate: 1800 } });
     return await res.json();
   } catch { return { temp: null }; }
 }
-
 async function getCurrency() {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "https://www.caspian-routes.com"}/api/currency`, { cache: "no-store" });
@@ -135,7 +134,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const lang = (locale === "ru" || locale === "az" || locale === "tr") ? locale : "en";
   const t = content[lang];
 
-  const [weather, currency] = await Promise.all([getWeather(), getCurrency()]);
+  const [weather, currency] = await Promise.all([getWeather(lang), getCurrency()]);
 
   const mapEmbedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d194304.64910730564!2d49.6570777!3d40.3947365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40307d6bd6211cf9%3A0x343f6605f2a7c9ba!2z0J_QkNCa0KMsINCQ0LfQtdGA0LHQsNC50LTQttCw0L0!5e0!3m2!1sru!2s!4v1620000000000!5m2!1sru!2s";
 
@@ -325,13 +324,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <section style={{ position: "relative", zIndex: 5, maxWidth: 1280, margin: "0 auto", padding: "80px 48px 60px" }}>
         <FadeIn>
           <div style={{ marginBottom: 48 }}>
-            <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 12 }}>✦ {lang === "ru" ? "Популярные направления" : "Popular destinations"}</p>
-            <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.6rem, 3vw, 2.4rem)", color: T.text, fontWeight: 800, margin: "0 0 8px" }}>
-              {lang === "ru" ? "Популярные направления" : "Popular destinations"}
-            </h2>
-            <p style={{ color: T.textMuted, fontSize: 14, margin: 0 }}>
-              {lang === "ru" ? "Выберите регион — и ИИ построит для вас готовый маршрут" : "Choose a region and AI will build your itinerary"}
-            </p>
+            <p style={{ color: T.textMuted, fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase", marginBottom: 12 }}>✦ {lang === "ru" ? "Популярные направления" : lang === "az" ? "Məşhur istiqamətlər" : lang === "tr" ? "Popüler destinasyonlar" : "Popular destinations"}</p>
+<h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(1.6rem, 3vw, 2.4rem)", color: T.text, fontWeight: 800, margin: "0 0 8px" }}>
+  {lang === "ru" ? "Популярные направления" : lang === "az" ? "Məşhur istiqamətlər" : lang === "tr" ? "Popüler destinasyonlar" : "Popular destinations"}
+</h2>
+<p style={{ color: T.textMuted, fontSize: 14, margin: 0 }}>
+  {lang === "ru" ? "Выберите регион — и ИИ построит для вас готовый маршрут" : lang === "az" ? "Bölgəni seçin — AI marşrutunuzu quracaq" : lang === "tr" ? "Bölge seçin — AI rotanızı oluştursun" : "Choose a region and AI will build your itinerary"}
+</p>
           </div>
         </FadeIn>
         <div className="dest-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>

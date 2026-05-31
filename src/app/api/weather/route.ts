@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const lang = req.nextUrl.searchParams.get("lang") || "ru";
     const res = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=Baku,az&appid=${process.env.OPENWEATHER_API_KEY}&units=metric&lang=ru`,
+      `https://api.openweathermap.org/data/2.5/weather?q=Baku,az&appid=${process.env.OPENWEATHER_API_KEY}&units=metric&lang=${lang}`,
       { next: { revalidate: 1800 } }
     );
     const data = await res.json();
