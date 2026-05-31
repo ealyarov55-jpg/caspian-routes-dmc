@@ -739,23 +739,45 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
                   const color = currentGeoDay?.color || T.accent;
                   return (
                     <div key={slot} className={`stop-row${isActive ? " active-stop" : ""}`}
-                      onClick={() => { setActiveStopIdx(si); setActiveSlot(slot); }}
-                      style={{ display: "flex", gap: 12, padding: "12px", borderRadius: 10, border: `1px solid ${T.border}`, marginBottom: 8, cursor: "pointer", transition: "all 0.2s" }}>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, width: 32, flexShrink: 0 }}>
-                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: isActive ? color : T.bgCard, border: `1.5px solid ${isActive ? color : T.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: isActive ? "#06090f" : T.textMuted, transition: "all 0.2s" }}>
-                          {si + 1}
-                        </div>
-                        {si < 2 && <div style={{ width: 1, flex: 1, minHeight: 16, background: isActive ? color : T.border, opacity: 0.4 }} />}
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: 10, color: T.textMuted, marginBottom: 2 }}>{label}</p>
-                        <p style={{ fontSize: 13, fontWeight: 600, color: isActive ? color : T.text, margin: "0 0 3px" }}>{data.activity}</p>
-                        <p style={{ fontSize: 12, color: T.textSoft, lineHeight: 1.5, margin: 0 }}>{data.description}</p>
-                        {data.curator_note && isActive && (
-                          <p style={{ fontSize: 11, color: T.textMuted, fontStyle: "italic", marginTop: 6, paddingLeft: 8, borderLeft: `2px solid ${T.accentBorder}` }}>{data.curator_note}</p>
-                        )}
-                      </div>
-                    </div>
+  onClick={() => { setActiveStopIdx(si); setActiveSlot(slot); }}
+  style={{ display: "flex", gap: 12, padding: "12px", borderRadius: 10, border: `1px solid ${T.border}`, marginBottom: 8, cursor: "pointer", transition: "all 0.2s" }}>
+  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, width: 32, flexShrink: 0 }}>
+    <div style={{ width: 28, height: 28, borderRadius: "50%", background: isActive ? color : T.bgCard, border: `1.5px solid ${isActive ? color : T.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: isActive ? "#06090f" : T.textMuted, transition: "all 0.2s" }}>
+      {si + 1}
+    </div>
+    {si < 2 && <div style={{ width: 1, flex: 1, minHeight: 16, background: isActive ? color : T.border, opacity: 0.4 }} />}
+  </div>
+  <div style={{ flex: 1 }}>
+    <p style={{ fontSize: 10, color: T.textMuted, marginBottom: 2 }}>{label}</p>
+    <p style={{ fontSize: 13, fontWeight: 600, color: isActive ? color : T.text, margin: "0 0 3px" }}>{data.activity}</p>
+    <p style={{ fontSize: 12, color: T.textSoft, lineHeight: 1.5, margin: 0 }}>{data.description}</p>
+    
+    {/* Добавленные кнопки ссылок и рейтинга */}
+    {(data as any).maps_url && (
+      <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
+        {(data as any).rating && (
+          <span style={{ fontSize: 10, color: "#f59e0b", padding: "2px 7px", borderRadius: 6, background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)" }}>
+            ⭐ {(data as any).rating}
+          </span>
+        )}
+        <a href={(data as any).maps_url} target="_blank" rel="noopener noreferrer"
+          style={{ fontSize: 10, color: T.accent, padding: "2px 7px", borderRadius: 6, background: T.accentGlow, border: `1px solid ${T.accentBorder}`, textDecoration: "none" }}>
+          📍 Google Maps
+        </a>
+        {(data as any).tripadvisor_url && (
+          <a href={(data as any).tripadvisor_url} target="_blank" rel="noopener noreferrer"
+            style={{ fontSize: 10, color: "#34d399", padding: "2px 7px", borderRadius: 6, background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.15)", textDecoration: "none" }}>
+            🔍 TripAdvisor
+          </a>
+        )}
+      </div>
+    )}
+
+    {data.curator_note && isActive && (
+      <p style={{ fontSize: 11, color: T.textMuted, fontStyle: "italic", marginTop: 6, paddingLeft: 8, borderLeft: `2px solid ${T.accentBorder}` }}>{data.curator_note}</p>
+    )}
+  </div>
+</div>
                   );
                 })}
 
