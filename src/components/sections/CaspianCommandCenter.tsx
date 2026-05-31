@@ -409,7 +409,13 @@ function GeneratingOverlay({ locale }: { locale: string }) {
         <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "2px solid rgba(0,212,170,0.1)" }} />
         <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "2px solid transparent", borderTopColor: "#00d4aa", animation: "spin 1s linear infinite" }} />
         <div style={{ position: "absolute", inset: 8, borderRadius: "50%", border: "1.5px solid transparent", borderTopColor: "rgba(0,212,170,0.4)", animation: "spin 1.5s linear infinite reverse" }} />
-        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>🗺</div>
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00d4aa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+    <line x1="8" y1="2" x2="8" y2="18"/>
+    <line x1="16" y1="6" x2="16" y2="22"/>
+  </svg>
+</div>
       </div>
 
       {/* Title */}
