@@ -121,7 +121,106 @@ const INTERESTS_OPTIONS = [
   { icon: "🏄", label: "Активный отдых" },
   { icon: "🛍", label: "Шопинг" },
 ];
+const getTexts = (locale: string) => {
+  const isRu = locale === "ru";
+  const isAz = locale === "az";
+  const isTr = locale === "tr";
+  return {
+    greeting: isRu ? "Привет! Я помогу составить маршрут по Азербайджану специально под вас.\n\nПодготовлю персональный итинерарий за 5 вопросов — займёт меньше минуты. 🗺" : isAz ? "Salam! Azərbaycan üçün xüsusi marşrut hazırlamağa kömək edəcəyəm.\n\n5 sual ərzində fərdi itinerariy hazırlayacağam — bir dəqiqədən az çəkəcək. 🗺" : isTr ? "Merhaba! Azerbaycan için size özel bir rota oluşturmama yardımcı olacağım.\n\n5 soruda kişisel bir güzergah hazırlayacağım — bir dakikadan az sürer. 🗺" : "Hello! I'll help you plan a trip to Azerbaijan tailored just for you.\n\nI'll prepare a personal itinerary in 5 questions — takes less than a minute. 🗺",
+    q_duration: isRu ? "Когда планируете поехать и на сколько дней?" : isAz ? "Nə vaxt getməyi planlaşdırırsınız və neçə gün?" : isTr ? "Ne zaman gitmeyi planlıyorsunuz ve kaç gün?" : "When are you planning to go and for how many days?",
+    q_group: isRu ? "С кем едете?" : isAz ? "Kiminlə gedirsiniz?" : isTr ? "Kiminle gidiyorsunuz?" : "Who are you traveling with?",
+    q_budget: isRu ? "Какой примерный бюджет на человека?" : isAz ? "Bir nəfər üçün təxmini büdcə nə qədərdir?" : isTr ? "Kişi başına tahmini bütçeniz nedir?" : "What is your approximate budget per person?",
+    q_interests: isRu ? "Что вас привлекает в Азербайджане? Выберите всё что нравится:" : isAz ? "Azərbaycanda sizi nə cəlb edir? Bütün bəyəndiklərinizi seçin:" : isTr ? "Azerbaycan'da sizi ne çekiyor? Beğendiklerinizi seçin:" : "What interests you in Azerbaijan? Select all that apply:",
+    q_pace: isRu ? "Последний вопрос — какой темп вам ближе?" : isAz ? "Son sual — hansı temp sizə daha yaxındır?" : isTr ? "Son soru — hangi tempo size daha yakın?" : "Last question — what pace suits you best?",
+    generating: isRu ? "Отлично! У меня всё есть. Составляю персональный маршрут... ✨" : isAz ? "Əla! Hər şeyim var. Fərdi marşrut hazırlayıram... ✨" : isTr ? "Harika! Her şeyim var. Kişisel rota hazırlıyorum... ✨" : "Great! I have everything. Building your personal itinerary... ✨",
+    ready: isRu ? "Маршрут готов! 🎉 Открываю интерактивный вид с картой..." : isAz ? "Marşrut hazırdır! 🎉 Xəritə ilə interaktiv görünüş açıram..." : isTr ? "Rota hazır! 🎉 Haritayla interaktif görünümü açıyorum..." : "Itinerary ready! 🎉 Opening interactive view with map...",
+    error: isRu ? "Ошибка генерации. Попробуйте ещё раз." : isAz ? "Xəta baş verdi. Yenidən cəhd edin." : isTr ? "Oluşturma hatası. Lütfen tekrar deneyin." : "Generation error. Please try again.",
+    network_error: isRu ? "Ошибка сети. Проверьте подключение." : isAz ? "Şəbəkə xətası. Bağlantını yoxlayın." : isTr ? "Ağ hatası. Bağlantınızı kontrol edin." : "Network error. Please check your connection.",
+    done_btn: isRu ? "✓ Готово" : isAz ? "✓ Hazır" : isTr ? "✓ Tamam" : "✓ Done",
+    placeholder: isRu ? "Напишите или выберите вариант выше..." : isAz ? "Yazın və ya yuxarıdan variant seçin..." : isTr ? "Yazın veya yukarıdan seçin..." : "Type or choose an option above...",
+    ai_active: isRu ? "ИИ активен" : isAz ? "AI aktivdir" : isTr ? "AI aktif" : "AI active",
+    planner_title: isRu ? "планер" : isAz ? "planlayıcı" : isTr ? "planlayıcı" : "planner",
+    your_route: isRu ? "✦ Ваш маршрут" : isAz ? "✦ Marşrutunuz" : isTr ? "✦ Rotanız" : "✦ Your itinerary",
+    hotels: isRu ? "🏨 Рекомендуемые отели" : isAz ? "🏨 Tövsiyə olunan otellər" : isTr ? "🏨 Önerilen oteller" : "🏨 Recommended hotels",
+    find_room: isRu ? "Найти номер →" : isAz ? "Otaq tap →" : isTr ? "Oda bul →" : "Find room →",
+    tickets: isRu ? "✈️ Билеты" : isAz ? "✈️ Biletlər" : isTr ? "✈️ Biletler" : "✈️ Tickets",
+    find: isRu ? "Найти →" : isAz ? "Tap →" : isTr ? "Bul →" : "Find →",
+    car: isRu ? "🚗 Авто" : isAz ? "🚗 Avtomobil" : isTr ? "🚗 Araba" : "🚗 Car",
+    book_excursion: isRu ? "Забронировать экскурсию →" : isAz ? "Ekskursiya rezerv et →" : isTr ? "Tur rezerv et →" : "Book excursion →",
+    morning: isRu ? "🌅 Утро" : isAz ? "🌅 Səhər" : isTr ? "🌅 Sabah" : "🌅 Morning",
+    afternoon: isRu ? "☀️ День" : isAz ? "☀️ Gündüz" : isTr ? "☀️ Öğle" : "☀️ Afternoon",
+    evening: isRu ? "🌙 Вечер" : isAz ? "🌙 Axşam" : isTr ? "🌙 Akşam" : "🌙 Evening",
+    day: isRu ? "День" : isAz ? "Gün" : isTr ? "Gün" : "Day",
+    chat_btn: isRu ? "💬 Чат" : isAz ? "💬 Söhbət" : isTr ? "💬 Sohbet" : "💬 Chat",
+    open_route: isRu ? "🗺 Открыть маршрут" : isAz ? "🗺 Marşrutu aç" : isTr ? "🗺 Rotayı aç" : "🗺 Open itinerary",
+    route_btn: isRu ? "🗺 Маршрут" : isAz ? "🗺 Marşrut" : isTr ? "🗺 Rota" : "🗺 Itinerary",
+    loading_map: isRu ? "Загружаем..." : isAz ? "Yüklənir..." : isTr ? "Yükleniyor..." : "Loading...",
+    map_unavailable: isRu ? "Карта недоступна" : isAz ? "Xəritə əlçatmazdır" : isTr ? "Harita mevcut değil" : "Map unavailable",
+    profile: isRu ? "Профиль поездки" : isAz ? "Səyahət profili" : isTr ? "Seyahat profili" : "Trip profile",
+    duration_label: isRu ? "Длительность" : isAz ? "Müddət" : isTr ? "Süre" : "Duration",
+    group_label: isRu ? "Состав" : isAz ? "Tərkib" : isTr ? "Grup" : "Group",
+    budget_label: isRu ? "Бюджет" : isAz ? "Büdcə" : isTr ? "Bütçe" : "Budget",
+    interests_label: isRu ? "Интересы" : isAz ? "Maraqlar" : isTr ? "İlgi alanları" : "Interests",
+    pace_label: isRu ? "Темп" : isAz ? "Temp" : isTr ? "Tempo" : "Pace",
+    not_specified: isRu ? "Не указано" : isAz ? "Göstərilməyib" : isTr ? "Belirtilmemiş" : "Not specified",
+    days_suffix: isRu ? " дней" : isAz ? " gün" : isTr ? " gün" : " days",
+    ai_route: isRu ? "AI маршрут" : isAz ? "AI marşrut" : isTr ? "AI rota" : "AI itinerary",
+    select_above: isRu ? "Выберите вариант выше." : isAz ? "Yuxarıdan variant seçin." : isTr ? "Yukarıdan seçin." : "Please select an option above.",
+  };
+};
 
+const getOptions = (locale: string) => {
+  const isRu = locale === "ru";
+  const isAz = locale === "az";
+  const isTr = locale === "tr";
+  return {
+    duration: [
+      { icon: "🌸", label: isRu ? "1–3 дня" : isAz ? "1–3 gün" : isTr ? "1–3 gün" : "1–3 days", value: "3" },
+      { icon: "🏖", label: isRu ? "4–5 дней" : isAz ? "4–5 gün" : isTr ? "4–5 gün" : "4–5 days", value: "5" },
+      { icon: "✈️", label: isRu ? "6–7 дней" : isAz ? "6–7 gün" : isTr ? "6–7 gün" : "6–7 days", value: "7" },
+      { icon: "🌍", label: isRu ? "8+ дней" : isAz ? "8+ gün" : isTr ? "8+ gün" : "8+ days", value: "10+" },
+    ],
+    group: [
+      { icon: "🙋", label: isRu ? "Один / одна" : isAz ? "Tək" : isTr ? "Yalnız" : "Solo", value: isRu ? "Один" : isAz ? "Tək" : isTr ? "Yalnız" : "Solo" },
+      { icon: "💑", label: isRu ? "Пара" : isAz ? "Cütlük" : isTr ? "Çift" : "Couple", value: isRu ? "Пара" : isAz ? "Cütlük" : isTr ? "Çift" : "Couple" },
+      { icon: "👨‍👩‍👧‍👦", label: isRu ? "С детьми" : isAz ? "Uşaqlarla" : isTr ? "Çocuklarla" : "Family", value: isRu ? "С детьми" : isAz ? "Uşaqlarla" : isTr ? "Çocuklarla" : "Family" },
+      { icon: "👫", label: isRu ? "Друзья" : isAz ? "Dostlar" : isTr ? "Arkadaşlar" : "Friends", value: isRu ? "Друзья" : isAz ? "Dostlar" : isTr ? "Arkadaşlar" : "Friends" },
+    ],
+    budget: [
+      { icon: "💚", label: isRu ? "Эконом" : isAz ? "Ekonom" : isTr ? "Ekonomi" : "Economy", value: "$300-500" },
+      { icon: "💛", label: isRu ? "Комфорт" : isAz ? "Komfort" : isTr ? "Konfor" : "Comfort", value: "$500-1000" },
+      { icon: "🧡", label: isRu ? "Бизнес" : isAz ? "Biznes" : isTr ? "Business" : "Business", value: "$1000-2000" },
+      { icon: "❤️", label: isRu ? "Люкс" : isAz ? "Lüks" : isTr ? "Lüks" : "Luxury", value: "$2000+" },
+    ],
+    pace: [
+      { icon: "🧘", label: isRu ? "Расслабленный" : isAz ? "Rahat" : isTr ? "Rahat" : "Relaxed", value: isRu ? "Расслабленный" : isAz ? "Rahat" : isTr ? "Rahat" : "Relaxed" },
+      { icon: "⚡", label: isRu ? "Насыщенный" : isAz ? "Sıx" : isTr ? "Yoğun" : "Intensive", value: isRu ? "Насыщенный" : isAz ? "Sıx" : isTr ? "Yoğun" : "Intensive" },
+      { icon: "⚖️", label: isRu ? "Сбалансированный" : isAz ? "Balanslaşdırılmış" : isTr ? "Dengeli" : "Balanced", value: isRu ? "Сбалансированный" : isAz ? "Balanslaşdırılmış" : isTr ? "Dengeli" : "Balanced" },
+    ],
+    post: [
+      { icon: "✏️", label: isRu ? "Изменить маршрут" : isAz ? "Marşrutu dəyiş" : isTr ? "Rotayı değiştir" : "Edit itinerary", value: isRu ? "Изменить маршрут" : isAz ? "Marşrutu dəyiş" : isTr ? "Rotayı değiştir" : "Edit itinerary" },
+      { icon: "💰", label: isRu ? "Сделать дешевле" : isAz ? "Daha ucuz et" : isTr ? "Daha ucuz yap" : "Make cheaper", value: isRu ? "Сделать дешевле" : isAz ? "Daha ucuz et" : isTr ? "Daha ucuz yap" : "Make cheaper" },
+      { icon: "🏨", label: isRu ? "Посоветуй отели" : isAz ? "Otel tövsiyə et" : isTr ? "Otel öner" : "Recommend hotels", value: isRu ? "Посоветуй отели" : isAz ? "Otel tövsiyə et" : isTr ? "Otel öner" : "Recommend hotels" },
+      { icon: "🍽", label: isRu ? "Рестораны на маршруте" : isAz ? "Marşrutdakı restoranlar" : isTr ? "Güzergahtaki restoranlar" : "Restaurants on route", value: isRu ? "Рестораны на маршруте" : isAz ? "Marşrutdakı restoranlar" : isTr ? "Güzergahtaki restoranlar" : "Restaurants on route" },
+      { icon: "🚕", label: isRu ? "Как добраться" : isAz ? "Necə çatmaq olar" : isTr ? "Nasıl ulaşılır" : "How to get there", value: isRu ? "Как добраться" : isAz ? "Necə çatmaq olar" : isTr ? "Nasıl ulaşılır" : "How to get there" },
+      { icon: "📋", label: isRu ? "Новый маршрут" : isAz ? "Yeni marşrut" : isTr ? "Yeni rota" : "New itinerary", value: "NEW_ROUTE" },
+    ],
+    interests: [
+      { icon: "🏛", label: isRu ? "История и архитектура" : isAz ? "Tarix və memarlıq" : isTr ? "Tarih ve mimari" : "History & Architecture" },
+      { icon: "🌿", label: isRu ? "Природа и горы" : isAz ? "Təbiət və dağlar" : isTr ? "Doğa ve dağlar" : "Nature & Mountains" },
+      { icon: "🍽", label: isRu ? "Гастрономия" : isAz ? "Qastronomiya" : isTr ? "Gastronomi" : "Gastronomy" },
+      { icon: "🏖", label: isRu ? "Пляж и море" : isAz ? "Çimərlik və dəniz" : isTr ? "Plaj ve deniz" : "Beach & Sea" },
+      { icon: "🎨", label: isRu ? "Искусство и культура" : isAz ? "İncəsənət və mədəniyyət" : isTr ? "Sanat ve kültür" : "Art & Culture" },
+      { icon: "🧘", label: isRu ? "Спа и отдых" : isAz ? "Spa və istirahət" : isTr ? "Spa ve dinlenme" : "Spa & Relaxation" },
+      { icon: "🏄", label: isRu ? "Активный отдых" : isAz ? "Aktiv istirahət" : isTr ? "Aktif tatil" : "Active Recreation" },
+      { icon: "🛍", label: isRu ? "Шопинг" : isAz ? "Alış-veriş" : isTr ? "Alışveriş" : "Shopping" },
+    ],
+  };
+};
+
+declare global {
+  interface Window { google: any; initGoogleMap?: () => void; }
+}
 declare global {
   interface Window { google: any; initGoogleMap?: () => void; }
 }
@@ -248,7 +347,8 @@ function ItineraryMap({ geoDays, activeDay, onMarkerClick }: {
 export default function CaspianCommandCenter() {
   const params = useParams();
   const locale = (params?.locale as string) || "ru";
-
+const texts = getTexts(locale);
+const options = getOptions(locale);
   // Chat state
   const [messages, setMessages] = useState<Message[]>([]);
   const [prefs, setPrefs] = useState<Prefs>({ duration: null, group: null, budget: null, interests: [], pace: null });
@@ -302,25 +402,24 @@ export default function CaspianCommandCenter() {
   if (generating) return;
   setActiveOptions(null);
   pushUser(label);
-
   if (step === 0) {
     const np = { ...prefs, duration: value };
     setPrefs(np); setStep(1);
-    aiSay("С кем едете?", 700, () => { scrollBottom(); setActiveOptions("group"); });
+    aiSay(texts.q_group, 700, () => { scrollBottom(); setActiveOptions("group"); });
   } else if (step === 1) {
     const np = { ...prefs, group: value };
     setPrefs(np); setStep(2);
-    aiSay("Какой примерный бюджет на человека?", 700, () => { scrollBottom(); setActiveOptions("budget"); });
+    aiSay(texts.q_budget, 700, () => { scrollBottom(); setActiveOptions("budget"); });
   } else if (step === 2) {
     const np = { ...prefs, budget: value };
     setPrefs(np); setStep(3);
-    aiSay("Что вас привлекает в Азербайджане? Выберите всё что нравится:", 700, () => { scrollBottom(); setActiveOptions("interests"); });
+    aiSay(texts.q_interests, 700, () => { scrollBottom(); setActiveOptions("interests"); });
   } else if (step === 4) {
     const np = { ...prefs, pace: value };
     setPrefs(np); setStep(5);
     generatePlan({ ...prefs, pace: value });
   } else if (step === 5) {
-    if (value === "Новый маршрут") { window.location.reload(); return; }
+    if (value === "NEW_ROUTE") { window.location.reload(); return; }
     continueChat(value);
   }
 };
@@ -331,7 +430,7 @@ const handleInterestsDone = () => {
   pushUser(interests.join(", "));
   const np = { ...prefs, interests };
   setPrefs(np); setStep(4);
-  aiSay("Последний вопрос — какой темп вам ближе?", 700, () => { scrollBottom(); setActiveOptions("pace"); });
+  aiSay(texts.q_pace, 700, () => { scrollBottom(); setActiveOptions("pace"); });
 };
 
   const geocodePlan = async (planData: Plan): Promise<GeoDay[]> => {
@@ -370,87 +469,84 @@ const handleInterestsDone = () => {
 };
 
   const generatePlan = async (finalPrefs: Prefs) => {
-    aiSay("Отлично! У меня всё есть. Составляю персональный маршрут... ✨", 400);
-    setGenerating(true);
-    try {
-      const res = await fetch("/api/generate-plan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          days: finalPrefs.duration,
-          group: finalPrefs.group,
-          budget: finalPrefs.budget,
-          interests: finalPrefs.interests,
-          from: "Весь Азербайджан",
-          locale,
-          diet: [],
-          pace: finalPrefs.pace,
-        }),
-      });
-      const data = await res.json();
-      if (data.plan) {
-        setPlan(data.plan);
-        aiSay("Маршрут готов! 🎉 Открываю интерактивный вид с картой...", 600);
-
-        // Geocode in background
-        const geo = await geocodePlan(data.plan);
-        setGeoDays(geo);
-        setActiveDay(1);
-        setTimeout(() => {
-          setView("itinerary");
-        }, 1200);
-      } else {
-        aiSay("Ошибка генерации. Попробуйте ещё раз.");
-      }
-    } catch {
-      aiSay("Ошибка сети. Проверьте подключение.");
+  aiSay(texts.generating, 400);
+  setGenerating(true);
+  try {
+    const res = await fetch("/api/generate-plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        days: finalPrefs.duration,
+        group: finalPrefs.group,
+        budget: finalPrefs.budget,
+        interests: finalPrefs.interests,
+        from: "Весь Азербайджан",
+        locale,
+        diet: [],
+        pace: finalPrefs.pace,
+      }),
+    });
+    const data = await res.json();
+    if (data.plan) {
+      setPlan(data.plan);
+      aiSay(texts.ready, 600);
+      const geo = await geocodePlan(data.plan);
+      setGeoDays(geo);
+      setActiveDay(1);
+      setTimeout(() => { setView("itinerary"); }, 1200);
+    } else {
+      aiSay(texts.error);
     }
-    setGenerating(false);
-  };
+  } catch {
+    aiSay(texts.network_error);
+  }
+  setGenerating(false);
+};
 
-  const continueChat = async (userMsg: string) => {
-    if (generating) return;
-    setGenerating(true);
-    setIsTyping(true);
-    setActiveOptions(null);
-    const system = `Ты — travel-консультант по Азербайджану. Контекст: ${prefs.duration} дней, ${prefs.group}, бюджет ${prefs.budget}, интересы: ${prefs.interests.join(", ")}, темп ${prefs.pace}. Отвечай конкретно, по-русски. Максимум 150 слов.`;
-    const newHistory = [...chatHistory, { role: "user", content: userMsg }];
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newHistory, system }),
-      });
-      const data = await res.json();
-      const text = data.text || "Попробуйте переформулировать.";
-      setChatHistory([...newHistory, { role: "assistant", content: text }]);
-      setIsTyping(false);
-      pushAI(text);
-      scrollBottom();
-      setTimeout(() => { scrollBottom(); setActiveOptions("post"); }, 400);
-    } catch {
-      setIsTyping(false);
-      aiSay("Ошибка. Попробуйте снова.");
-    }
-    setGenerating(false);
-  };
+const continueChat = async (userMsg: string) => {
+  if (generating) return;
+  setGenerating(true);
+  setIsTyping(true);
+  setActiveOptions(null);
+  const langInstruction = locale === "ru" ? "Отвечай на русском." : locale === "az" ? "Azərbaycan dilində cavab ver." : locale === "tr" ? "Türkçe yanıt ver." : "Respond in English.";
+  const system = `${langInstruction} Travel consultant for Azerbaijan. Context: ${prefs.duration} days, ${prefs.group}, budget ${prefs.budget}, interests: ${prefs.interests.join(", ")}, pace ${prefs.pace}. Max 150 words.`;
+  const newHistory = [...chatHistory, { role: "user", content: userMsg }];
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: newHistory, system }),
+    });
+    const data = await res.json();
+    const text = data.text || (locale === "ru" ? "Попробуйте переформулировать." : "Please try rephrasing.");
+    setChatHistory([...newHistory, { role: "assistant", content: text }]);
+    setIsTyping(false);
+    pushAI(text);
+    scrollBottom();
+    setTimeout(() => { scrollBottom(); setActiveOptions("post"); }, 400);
+  } catch {
+    setIsTyping(false);
+    aiSay(texts.error);
+  }
+  setGenerating(false);
+};
 
-  const handleSend = () => {
-    const text = inputValue.trim();
-    if (!text || generating) return;
-    setInputValue("");
-    pushUser(text);
-    setActiveOptions(null);
-    if (step >= 5) continueChat(text);
-    else if (step === 0) handleOption(text, text);
-    else if (step === 1) handleOption(text, text);
-    else if (step === 2) handleOption(text, text);
-    else if (step === 4) handleOption(text, text);
-    else aiSay("Выберите вариант выше.");
-  };
+const handleSend = () => {
+  const text = inputValue.trim();
+  if (!text || generating) return;
+  setInputValue("");
+  pushUser(text);
+  setActiveOptions(null);
+  if (step >= 5) continueChat(text);
+  else if (step === 0) handleOption(text, text);
+  else if (step === 1) handleOption(text, text);
+  else if (step === 2) handleOption(text, text);
+  else if (step === 4) handleOption(text, text);
+  else aiSay(texts.select_above);
+};
 
-  const currentDay = plan?.days.find(d => d.day === activeDay);
-  const currentGeoDay = geoDays.find(d => d.day === activeDay);
+const currentDay = plan?.days.find(d => d.day === activeDay);
+const currentGeoDay = geoDays.find(d => d.day === activeDay);
 
   // ── ITINERARY VIEW ─────────────────────────────────────────────────
   if (view === "itinerary" && plan) {
@@ -736,7 +832,7 @@ const handleInterestsDone = () => {
             )}
             <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", borderRadius: 20, background: T.accentGlow, border: `1px solid ${T.accentBorder}` }}>
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.accent, animation: "pulse 2s ease infinite" }} />
-              <span style={{ fontSize: 11, color: T.accent, fontWeight: 500 }}>ИИ активен</span>
+              <span style={{ fontSize: 11, color: T.accent, fontWeight: 500 }}>{texts.ai_active}</span>
             </div>
           </div>
         </div>
@@ -770,7 +866,7 @@ const handleInterestsDone = () => {
 
           {!isTyping && !generating && activeOptions && activeOptions !== "interests" && activeOptions !== "post" && (
             <div style={{ paddingLeft: 40, display: "flex", flexWrap: "wrap", gap: 7, animation: "fadeUp 0.3s ease" }}>
-              {OPTIONS[activeOptions as keyof typeof OPTIONS]?.map((opt: any) => (
+              {options[activeOptions as keyof typeof options]?.map((opt: any) => (
                 <button key={opt.label} className="cr-opt" onClick={() => handleOption(opt.value || opt.label, opt.label)}
                   style={{ padding: "7px 14px", border: `1px solid ${T.border}`, borderRadius: 20, background: T.bgCard, color: T.text, fontSize: 13, fontFamily: T.font, cursor: "pointer", transition: "all 0.18s", display: "flex", alignItems: "center", gap: 6 }}>
                   <span>{opt.icon}</span>{opt.label}
@@ -782,7 +878,7 @@ const handleInterestsDone = () => {
           {!isTyping && !generating && activeOptions === "interests" && (
             <div style={{ paddingLeft: 40, animation: "fadeUp 0.3s ease" }}>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginBottom: 10 }}>
-                {INTERESTS_OPTIONS.map(opt => (
+                {options.interests.map(opt => (
                   <button key={opt.label} className={`cr-int${selectedInterests.includes(opt.label) ? " sel" : ""}`}
                     onClick={() => setSelectedInterests(prev => prev.includes(opt.label) ? prev.filter(x => x !== opt.label) : [...prev, opt.label])}
                     style={{ padding: "7px 14px", border: `1px solid ${T.border}`, borderRadius: 20, background: T.bgCard, color: T.text, fontSize: 13, fontFamily: T.font, cursor: "pointer", transition: "all 0.18s", display: "flex", alignItems: "center", gap: 6 }}>
@@ -790,7 +886,7 @@ const handleInterestsDone = () => {
                   </button>
                 ))}
               </div>
-              <button onClick={handleInterestsDone} style={{ padding: "8px 20px", borderRadius: 20, background: T.accent, color: "#06090f", border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: T.font }}>✓ Готово</button>
+              <button onClick={handleInterestsDone} style={{ padding: "8px 20px", borderRadius: 20, background: T.accent, color: "#06090f", border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: T.font }}>{texts.done_btn}</button>
             </div>
           )}
 
@@ -812,7 +908,7 @@ const handleInterestsDone = () => {
             <textarea value={inputValue}
               onChange={e => { setInputValue(e.target.value); e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px"; }}
               onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-              placeholder="Напишите или выберите вариант выше..." rows={1}
+              placeholder={texts.placeholder} rows={1}
               style={{ flex: 1, minHeight: 44, maxHeight: 120, padding: "10px 14px", border: `1px solid ${T.border}`, borderRadius: 12, background: T.bgCard, color: T.text, fontSize: 14, fontFamily: T.font, resize: "none", outline: "none", lineHeight: 1.5, transition: "border-color 0.2s" }}
               onFocus={e => e.target.style.borderColor = T.accent}
               onBlur={e => e.target.style.borderColor = T.border}
