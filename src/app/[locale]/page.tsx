@@ -379,7 +379,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     .az-map-section { padding: 40px 20px !important; }
    .nav-lang { gap: 2px !important; padding: 3px 4px !important; }
     .nav-lang a { padding: 2px 3px !important; font-size: 9px !important; }
-    .nav-cta { display: inline-block !important; font-size: 10px !important; padding: 5px 8px !important; white-space: nowrap !important; }
+    .nav-cta { display: inline-block !important; font-size: 9px !important; padding: 5px 6px !important; white-space: nowrap !important; letter-spacing: -0.3px !important; }
+.nav-logo-text { font-size: 10px !important; }
     .nav-logo-text { font-size: 11px !important; }
   }
 `}</style>
