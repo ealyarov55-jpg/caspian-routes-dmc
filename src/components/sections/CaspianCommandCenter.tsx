@@ -405,7 +405,7 @@ function GeneratingOverlay({ locale }: { locale: string }) {
       </div>
 
       {/* Spinner */}
-      <div style={{ position: "relative", width: 80, height: 80, marginBottom: 32 }}>
+      <div style={{ position: "relative", width: 70, height: 70, marginBottom: 24 }}>
         <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "2px solid rgba(0,212,170,0.1)" }} />
         <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "2px solid transparent", borderTopColor: "#00d4aa", animation: "spin 1s linear infinite" }} />
         <div style={{ position: "absolute", inset: 8, borderRadius: "50%", border: "1.5px solid transparent", borderTopColor: "rgba(0,212,170,0.4)", animation: "spin 1.5s linear infinite reverse" }} />
@@ -423,8 +423,8 @@ function GeneratingOverlay({ locale }: { locale: string }) {
       </div>
 
       {/* Fact */}
-      <div style={{ maxWidth: 400, textAlign: "center", minHeight: 60 }}>
-        <p key={factIdx} style={{ color: "#94a3b8", fontSize: 14, lineHeight: 1.7, animation: "factFade 3s ease", margin: 0 }}>
+      <div style={{ maxWidth: 340, textAlign: "center", minHeight: 72, padding: "0 16px" }}>
+  <p key={factIdx} style={{ color: "#94a3b8", fontSize: 13, lineHeight: 1.7, animation: "factFade 3s ease", margin: 0 }}>
           {facts[factIdx]}
         </p>
       </div>
