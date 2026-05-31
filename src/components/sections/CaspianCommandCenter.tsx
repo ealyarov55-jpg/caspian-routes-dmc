@@ -173,6 +173,7 @@ const getTexts = (locale: string) => {
     days_suffix: isRu ? " дней" : isAz ? " gün" : isTr ? " gün" : " days",
     ai_route: isRu ? "AI маршрут" : isAz ? "AI marşrut" : isTr ? "AI rota" : "AI itinerary",
     select_above: isRu ? "Выберите вариант выше." : isAz ? "Yuxarıdan variant seçin." : isTr ? "Yukarıdan seçin." : "Please select an option above.",
+    
   };
 };
 
@@ -502,6 +503,16 @@ const [stopPhotos, setStopPhotos] = useState<Record<string, string>>({});
     aiSay(t.q_duration, 800, () => { scrollBottom(); setActiveOptions("duration"); });
   });
 }, [locale]);
+
+  useEffect(() => {
+    if (plan && activeDay) {
+      const key = `${activeDay}-morning`;
+      if (!stopPhotos[key]) {
+        fetchStopPhotos(plan, activeDay);
+      }
+    }
+  }, [activeDay, plan]);
+
   const handleOption = (value: string, label: string) => {
   if (generating) return;
   setActiveOptions(null);
@@ -571,18 +582,16 @@ const handleInterestsDone = () => {
   }));
   return days;
 };
-const fetchStopPhotos = async (planData: Plan) => {
+const fetchStopPhotos = async (planData: Plan, dayNumber: number) => {
   const queries: { key: string; query: string }[] = [];
-  planData.days.forEach(day => {
-    ["morning", "afternoon", "evening"].forEach(slot => {
-      const stop = day[slot as keyof PlanDay] as Stop;
-      if (stop?.photo_query) {
-        queries.push({
-          key: `${day.day}-${slot}`,
-          query: stop.photo_query,
-        });
-      }
-    });
+  const day = planData.days.find(d => d.day === dayNumber);
+  if (!day) return;
+
+  ["morning", "afternoon", "evening"].forEach(slot => {
+    const stop = day[slot as keyof PlanDay] as Stop;
+    if (stop?.photo_query) {
+      queries.push({ key: `${day.day}-${slot}`, query: stop.photo_query });
+    }
   });
 
   const results = await Promise.allSettled(
@@ -599,7 +608,7 @@ const fetchStopPhotos = async (planData: Plan) => {
       photos[result.value.key] = result.value.url;
     }
   });
-  setStopPhotos(photos);
+  setStopPhotos(prev => ({ ...prev, ...photos }));
 };
   const generatePlan = async (finalPrefs: Prefs) => {
   aiSay(texts.generating, 400);
@@ -624,7 +633,7 @@ const fetchStopPhotos = async (planData: Plan) => {
       setPlan(data.plan);
       aiSay(texts.ready, 600);
       const geo = await geocodePlan(data.plan);
-      fetchStopPhotos(data.plan);
+      fetchStopPhotos(data.plan, 1);
       setGeoDays(geo);
       setActiveDay(1);
       setTimeout(() => { setView("itinerary"); }, 1200);
@@ -715,12 +724,12 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
             <span style={{ fontFamily: T.fontDisplay, fontSize: 13, fontWeight: 800, color: T.text, whiteSpace: "nowrap" }}>CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES</span>
           </Link>
           <div style={{ width: 1, height: 16, background: T.border, flexShrink: 0 }} />
-          <span className="itin-topbar-title" style={{ fontSize: 12, color: T.textMuted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>AI маршрут</span>
+          <span className="itin-topbar-title" style={{ fontSize: 12, color: T.textMuted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{texts.ai_route}</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
           {geocoding && <span style={{ fontSize: 11, color: T.textMuted, whiteSpace: "nowrap" }}>Загружаем...</span>}
           <button onClick={() => setView("chat")} style={{ padding: "6px 14px", borderRadius: 8, background: T.accentGlow, border: `1px solid ${T.accentBorder}`, color: T.accent, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.font, whiteSpace: "nowrap" }}>
-            💬 Чат
+           {texts.chat_btn}
           </button>
         </div>
       </div>
@@ -752,7 +761,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
                 <button key={day.day} className="day-chip"
                   onClick={() => { setActiveDay(day.day); setActiveStopIdx(null); }}
                   style={{ padding: "5px 14px", borderRadius: 20, border: `1px solid ${isActive ? color : T.border}`, background: isActive ? `${color}15` : T.bgCard, color: isActive ? color : T.textMuted, fontSize: 12, fontWeight: isActive ? 600 : 400, cursor: "pointer", fontFamily: T.font, whiteSpace: "nowrap", transition: "all 0.2s", flexShrink: 0 }}>
-                  День {day.day}
+                  {texts.day} {day.day}
                 </button>
               );
             })}
@@ -840,7 +849,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
                     <span style={{ fontSize: 16 }}>🎫</span>
                     <div>
                       <p style={{ fontSize: 12, color: T.accent, fontWeight: 600, margin: 0 }}>{currentDay.excursion.name}</p>
-                      <p style={{ fontSize: 11, color: T.textMuted, margin: 0 }}>Забронировать экскурсию →</p>
+                      <p style={{ fontSize: 11, color: T.textMuted, margin: 0 }}>{texts.book_excursion}</p>
                     </div>
                   </a>
                 )}
@@ -849,13 +858,13 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
 
             {plan.curated_stays && plan.curated_stays.length > 0 && (
               <div style={{ marginTop: 20 }}>
-                <p style={{ fontSize: 10, color: T.accent, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 8, fontWeight: 600 }}>🏨 Рекомендуемые отели</p>
+                <p style={{ fontSize: 10, color: T.accent, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 8, fontWeight: 600 }}>{texts.hotels}</p>
                 {plan.curated_stays.map(hotel => (
                   <a key={hotel.name} href={hotel.booking_url} target="_blank" rel="noopener noreferrer"
                     style={{ display: "block", textDecoration: "none", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 14px", marginBottom: 8 }}>
                     <p style={{ color: T.text, fontSize: 13, fontWeight: 600, margin: "0 0 2px" }}>{hotel.name}</p>
                     <p style={{ color: T.textSoft, fontSize: 12, margin: "0 0 4px" }}>{hotel.description}</p>
-                    <span style={{ color: T.accent, fontSize: 11 }}>Найти номер →</span>
+                    <span style={{ color: T.accent, fontSize: 11 }}>{texts.find_room}</span>
                   </a>
                 ))}
               </div>
@@ -871,14 +880,14 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8, marginBottom: 20 }}>
               {plan.flights && (
                 <a href={plan.flights.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 12px" }}>
-                  <p style={{ color: T.accent, fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginBottom: 3 }}>✈️ Билеты</p>
+                  <p style={{ color: T.accent, fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginBottom: 3 }}>{texts.tickets}</p>
                   <p style={{ color: T.textSoft, fontSize: 11, margin: "0 0 4px" }}>{plan.flights.tip}</p>
-                  <span style={{ color: T.accent, fontSize: 11 }}>Найти →</span>
+                  <span style={{ color: T.accent, fontSize: 11 }}>{texts.find}</span>
                 </a>
               )}
               {plan.car_rental && (
                 <a href={plan.car_rental.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 12px" }}>
-                  <p style={{ color: "#f59e0b", fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginBottom: 3 }}>🚗 Авто</p>
+                  <p style={{ color: "#f59e0b", fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginBottom: 3 }}>{texts.car}</p>
                   <p style={{ color: T.textSoft, fontSize: 11, margin: "0 0 4px" }}>{plan.car_rental.tip}</p>
                   <span style={{ color: "#f59e0b", fontSize: 11 }}>Найти →</span>
                 </a>
