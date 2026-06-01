@@ -727,7 +727,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
           <span className="itin-topbar-title" style={{ fontSize: 12, color: T.textMuted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{texts.ai_route}</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-          {geocoding && <span style={{ fontSize: 11, color: T.textMuted, whiteSpace: "nowrap" }}>Загружаем...</span>}
+          {geocoding && <span style={{ fontSize: 11, color: T.textMuted, whiteSpace: "nowrap" }}>{texts.loading_map}</span>}
           <button onClick={() => setView("chat")} style={{ padding: "6px 14px", borderRadius: 8, background: T.accentGlow, border: `1px solid ${T.accentBorder}`, color: T.accent, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.font, whiteSpace: "nowrap" }}>
            {texts.chat_btn}
           </button>
@@ -742,7 +742,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
 
           {/* Plan header */}
           <div style={{ padding: "16px 20px 12px", borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
-            <p style={{ fontSize: 9, color: T.accent, letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: 4 }}>✦ Ваш маршрут</p>
+            <p style={{ fontSize: 9, color: T.accent, letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: 4 }}>{texts.your_route}</p>
             <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(0.95rem, 2vw, 1.2rem)", color: T.text, fontWeight: 800, margin: "0 0 4px" }}>{plan.plan_title}</h2>
             <p style={{ color: T.textMuted, fontSize: 12, margin: 0 }}>{plan.total_budget_estimate}</p>
             <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
@@ -772,7 +772,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
             {currentDay && (
               <>
                 <div style={{ marginBottom: 16 }}>
-                  <p style={{ fontSize: 10, color: currentGeoDay?.color || T.accent, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 4 }}>День {currentDay.day}</p>
+                  <p style={{ fontSize: 10, color: currentGeoDay?.color || T.accent, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 4 }}>{texts.day} {currentDay.day}</p>
                   <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1.1rem", color: T.text, fontWeight: 800, margin: 0 }}>{currentDay.title}</h3>
                 </div>
 
@@ -889,7 +889,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
                 <a href={plan.car_rental.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 12px" }}>
                   <p style={{ color: "#f59e0b", fontSize: 10, letterSpacing: 1, textTransform: "uppercase", marginBottom: 3 }}>{texts.car}</p>
                   <p style={{ color: T.textSoft, fontSize: 11, margin: "0 0 4px" }}>{plan.car_rental.tip}</p>
-                  <span style={{ color: "#f59e0b", fontSize: 11 }}>Найти →</span>
+                  <span style={{ color: "#f59e0b", fontSize: 11 }}>{texts.find}</span>
                 </a>
               )}
             </div>
@@ -911,7 +911,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
             <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#07111e" }}>
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 32, marginBottom: 12 }}>🗺</div>
-                <p style={{ color: T.textMuted, fontSize: 13 }}>{geocoding ? "Загружаем карту..." : "Карта недоступна"}</p>
+                <p style={{ color: T.textMuted, fontSize: 13 }}>{geocoding ? texts.loading_map : texts.map_unavailable}</p>
               </div>
             </div>
           )}
@@ -971,25 +971,25 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
             <span style={{ fontFamily: T.fontDisplay, fontSize: 14, fontWeight: 800, color: T.text, letterSpacing: -0.3 }}>CASPIAN<span style={{ color: T.accent }}>.</span>ROUTES</span>
           </div>
         </Link>
-        <p style={{ fontSize: 9, letterSpacing: "0.25em", textTransform: "uppercase", color: T.textMuted, marginBottom: 16 }}>Профиль поездки</p>
+        <p style={{ fontSize: 9, letterSpacing: "0.25em", textTransform: "uppercase", color: T.textMuted, marginBottom: 16 }}>{texts.profile}</p>
         {[
-          { icon: "🗓", label: "Длительность", value: prefs.duration ? `${prefs.duration} дней` : null },
-          { icon: "👥", label: "Состав", value: prefs.group },
-          { icon: "💳", label: "Бюджет", value: prefs.budget },
-          { icon: "🎯", label: "Интересы", value: prefs.interests.length > 0 ? prefs.interests.slice(0, 2).join(", ") + (prefs.interests.length > 2 ? "..." : "") : null },
-          { icon: "🚶", label: "Темп", value: prefs.pace },
+          { icon: "🗓", label: texts.duration_label, value: prefs.duration ? `${prefs.duration}${texts.days_suffix}` : null },
+          { icon: "👥", label: texts.group_label, value: prefs.group },
+          { icon: "💳", label: texts.budget_label, value: prefs.budget },
+          { icon: "🎯", label: texts.interests_label, value: prefs.interests.length > 0 ? prefs.interests.slice(0, 2).join(", ") + (prefs.interests.length > 2 ? "..." : "") : null },
+          { icon: "🚶", label: texts.pace_label, value: prefs.pace },
         ].map((item, i) => (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: `1px solid ${T.border}` }}>
             <div style={{ width: 30, height: 30, borderRadius: 8, background: T.bgCard, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, flexShrink: 0 }}>{item.icon}</div>
             <div>
               <span style={{ fontSize: 10, color: T.textMuted, display: "block", marginBottom: 1 }}>{item.label}</span>
-              <span style={{ fontSize: 12, color: item.value ? T.textSoft : T.textMuted, fontStyle: item.value ? "normal" : "italic" }}>{item.value || "Не указано"}</span>
+              <span style={{ fontSize: 12, color: item.value ? T.textSoft : T.textMuted, fontStyle: item.value ? "normal" : "italic" }}>{item.value || texts.not_specified}</span>
             </div>
           </div>
         ))}
         {plan && (
           <button onClick={() => setView("itinerary")} style={{ marginTop: 20, padding: "8px 0", borderRadius: 8, background: T.accentGlow, border: `1px solid ${T.accentBorder}`, color: T.accent, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: T.font }}>
-            🗺 Открыть маршрут
+            {texts.open_route}
           </button>
         )}
         <div style={{ marginTop: "auto", paddingTop: 20 }}>
@@ -1008,7 +1008,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             {plan && (
               <button onClick={() => setView("itinerary")} style={{ padding: "5px 12px", borderRadius: 8, background: T.accentGlow, border: `1px solid ${T.accentBorder}`, color: T.accent, fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: T.font }}>
-                🗺 Маршрут
+               {texts.route_btn}
               </button>
             )}
             <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", borderRadius: 20, background: T.accentGlow, border: `1px solid ${T.accentBorder}` }}>
