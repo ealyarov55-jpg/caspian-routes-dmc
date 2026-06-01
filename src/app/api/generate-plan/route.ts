@@ -83,7 +83,11 @@ Return ONLY valid JSON:
       if (lastGoodDay > 0) {
         const afterExcursion = extracted.indexOf('}', extracted.indexOf('}', lastGoodDay) + 1);
         if (afterExcursion > 0) {
-          extracted = extracted.substring(0, afterExcursion + 1) + '],"curated_stays":[],"logistics":{"title":"Транспорт","content":"Такси через Bolt, метро 0.30 AZN."},"flights":{"tip":"Ищите заранее","url":"https://aviasales.tpk.ro/qyjqiTHn"},"car_rental":{"tip":"Аренда от партнёров","url":"https://localrent.tpk.ro/BAFUsMGN"}}';
+          const fallbackLogistics = locale === "tr" ? "Bolt taksi, metro 0.30 AZN." : locale === "az" ? "Bolt taksi, metro 0.30 AZN." : locale === "en" ? "Bolt taxi, metro 0.30 AZN." : "Такси через Bolt, метро 0.30 AZN.";
+const fallbackLogisticsTitle = locale === "tr" ? "Ulaşım" : locale === "az" ? "Nəqliyyat" : locale === "en" ? "Transport" : "Транспорт";
+const fallbackFlights = locale === "tr" ? "Erken rezervasyon yapın" : locale === "az" ? "Erkən rezerv edin" : locale === "en" ? "Book early for best prices" : "Ищите билеты заранее";
+const fallbackCar = locale === "tr" ? "Ortak kiralama" : locale === "az" ? "Tərəfdaş kiralama" : locale === "en" ? "Partner car rental" : "Аренда от партнёров";
+extracted = extracted.substring(0, afterExcursion + 1) + `],"curated_stays":[],"logistics":{"title":"${fallbackLogisticsTitle}","content":"${fallbackLogistics}"},"flights":{"tip":"${fallbackFlights}","url":"https://aviasales.tpk.ro/qyjqiTHn"},"car_rental":{"tip":"${fallbackCar}","url":"https://localrent.tpk.ro/BAFUsMGN"}}`;
         }
       }
       
