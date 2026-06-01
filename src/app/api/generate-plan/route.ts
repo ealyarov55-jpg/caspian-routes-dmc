@@ -21,7 +21,7 @@ ${dietLine}
 ${paceLine}
 
 RULES:
-- Tone: cinematic, sensory, no cliches ("hidden gem", "must-see" banned)
+- Tone: punchy, evocative, highly specific. No cliches ("hidden gem", "must-see", "breathtaking" banned).
 - Max 8 words per description field. Be extremely concise.
 - tip: max 8 words
 - curator_note: max 8 words
@@ -30,7 +30,12 @@ RULES:
 - car_rental tip: max 6 words
 - hotel description: max 8 words
 - BUDGET: be realistic. Azerbaijan is NOT cheap for tourists. Use these real price benchmarks: budget hotel 50-80 AZN/night, mid hotel 150-250 AZN/night, luxury hotel 400-800 AZN/night, restaurant meal 15-40 AZN/person, taxi cross-city 10-20 AZN, intercity bus 10-30 AZN, Gobustan tour 50-80 AZN. Calculate total_budget_estimate honestly based on actual days and group size.
-- curated_stays: ALWAYS include exactly 3 real hotels that actually exist in Azerbaijan. Match hotels to budget: economy ($300-500) → ibis, Sultan Inn, local guesthouses; comfort ($500-1000) → Holiday Inn, Baku Marriott, boutique hotels; business ($1000-2000) → JW Marriott, InterContinental, Fairmont; luxury ($2000+) → Four Seasons, Fairmont Flame Towers.
+- curated_stays: ALWAYS include exactly 3 hotels. Use EXACTLY these hotel names (copy-paste, no alterations):
+  Economy: "ibis Baku City", "Sultan Inn Baku", "Boutique 19 Hotel Baku"
+  Comfort: "Holiday Inn Baku", "Baku Marriott Hotel Boulevard", "Moss Art Hotel Baku"
+  Business: "JW Marriott Absheron Baku", "InterContinental Baku", "Hazz Hotel Baku"
+  Luxury: "Four Seasons Hotel Baku", "Fairmont Baku Flame Towers"
+  For regions outside Baku add 1 regional hotel with realistic name.
 - For trips outside Baku (Sheki, Gabala, Guba etc) include regional hotels, not only Baku hotels.
 - NO hotels in daily schedule — only in curated_stays
 - curated_stays: 3 real hotels matching budget and regions visited
@@ -44,7 +49,7 @@ RULES:
 - TRANSPORT COSTS: Bolt taxi Baku center to Gobustan = 25-35 AZN one way. Baku to Nardaran = 15-20 AZN. Baku to Ateshgah = 10-15 AZN. Intercity Baku-Sheki bus = 10-12 AZN. Be honest — if itinerary needs 3 taxi rides, budget 60-90 AZN for transport that day.
 - RESTAURANT PRICES: Firuze, Shirvanshahlar, Chinar = 30-60 AZN per person minimum. Street food = 5-10 AZN. Teze Bazar snacks = 10-20 AZN. Never underestimate food costs.
 - ATTRACTIONS: Gobustan museum = 10 AZN. Ateshgah = 10 AZN. Icheri Sheher palaces = 15 AZN each. Mud volcanoes = free but need local jeep 20-30 AZN.
-- total_budget_estimate: calculate honestly. Sum transport + food + hotels + attractions. Never round down. Add 15% buffer for unexpected costs.
+- total_budget_estimate: provide a realistic range like "$450-600 per person". Do NOT sum numbers. Base range on: economy=$300-500, comfort=$500-900, business=$900-1800, luxury=$1800+. Adjust up if itinerary includes expensive restaurants or distant regions.
 Return ONLY valid JSON:
 {
   "plan_title": "editorial title",
@@ -65,7 +70,7 @@ Return ONLY valid JSON:
   "logistics": { "title": "short title", "content": "max 30 words with real prices in AZN" },
   "flights": { "tip": "max 15 words", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
   "car_rental": { "tip": "max 10 words", "url": "https://localrent.tpk.ro/BAFUsMGN" }
-}`;
+Output strictly valid JSON only. No markdown, no explanations, no text before or after the JSON object.}`;
 
     const message = await client.messages.create({
       model: "claude-sonnet-4-6",
