@@ -777,9 +777,9 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
                 </div>
 
                 {[
-                  { slot: "morning" as const, label: "🌅 Утро", data: currentDay.morning },
-                  { slot: "afternoon" as const, label: "☀️ День", data: currentDay.afternoon },
-                  { slot: "evening" as const, label: "🌙 Вечер", data: currentDay.evening },
+                  { slot: "morning" as const, label: texts.morning, data: currentDay.morning },
+{ slot: "afternoon" as const, label: texts.afternoon, data: currentDay.afternoon },
+{ slot: "evening" as const, label: texts.evening, data: currentDay.evening },
                 ].map(({ slot, label, data }, si) => {
                   const isActive = activeStopIdx === si;
                   const color = currentGeoDay?.color || T.accent;
@@ -918,7 +918,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
 
           {currentGeoDay && (
             <div style={{ position: "absolute", top: 12, left: 12, padding: "6px 14px", borderRadius: 20, background: currentGeoDay.color, color: "#06090f", fontSize: 12, fontWeight: 600, zIndex: 10, pointerEvents: "none" }}>
-              День {currentGeoDay.day} — {currentGeoDay.title}
+              {texts.day} {currentGeoDay.day} — {currentGeoDay.title}
             </div>
           )}
 {activeStopIdx !== null && currentGeoDay && currentGeoDay.stops[activeStopIdx as number] && (
