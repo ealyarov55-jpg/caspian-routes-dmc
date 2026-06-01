@@ -73,10 +73,23 @@ Return ONLY valid JSON:
     try {
       plan = JSON.parse(clean);
     } catch {
-      const match = clean.match(/\{[\s\S]*\}/);
-      if (match) {
-        plan = JSON.parse(match[0]);
-      } else {
+      // Try to extract and fix truncated JSON
+      let extracted = clean;
+      const match = clean.match(/\{[\s\S]*/);
+      if (match) extracted = match[0];
+      
+      // Find last complete day object and truncate there
+      const lastGoodDay = extracted.lastIndexOf('"excursion"');
+      if (lastGoodDay > 0) {
+        const afterExcursion = extracted.indexOf('}', extracted.indexOf('}', lastGoodDay) + 1);
+        if (afterExcursion > 0) {
+          extracted = extracted.substring(0, afterExcursion + 1) + '],"curated_stays":[],"logistics":{"title":"Транспорт","content":"Такси через Bolt, метро 0.30 AZN."},"flights":{"tip":"Ищите заранее","url":"https://aviasales.tpk.ro/qyjqiTHn"},"car_rental":{"tip":"Аренда от партнёров","url":"https://localrent.tpk.ro/BAFUsMGN"}}';
+        }
+      }
+      
+      try {
+        plan = JSON.parse(extracted);
+      } catch {
         throw new Error("Invalid JSON");
       }
     }
