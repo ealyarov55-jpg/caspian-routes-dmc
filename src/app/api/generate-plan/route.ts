@@ -40,7 +40,11 @@ RULES:
 - rating: real approximate rating from Google Maps (e.g. "4.6")
 - tripadvisor_url: real TripAdvisor search URL for the place
 - photo_query: specific English search query for Pexels to find a photo of this exact place. Include place name and country. Examples: "Gobustan mud volcanoes Azerbaijan", "Sheki Khan Palace Azerbaijan", "Old City Baku walls medieval". Never use generic words like "travel", "nature", "tourism".
-
+- GEOGRAPHY: group locations by proximity. NEVER put Gobustan and Ateshgah on the same day — they are opposite directions from Baku. NEVER put Nardaran and Sumgait on the same day as central Baku. Max 2 distant locations per day.
+- TRANSPORT COSTS: Bolt taxi Baku center to Gobustan = 25-35 AZN one way. Baku to Nardaran = 15-20 AZN. Baku to Ateshgah = 10-15 AZN. Intercity Baku-Sheki bus = 10-12 AZN. Be honest — if itinerary needs 3 taxi rides, budget 60-90 AZN for transport that day.
+- RESTAURANT PRICES: Firuze, Shirvanshahlar, Chinar = 30-60 AZN per person minimum. Street food = 5-10 AZN. Teze Bazar snacks = 10-20 AZN. Never underestimate food costs.
+- ATTRACTIONS: Gobustan museum = 10 AZN. Ateshgah = 10 AZN. Icheri Sheher palaces = 15 AZN each. Mud volcanoes = free but need local jeep 20-30 AZN.
+- total_budget_estimate: calculate honestly. Sum transport + food + hotels + attractions. Never round down. Add 15% buffer for unexpected costs.
 Return ONLY valid JSON:
 {
   "plan_title": "editorial title",
