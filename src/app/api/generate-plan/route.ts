@@ -22,7 +22,7 @@ ${paceLine}
 
 RULES:
 - Tone: cinematic, sensory, no cliches ("hidden gem", "must-see" banned)
-- Max 15 words per description field
+- Max 10 words per description field. Be extremely concise.
 - NO hotels in daily schedule — only in curated_stays
 - curated_stays: 3 real hotels matching budget and regions visited
 - All hotel/cafe/street names must be real and exist in Azerbaijan
@@ -56,7 +56,7 @@ Return ONLY valid JSON:
 
     const message = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 8000,
+      max_tokens: 4000,
       messages: [{ role: "user", content: prompt }],
     });
 
