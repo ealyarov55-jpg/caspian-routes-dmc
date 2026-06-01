@@ -29,6 +29,9 @@ RULES:
 - flights tip: max 8 words
 - car_rental tip: max 6 words
 - hotel description: max 8 words
+- BUDGET: be realistic. Azerbaijan is NOT cheap for tourists. Use these real price benchmarks: budget hotel 50-80 AZN/night, mid hotel 150-250 AZN/night, luxury hotel 400-800 AZN/night, restaurant meal 15-40 AZN/person, taxi cross-city 10-20 AZN, intercity bus 10-30 AZN, Gobustan tour 50-80 AZN. Calculate total_budget_estimate honestly based on actual days and group size.
+- curated_stays: ALWAYS include exactly 3 real hotels that actually exist in Azerbaijan. Match hotels to budget: economy ($300-500) → ibis, Sultan Inn, local guesthouses; comfort ($500-1000) → Holiday Inn, Baku Marriott, boutique hotels; business ($1000-2000) → JW Marriott, InterContinental, Fairmont; luxury ($2000+) → Four Seasons, Fairmont Flame Towers.
+- For trips outside Baku (Sheki, Gabala, Guba etc) include regional hotels, not only Baku hotels.
 - NO hotels in daily schedule — only in curated_stays
 - curated_stays: 3 real hotels matching budget and regions visited
 - All hotel/cafe/street names must be real and exist in Azerbaijan
