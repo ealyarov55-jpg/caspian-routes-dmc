@@ -65,6 +65,13 @@ type Plan = {
   logistics?: { title: string; content: string };
   flights?: { tip: string; url: string };
   car_rental?: { tip: string; url: string };
+  budget_breakdown?: {
+    accommodation: string;
+    food: string;
+    transport: string;
+    attractions: string;
+    total: string;
+  };
 };
 
 type GeoStop = {
@@ -869,7 +876,26 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
                 ))}
               </div>
             )}
-
+{plan.budget_breakdown && (
+              <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "12px 14px", marginTop: 12 }}>
+                <p style={{ color: T.accent, fontSize: 10, letterSpacing: 2, textTransform: "uppercase", marginBottom: 10, fontWeight: 600 }}>💰 {locale === "ru" ? "Смета поездки" : locale === "az" ? "Səyahət smetası" : locale === "tr" ? "Seyahat bütçesi" : "Budget breakdown"}</p>
+                {[
+                  { icon: "🏨", label: locale === "ru" ? "Проживание" : locale === "az" ? "Yaşayış" : locale === "tr" ? "Konaklama" : "Accommodation", value: plan.budget_breakdown.accommodation },
+                  { icon: "🍽", label: locale === "ru" ? "Питание" : locale === "az" ? "Qida" : locale === "tr" ? "Yemek" : "Food", value: plan.budget_breakdown.food },
+                  { icon: "🚕", label: locale === "ru" ? "Транспорт" : locale === "az" ? "Nəqliyyat" : locale === "tr" ? "Ulaşım" : "Transport", value: plan.budget_breakdown.transport },
+                  { icon: "🎫", label: locale === "ru" ? "Билеты и экскурсии" : locale === "az" ? "Biletlər" : locale === "tr" ? "Biletler" : "Attractions", value: plan.budget_breakdown.attractions },
+                ].map((item, i) => (
+                  <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0", borderBottom: `1px solid ${T.border}` }}>
+                    <span style={{ color: T.textSoft, fontSize: 12 }}>{item.icon} {item.label}</span>
+                    <span style={{ color: T.text, fontSize: 12, fontWeight: 600 }}>{item.value}</span>
+                  </div>
+                ))}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 8, marginTop: 2 }}>
+                  <span style={{ color: T.accent, fontSize: 12, fontWeight: 700 }}>ИТОГО</span>
+                  <span style={{ color: T.accent, fontSize: 14, fontWeight: 800 }}>{plan.budget_breakdown.total}</span>
+                </div>
+              </div>
+            )}
             {plan.logistics && (
               <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 10, padding: "12px 14px", marginTop: 12 }}>
                 <p style={{ color: T.accent, fontSize: 10, letterSpacing: 2, textTransform: "uppercase", marginBottom: 4 }}>🚕 {plan.logistics.title}</p>

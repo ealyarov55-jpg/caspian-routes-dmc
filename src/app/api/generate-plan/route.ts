@@ -30,6 +30,7 @@ RULES:
 - car_rental tip: max 6 words
 - hotel description: max 8 words
 - BUDGET: be realistic. Azerbaijan is NOT cheap for tourists. Use these real price benchmarks: budget hotel 50-80 AZN/night, mid hotel 150-250 AZN/night, luxury hotel 400-800 AZN/night, restaurant meal 15-40 AZN/person, taxi cross-city 10-20 AZN, intercity bus 10-30 AZN, Gobustan tour 50-80 AZN. Calculate total_budget_estimate honestly based on actual days and group size.
+- budget_breakdown: realistic per-person cost ranges for entire trip. accommodation = hotels × nights. food = meals × days. transport = taxis + intercity. attractions = entry fees. total = sum of all categories.
 - curated_stays: ALWAYS include exactly 3 hotels. Use EXACTLY these hotel names (copy-paste, no alterations):
   Economy: "ibis Baku City", "Sultan Inn Baku", "Boutique 19 Hotel Baku"
   Comfort: "Holiday Inn Baku", "Baku Marriott Hotel Boulevard", "Moss Art Hotel Baku"
@@ -70,7 +71,8 @@ Return ONLY valid JSON:
   ],
   "logistics": { "title": "short title", "content": "max 30 words with real prices in AZN" },
   "flights": { "tip": "max 15 words", "url": "https://aviasales.tpk.ro/qyjqiTHn" },
-  "car_rental": { "tip": "max 10 words", "url": "https://localrent.tpk.ro/BAFUsMGN" }
+  "car_rental": { "tip": "max 10 words", "url": "https://localrent.tpk.ro/BAFUsMGN" },
+  "budget_breakdown": { "accommodation": "$120-160", "food": "$80-120", "transport": "$40-60", "attractions": "$20-30", "total": "$260-370" }
 Output strictly valid JSON only. No markdown, no explanations, no text before or after the JSON object.}`;
 
     const message = await client.messages.create({
