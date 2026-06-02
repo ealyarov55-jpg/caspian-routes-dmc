@@ -187,13 +187,10 @@ export default function AzerbaijanMap({ locale, lang }: { locale: string; lang: 
 
             {/* Контент */}
             <div style={{ padding: "14px 16px 16px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+              <div style={{ marginBottom: 6 }}>
                 <h3 style={{ fontFamily: T.fontDisplay, fontSize: "1.05rem", color: T.text, fontWeight: 800, margin: 0 }}>
                   {L(active.name)}
                 </h3>
-                <span style={{ fontSize: 10, color: "rgba(0,212,170,0.7)", fontWeight: 500, background: "rgba(0,212,170,0.08)", padding: "2px 8px", borderRadius: 4 }}>
-                  {L(active.days)}
-                </span>
               </div>
               <p style={{ color: T.textMuted, fontSize: 12, margin: "0 0 14px", lineHeight: 1.5 }}>
                 {L(active.desc)}
