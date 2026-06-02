@@ -24,6 +24,7 @@ const T = {
 const DAY_COLORS = ["#00d4aa", "#a78bfa", "#f59e0b", "#3b82f6", "#ec4899", "#10b981", "#f97316"];
 
 type Prefs = {
+  date: string | null;
   duration: string | null;
   group: string | null;
   budget: string | null;
@@ -32,7 +33,7 @@ type Prefs = {
 };
 
 type Message = { role: "ai" | "user"; text: string };
-type ActiveOptions = "duration" | "group" | "budget" | "interests" | "pace" | "post" | null;
+type ActiveOptions = "date" | "duration" | "group" | "budget" | "interests" | "pace" | "post" | null;
 
 type Stop = {
   activity: string;
@@ -141,7 +142,8 @@ const getTexts = (locale: string) => {
   const isTr = locale === "tr";
   return {
     greeting: isRu ? "Привет! Я помогу составить маршрут по Азербайджану специально под вас.\n\nПодготовлю персональный итинерарий за 5 вопросов — займёт меньше минуты. 🗺" : isAz ? "Salam! Azərbaycan üçün xüsusi marşrut hazırlamağa kömək edəcəyəm.\n\n5 sual ərzində fərdi itinerariy hazırlayacağam — bir dəqiqədən az çəkəcək. 🗺" : isTr ? "Merhaba! Azerbaycan için size özel bir rota oluşturmama yardımcı olacağım.\n\n5 soruda kişisel bir güzergah hazırlayacağım — bir dakikadan az sürer. 🗺" : "Hello! I'll help you plan a trip to Azerbaijan tailored just for you.\n\nI'll prepare a personal itinerary in 5 questions — takes less than a minute. 🗺",
-    q_duration: isRu ? "Когда планируете поехать и на сколько дней?" : isAz ? "Nə vaxt getməyi planlaşdırırsınız və neçə gün?" : isTr ? "Ne zaman gitmeyi planlıyorsunuz ve kaç gün?" : "When are you planning to go and for how many days?",
+    q_date: isRu ? "Когда планируете поехать? Выберите дату:" : isAz ? "Nə vaxt getməyi planlaşdırırsınız?" : isTr ? "Ne zaman gitmeyi planlıyorsunuz?" : "When are you planning to go?",
+    q_duration: isRu ? "На сколько дней?" : isAz ? "Neçə gün?" : isTr ? "Kaç gün?" : "For how many days?",
     q_group: isRu ? "С кем едете?" : isAz ? "Kiminlə gedirsiniz?" : isTr ? "Kiminle gidiyorsunuz?" : "Who are you traveling with?",
     q_budget: isRu ? "Какой примерный бюджет на человека?" : isAz ? "Bir nəfər üçün təxmini büdcə nə qədərdir?" : isTr ? "Kişi başına tahmini bütçeniz nedir?" : "What is your approximate budget per person?",
     q_interests: isRu ? "Что вас привлекает в Азербайджане? Выберите всё что нравится:" : isAz ? "Azərbaycanda sizi nə cəlb edir? Bütün bəyəndiklərinizi seçin:" : isTr ? "Azerbaycan'da sizi ne çekiyor? Beğendiklerinizi seçin:" : "What interests you in Azerbaijan? Select all that apply:",
@@ -171,6 +173,7 @@ const getTexts = (locale: string) => {
     loading_map: isRu ? "Загружаем..." : isAz ? "Yüklənir..." : isTr ? "Yükleniyor..." : "Loading...",
     map_unavailable: isRu ? "Карта недоступна" : isAz ? "Xəritə əlçatmazdır" : isTr ? "Harita mevcut değil" : "Map unavailable",
     profile: isRu ? "Профиль поездки" : isAz ? "Səyahət profili" : isTr ? "Seyahat profili" : "Trip profile",
+    date_label: isRu ? "Дата" : isAz ? "Tarix" : isTr ? "Tarih" : "Date",
     duration_label: isRu ? "Длительность" : isAz ? "Müddət" : isTr ? "Süre" : "Duration",
     group_label: isRu ? "Состав" : isAz ? "Tərkib" : isTr ? "Grup" : "Group",
     budget_label: isRu ? "Бюджет" : isAz ? "Büdcə" : isTr ? "Bütçe" : "Budget",
@@ -482,13 +485,14 @@ const texts = getTexts(locale);
 const options = getOptions(locale);
   // Chat state
   const [messages, setMessages] = useState<Message[]>([]);
-  const [prefs, setPrefs] = useState<Prefs>({ duration: null, group: null, budget: null, interests: [], pace: null });
+  const [prefs, setPrefs] = useState<Prefs>({ date: null, duration: null, group: null, budget: null, interests: [], pace: null });
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [chatHistory, setChatHistory] = useState<{ role: string; content: string }[]>([]);
   const [step, setStep] = useState(0);
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const [activeOptions, setActiveOptions] = useState<ActiveOptions>(null);
 
   // Plan state
@@ -533,7 +537,7 @@ const [stopPhotos, setStopPhotos] = useState<Record<string, string>>({});
       : `Great! Building an itinerary for ${destName}.\n\nLet me ask a few questions to personalize it. 🗺`)
     : t.greeting;
   aiSay(greeting, 700, () => {
-    aiSay(t.q_duration, 800, () => { scrollBottom(); setActiveOptions("duration"); });
+    aiSay(t.q_date, 800, () => { scrollBottom(); setActiveOptions("date"); });
   });
 }, [locale, destinationParam]);
 
@@ -571,7 +575,16 @@ const [stopPhotos, setStopPhotos] = useState<Record<string, string>>({});
     continueChat(value);
   }
 };
-
+const handleDateDone = () => {
+  if (!selectedDate) return;
+  const dateObj = new Date(selectedDate);
+  const formatted = dateObj.toLocaleDateString(locale === "ru" ? "ru-RU" : locale === "tr" ? "tr-TR" : locale === "az" ? "az-AZ" : "en-US", { day: "numeric", month: "long", year: "numeric" });
+  setActiveOptions(null);
+  pushUser(formatted);
+  const np = { ...prefs, date: selectedDate };
+  setPrefs(np); setStep(0);
+  aiSay(getTexts(locale).q_duration, 700, () => { scrollBottom(); setActiveOptions("duration"); });
+};
 const handleInterestsDone = () => {
   const interests = selectedInterests.length > 0 ? selectedInterests : ["Разное"];
   setActiveOptions(null);
@@ -659,6 +672,7 @@ const fetchStopPhotos = async (planData: Plan, dayNumber: number) => {
         locale,
         diet: [],
         pace: finalPrefs.pace,
+        date: finalPrefs.date,
       }),
     });
     const data = await res.json();
@@ -1025,6 +1039,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
         </Link>
         <p style={{ fontSize: 9, letterSpacing: "0.25em", textTransform: "uppercase", color: T.textMuted, marginBottom: 16 }}>{texts.profile}</p>
         {[
+          { icon: "📅", label: texts.date_label, value: prefs.date ? new Date(prefs.date).toLocaleDateString(locale === "ru" ? "ru-RU" : "en-US", { day: "numeric", month: "short" }) : null },
           { icon: "🗓", label: texts.duration_label, value: prefs.duration ? `${prefs.duration}${texts.days_suffix}` : null },
           { icon: "👥", label: texts.group_label, value: prefs.group },
           { icon: "💳", label: texts.budget_label, value: prefs.budget },
@@ -1071,7 +1086,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
         </div>
 
         <div style={{ display: "flex", gap: 3, padding: "10px 20px 6px", flexShrink: 0 }}>
-          {[0,1,2,3,4].map(i => (
+          {[0,1,2,3,4,5].map(i => (
             <div key={i} style={{ flex: 1, height: 2, borderRadius: 2, background: i < step ? T.accent : i === step ? T.accentDim : T.bgCard, transition: "all 0.3s" }} />
           ))}
         </div>
@@ -1097,7 +1112,25 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
             </div>
           )}
 
-          {!isTyping && !generating && activeOptions && activeOptions !== "interests" && activeOptions !== "post" && (
+          {!isTyping && !generating && activeOptions === "date" && (
+            <div style={{ paddingLeft: 40, animation: "fadeUp 0.3s ease" }}>
+              <input
+                type="date"
+                value={selectedDate}
+                min={new Date().toISOString().split("T")[0]}
+                onChange={e => setSelectedDate(e.target.value)}
+                style={{ padding: "10px 14px", borderRadius: 10, border: `1px solid ${T.border}`, background: T.bgCard, color: T.text, fontSize: 14, fontFamily: T.font, outline: "none", marginBottom: 10, display: "block" }}
+              />
+              <button
+                onClick={handleDateDone}
+                disabled={!selectedDate}
+                style={{ padding: "8px 20px", borderRadius: 20, background: selectedDate ? T.accent : T.bgCard, color: selectedDate ? "#06090f" : T.textMuted, border: "none", fontSize: 13, fontWeight: 700, cursor: selectedDate ? "pointer" : "default", fontFamily: T.font }}>
+                {texts.done_btn}
+              </button>
+            </div>
+          )}
+
+          {!isTyping && !generating && activeOptions && activeOptions !== "interests" && activeOptions !== "post" && activeOptions !== "date" && (
             <div style={{ paddingLeft: 40, display: "flex", flexWrap: "wrap", gap: 7, animation: "fadeUp 0.3s ease" }}>
               {options[activeOptions as keyof typeof options]?.map((opt: any) => (
                 <button key={opt.label} className="cr-opt" onClick={() => handleOption(opt.value || opt.label, opt.label)}

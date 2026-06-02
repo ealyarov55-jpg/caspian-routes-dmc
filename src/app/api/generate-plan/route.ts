@@ -5,7 +5,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(req: NextRequest) {
   try {
-    const { days, group, budget, interests, from, locale, diet, pace } = await req.json();
+    const { days, group, budget, interests, from, locale, diet, pace, date } = await req.json();
 
     const langInstruction = locale === "en" ? "Respond in English." : locale === "az" ? "Azərbaycan dilində cavab ver." : locale === "tr" ? "Türkçe yanıt ver." : "Отвечай на русском языке.";
 
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
 You are a premium travel curator for Azerbaijan. Create an editorial itinerary.
 
-Context: Days: ${days} | Group: ${group} | Budget: ${budget} | Focus: ${interests.join(", ")} | Current month: ${new Date().toLocaleString('en', { month: 'long' })}
+Context: Days: ${days} | Group: ${group} | Budget: ${budget} | Focus: ${interests.join(", ")} | Travel date: ${date || new Date().toISOString().split('T')[0]} | Month: ${new Date(date || Date.now()).toLocaleString('en', { month: 'long' })}
 
 DESTINATION: "${from}"
 ${from !== "Весь Азербайджан" ? `CRITICAL: The ENTIRE itinerary must be based in and around "${from}". Every single day, every activity, every location must be in "${from}" or within 30km of "${from}". Do NOT include other cities or regions. Hotels must be in "${from}" or nearest town.` : "Cover the best of Azerbaijan based on interests and duration."}
