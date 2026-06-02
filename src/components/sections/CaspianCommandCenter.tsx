@@ -208,10 +208,10 @@ const getOptions = (locale: string) => {
       { icon: "👫", label: isRu ? "Друзья" : isAz ? "Dostlar" : isTr ? "Arkadaşlar" : "Friends", value: isRu ? "Друзья" : isAz ? "Dostlar" : isTr ? "Arkadaşlar" : "Friends" },
     ],
     budget: [
-      { icon: "💚", label: isRu ? "Эконом" : isAz ? "Ekonom" : isTr ? "Ekonomi" : "Economy", value: "$300-500" },
-      { icon: "💛", label: isRu ? "Комфорт" : isAz ? "Komfort" : isTr ? "Konfor" : "Comfort", value: "$500-1000" },
-      { icon: "🧡", label: isRu ? "Бизнес" : isAz ? "Biznes" : isTr ? "Business" : "Business", value: "$1000-2000" },
-      { icon: "❤️", label: isRu ? "Люкс" : isAz ? "Lüks" : isTr ? "Lüks" : "Luxury", value: "$2000+" },
+      { icon: "💚", label: isRu ? "Эконом" : isAz ? "Ekonom" : isTr ? "Ekonomi" : "Economy", value: "300-500" },
+      { icon: "💛", label: isRu ? "Комфорт" : isAz ? "Komfort" : isTr ? "Konfor" : "Comfort", value: "500-1000" },
+      { icon: "🧡", label: isRu ? "Бизнес" : isAz ? "Biznes" : isTr ? "Business" : "Business", value: "1000-2000" },
+      { icon: "❤️", label: isRu ? "Люкс" : isAz ? "Lüks" : isTr ? "Lüks" : "Luxury", value: "2000+" },
     ],
     currency: [
       { icon: "💵", label: "USD", value: "USD" },
