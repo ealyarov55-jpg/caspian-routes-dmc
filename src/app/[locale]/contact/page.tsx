@@ -82,7 +82,7 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
                   <Mail size={18} color="#2dd4bf" />
                 </div>
                 <div>
-                  <p style={{ color: "white", fontSize: 15, fontWeight: 500 }}>ealyarov55@gmail.com</p>
+                  <p style={{ color: "white", fontSize: 15, fontWeight: 500 }}>caspianroutes@gmail.com</p>
                   <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13 }}>
                     {tr("Reply within 24 hours", "Ответ в течение 24 часов", "24 saat ərzində cavab")}
                   </p>

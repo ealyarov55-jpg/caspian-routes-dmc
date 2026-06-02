@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
 
     await resend.emails.send({
       from: "Caspian Routes <onboarding@resend.dev>",
-      to: "ealyarov55@gmail.com",
+      to: "caspianroutes@gmail.com",
       subject: `✉️ Новое сообщение от ${name}`,
       html: `
         <!DOCTYPE html>
