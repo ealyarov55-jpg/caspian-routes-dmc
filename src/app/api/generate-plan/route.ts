@@ -34,12 +34,12 @@ RULES:
 - hotel description: max 8 words
 - BUDGET: be realistic. Azerbaijan is NOT cheap for tourists. Use these real price benchmarks: budget hotel 50-80 AZN/night, mid hotel 150-250 AZN/night, luxury hotel 400-800 AZN/night, restaurant meal 15-40 AZN/person, taxi cross-city 10-20 AZN, intercity bus 10-30 AZN, Gobustan tour 50-80 AZN. Calculate total_budget_estimate honestly based on actual days and group size.
 - budget_breakdown: realistic per-person cost ranges for entire trip. accommodation = hotels × nights. food = meals × days. transport = taxis + intercity. attractions = entry fees. total = sum of all categories.
-- curated_stays: ALWAYS include exactly 3 hotels. Use EXACTLY these hotel names (copy-paste, no alterations):
+- curated_stays: ALWAYS include exactly 3 hotels matching the regions visited in the itinerary. If itinerary visits multiple regions (e.g. Baku + Sheki + Gabala), include 1 hotel per main region visited. If itinerary stays only in Baku, use EXACTLY these names:
   Economy: "ibis Baku City", "Sultan Inn Baku", "Boutique 19 Hotel Baku"
   Comfort: "Holiday Inn Baku", "Baku Marriott Hotel Boulevard", "Moss Art Hotel Baku"
   Business: "JW Marriott Absheron Baku", "InterContinental Baku", "Hazz Hotel Baku"
   Luxury: "Four Seasons Hotel Baku", "Fairmont Baku Flame Towers"
-  For regions outside Baku add 1 regional hotel with realistic name.
+  For non-Baku regions use real hotel names that actually exist in that city (e.g. "Sheki Saray Hotel" for Sheki, "Qafqaz Tufandag Hotel" for Gabala, "Qafqaz Resort Hotel" for Gabala). Never recommend Baku hotels for days spent in other regions.
 - For trips outside Baku (Sheki, Gabala, Guba etc) include regional hotels, not only Baku hotels.
 - NO hotels in daily schedule — only in curated_stays
 - curated_stays: 3 real hotels matching budget and regions visited
