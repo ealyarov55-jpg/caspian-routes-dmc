@@ -876,7 +876,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
             <h2 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(0.95rem, 2vw, 1.2rem)", color: T.text, fontWeight: 800, margin: "0 0 4px" }}>{plan.plan_title}</h2>
             <p style={{ color: T.textMuted, fontSize: 12, margin: 0 }}>{plan.total_budget_estimate}</p>
             <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
-              {[prefs.group, prefs.budget, prefs.pace].filter(Boolean).map((p, i) => (
+              {[prefs.group, prefs.budget ? `${prefs.budget} ${prefs.currency || "USD"}` : null, prefs.pace].filter(Boolean).map((p, i) => (
                 <span key={i} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 10, background: T.bgCard, border: `1px solid ${T.border}`, color: T.textMuted }}>{p}</span>
               ))}
             </div>
@@ -1174,7 +1174,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
             <div key={i} style={{ flex: 1, height: 2, borderRadius: 2, background: i < step ? T.accent : i === step ? T.accentDim : T.bgCard, transition: "all 0.3s" }} />
           ))}
         </div>
-{generating && step === 5 && <GeneratingOverlay locale={locale} />}
+{generating && step === 6 && <GeneratingOverlay locale={locale} />}
         <div ref={chatRef} style={{ flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 12 }}>
           {messages.map((msg, i) => (
             <div key={i} style={{ display: "flex", gap: 10, maxWidth: "85%", alignSelf: msg.role === "user" ? "flex-end" : "flex-start", flexDirection: msg.role === "user" ? "row-reverse" : "row", animation: "fadeUp 0.3s ease" }}>
