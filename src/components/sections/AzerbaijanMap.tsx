@@ -196,7 +196,7 @@ export default function AzerbaijanMap({ locale, lang }: { locale: string; lang: 
                 {L(active.desc)}
               </p>
               <Link
-                href={`/${locale}/planner`}
+                href={`/${locale}/planner?destination=${active.id}`}
                 style={{
                   display: "block", textAlign: "center",
                   padding: "10px 16px",
