@@ -16,7 +16,10 @@ export async function POST(req: NextRequest) {
 
 You are a premium travel curator for Azerbaijan. Create an editorial itinerary.
 
-Context: Days: ${days} | Group: ${group} | Budget: ${budget} | Focus: ${interests.join(", ")} | From: ${from} | Current month: ${new Date().toLocaleString('en', { month: 'long' })}
+Context: Days: ${days} | Group: ${group} | Budget: ${budget} | Focus: ${interests.join(", ")} | Current month: ${new Date().toLocaleString('en', { month: 'long' })}
+
+DESTINATION: "${from}"
+${from !== "Весь Азербайджан" ? `CRITICAL: The ENTIRE itinerary must be based in and around "${from}". Every single day, every activity, every location must be in "${from}" or within 30km of "${from}". Do NOT include other cities or regions. Hotels must be in "${from}" or nearest town.` : "Cover the best of Azerbaijan based on interests and duration."}
 ${dietLine}
 ${paceLine}
 
