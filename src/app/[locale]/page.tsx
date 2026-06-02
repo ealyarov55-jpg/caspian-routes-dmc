@@ -353,7 +353,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <h3 style={{ fontFamily: T.fontDisplay, fontSize: "clamp(0.85rem, 4vw, 1.1rem)", color: T.text, fontWeight: 800, margin: "0 0 4px", lineHeight: 1.2, wordBreak: "break-word" }}>{dest.name}</h3>
       <p style={{ color: T.textMuted, fontSize: 12, margin: "0 0 12px", lineHeight: 1.4 }}>{dest.desc}</p>
       <span style={{ fontSize: 11, color: T.accent, fontWeight: 600 }}>
-        {lang === "ru" ? "Построить маршрут →" : lang === "az" ? "Marşrut yarat →" : lang === "tr" ? "Rota oluştur →" : "Build itinerary →"}
+        {dest.href.includes("/blog") 
+          ? (lang === "ru" ? "Читать статью →" : lang === "az" ? "Məqaləni oxu →" : lang === "tr" ? "Makaleyi oku →" : "Read article →")
+          : (lang === "ru" ? "Построить маршрут →" : lang === "az" ? "Marşrut yarat →" : lang === "tr" ? "Rota oluştur →" : "Build itinerary →")
+        }
       </span>
     </div>
   </Link>
