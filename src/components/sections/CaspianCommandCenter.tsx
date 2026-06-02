@@ -28,12 +28,13 @@ type Prefs = {
   duration: string | null;
   group: string | null;
   budget: string | null;
+  currency: string | null;
   interests: string[];
   pace: string | null;
 };
 
 type Message = { role: "ai" | "user"; text: string };
-type ActiveOptions = "date" | "duration" | "group" | "budget" | "interests" | "pace" | "post" | null;
+type ActiveOptions = "date" | "duration" | "group" | "budget" | "currency" | "interests" | "pace" | "post" | null;
 
 type Stop = {
   activity: string;
@@ -174,6 +175,8 @@ const getTexts = (locale: string) => {
     map_unavailable: isRu ? "Карта недоступна" : isAz ? "Xəritə əlçatmazdır" : isTr ? "Harita mevcut değil" : "Map unavailable",
     profile: isRu ? "Профиль поездки" : isAz ? "Səyahət profili" : isTr ? "Seyahat profili" : "Trip profile",
     date_label: isRu ? "Дата" : isAz ? "Tarix" : isTr ? "Tarih" : "Date",
+    q_currency: isRu ? "В какой валюте считать бюджет?" : isAz ? "Büdcəni hansı valyutada hesablayaq?" : isTr ? "Bütçeyi hangi para biriminde hesaplayalım?" : "Which currency for the budget?",
+    currency_label: isRu ? "Валюта" : isAz ? "Valyuta" : isTr ? "Para birimi" : "Currency",
     duration_label: isRu ? "Длительность" : isAz ? "Müddət" : isTr ? "Süre" : "Duration",
     group_label: isRu ? "Состав" : isAz ? "Tərkib" : isTr ? "Grup" : "Group",
     budget_label: isRu ? "Бюджет" : isAz ? "Büdcə" : isTr ? "Bütçe" : "Budget",
@@ -209,6 +212,14 @@ const getOptions = (locale: string) => {
       { icon: "💛", label: isRu ? "Комфорт" : isAz ? "Komfort" : isTr ? "Konfor" : "Comfort", value: "$500-1000" },
       { icon: "🧡", label: isRu ? "Бизнес" : isAz ? "Biznes" : isTr ? "Business" : "Business", value: "$1000-2000" },
       { icon: "❤️", label: isRu ? "Люкс" : isAz ? "Lüks" : isTr ? "Lüks" : "Luxury", value: "$2000+" },
+    ],
+    currency: [
+      { icon: "💵", label: "USD", value: "USD" },
+      { icon: "💴", label: "RUB", value: "RUB" },
+      { icon: "💶", label: "EUR", value: "EUR" },
+      { icon: "🪙", label: "AZN", value: "AZN" },
+      { icon: "💸", label: "TRY", value: "TRY" },
+      { icon: "🏦", label: "AED", value: "AED" },
     ],
     pace: [
       { icon: "🧘", label: isRu ? "Расслабленный" : isAz ? "Rahat" : isTr ? "Rahat" : "Relaxed", value: isRu ? "Расслабленный" : isAz ? "Rahat" : isTr ? "Rahat" : "Relaxed" },
@@ -552,7 +563,7 @@ const texts = getTexts(locale);
 const options = getOptions(locale);
   // Chat state
   const [messages, setMessages] = useState<Message[]>([]);
-  const [prefs, setPrefs] = useState<Prefs>({ date: null, duration: null, group: null, budget: null, interests: [], pace: null });
+  const [prefs, setPrefs] = useState<Prefs>({ date: null, duration: null, group: null, budget: null, currency: null, interests: [], pace: null });
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -632,12 +643,16 @@ const [stopPhotos, setStopPhotos] = useState<Record<string, string>>({});
   } else if (step === 2) {
     const np = { ...prefs, budget: value };
     setPrefs(np); setStep(3);
+    aiSay(getTexts(locale).q_currency, 700, () => { scrollBottom(); setActiveOptions("currency"); });
+  } else if (step === 3) {
+    const np = { ...prefs, currency: value };
+    setPrefs(np); setStep(4);
     aiSay(getTexts(locale).q_interests, 700, () => { scrollBottom(); setActiveOptions("interests"); });
-  } else if (step === 4) {
-    const np = { ...prefs, pace: value };
-    setPrefs(np); setStep(5);
-    generatePlan({ ...prefs, pace: value });
   } else if (step === 5) {
+    const np = { ...prefs, pace: value };
+    setPrefs(np); setStep(6);
+    generatePlan({ ...prefs, pace: value });
+  } else if (step === 6) {
     if (value === "NEW_ROUTE") { window.location.reload(); return; }
     continueChat(value);
   }
@@ -657,7 +672,7 @@ const handleInterestsDone = () => {
   setActiveOptions(null);
   pushUser(interests.join(", "));
   const np = { ...prefs, interests };
-  setPrefs(np); setStep(4);
+  setPrefs(np); setStep(5);
   aiSay(getTexts(locale).q_pace, 700, () => { scrollBottom(); setActiveOptions("pace"); });
 };
 
@@ -734,6 +749,7 @@ const fetchStopPhotos = async (planData: Plan, dayNumber: number) => {
         days: finalPrefs.duration,
         group: finalPrefs.group,
         budget: finalPrefs.budget,
+        currency: finalPrefs.currency || "USD",
         interests: finalPrefs.interests,
         from: destinationParam || "Весь Азербайджан",
         locale,
@@ -1110,6 +1126,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
           { icon: "🗓", label: texts.duration_label, value: prefs.duration ? `${prefs.duration}${texts.days_suffix}` : null },
           { icon: "👥", label: texts.group_label, value: prefs.group },
           { icon: "💳", label: texts.budget_label, value: prefs.budget },
+          { icon: "💱", label: texts.currency_label, value: prefs.currency },
           { icon: "🎯", label: texts.interests_label, value: prefs.interests.length > 0 ? prefs.interests.slice(0, 2).join(", ") + (prefs.interests.length > 2 ? "..." : "") : null },
           { icon: "🚶", label: texts.pace_label, value: prefs.pace },
         ].map((item, i) => (
@@ -1153,7 +1170,7 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
         </div>
 
         <div style={{ display: "flex", gap: 3, padding: "10px 20px 6px", flexShrink: 0 }}>
-          {[0,1,2,3,4,5].map(i => (
+          {[0,1,2,3,4,5,6].map(i => (
             <div key={i} style={{ flex: 1, height: 2, borderRadius: 2, background: i < step ? T.accent : i === step ? T.accentDim : T.bgCard, transition: "all 0.3s" }} />
           ))}
         </div>

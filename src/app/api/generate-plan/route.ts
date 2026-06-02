@@ -5,7 +5,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(req: NextRequest) {
   try {
-    const { days, group, budget, interests, from, locale, diet, pace, date } = await req.json();
+    const { days, group, budget, currency, interests, from, locale, diet, pace, date } = await req.json();
 
     const langInstruction = locale === "en" ? "Respond in English." : locale === "az" ? "Azərbaycan dilində cavab ver." : locale === "tr" ? "Türkçe yanıt ver." : "Отвечай на русском языке.";
 
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
 You are a premium travel curator for Azerbaijan. Create an editorial itinerary.
 
-Context: Days: ${days} | Group: ${group} | Budget: ${budget} | Focus: ${interests.join(", ")} | Travel date: ${date || new Date().toISOString().split('T')[0]} | Month: ${new Date(date || Date.now()).toLocaleString('en', { month: 'long' })}
+Context: Days: ${days} | Group: ${group} | Budget: ${budget} ${currency} | Focus: ${interests.join(", ")} | Travel date: ${date || new Date().toISOString().split('T')[0]} | Month: ${new Date(date || Date.now()).toLocaleString('en', { month: 'long' })}
 
 DESTINATION: "${from}"
 ${from !== "Весь Азербайджан" ? `CRITICAL: The ENTIRE itinerary must be based in and around "${from}". Every single day, every activity, every location must be in "${from}" or within 30km of "${from}". Do NOT include other cities or regions. Hotels must be in "${from}" or nearest town.` : "Cover the best of Azerbaijan based on interests and duration."}
@@ -63,7 +63,8 @@ RULES:
 - TRANSPORT COSTS: Bolt taxi Baku center to Gobustan = 25-35 AZN one way. Baku to Nardaran = 15-20 AZN. Baku to Ateshgah = 10-15 AZN. Intercity Baku-Sheki bus = 10-12 AZN. Be honest — if itinerary needs 3 taxi rides, budget 60-90 AZN for transport that day.
 - RESTAURANT PRICES: Firuze, Shirvanshahlar, Chinar = 30-60 AZN per person minimum. Street food = 5-10 AZN. Teze Bazar snacks = 10-20 AZN. Never underestimate food costs.
 - ATTRACTIONS: Gobustan museum = 10 AZN. Ateshgah = 10 AZN. Icheri Sheher palaces = 15 AZN each. Mud volcanoes = free but need local jeep 20-30 AZN.
-- total_budget_estimate: provide a realistic range like "$450-600 per person". Do NOT sum numbers. Base range on: economy=$300-500, comfort=$500-900, business=$900-1800, luxury=$1800+. Adjust up if itinerary includes expensive restaurants or distant regions.
+- total_budget_estimate: provide a realistic range in ${currency} currency (e.g. if currency is RUB write "45000-60000 RUB per person", if AZN write "780-1020 AZN per person"). Always use the specified currency symbol.
+- budget_breakdown: all amounts must be in ${currency} currency. Do NOT sum numbers. Base range on: economy=$300-500, comfort=$500-900, business=$900-1800, luxury=$1800+. Adjust up if itinerary includes expensive restaurants or distant regions.
 Return ONLY valid JSON:
 {
   "plan_title": "editorial title",
