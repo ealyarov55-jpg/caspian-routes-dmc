@@ -48,7 +48,12 @@ RULES:
 - maps_url: real Google Maps search URL for the place
 - rating: real approximate rating from Google Maps (e.g. "4.6")
 - tripadvisor_url: real TripAdvisor search URL for the place
-- photo_query: specific English search query for Pexels to find a photo of this exact place. Include place name and country. Examples: "Gobustan mud volcanoes Azerbaijan", "Sheki Khan Palace Azerbaijan", "Old City Baku walls medieval". Never use generic words like "travel", "nature", "tourism".
+- photo_query: Optimized English search query for Pexels API. Pexels has very limited Azerbaijan coverage, so follow this strategy strictly:
+  1. For world-famous landmarks use simple English: "[Name] Azerbaijan" or "[Name] Baku" (e.g. "Gobustan Azerbaijan", "Flame Towers Baku", "Sheki Khan Palace").
+  2. For local/specific places (local cafes, restaurants, small museums, bus stations) NEVER use their exact names. Instead generate a general high-aesthetic atmospheric query conveying the vibe (e.g. instead of "Firuze restaurant Baku" write "Baku traditional restaurant cozy"; instead of "Autovokzal Gabala" write "Azerbaijan mountain road sunny").
+  3. SEASONALITY: Analyze "Month" and "Travel date" fields. If trip is June-August add "summer" or "sunny" keywords and strictly avoid anything that could return snow/winter images. For winter trips use "winter", "moody", "snowy".
+  4. NO FOREIGN TEXT: Avoid queries that may return images with non-matching signs, billboards or city names on buildings.
+  5. FORBIDDEN WORDS: Never use "travel", "nature", "tourism", "photo", "scenery" or exact names of non-famous venues.
 - FAMILY WITH CHILDREN: if group contains "дети" or "children" or "С детьми" or "Family" or "Uşaqlarla" or "Çocuklarla": NO long walks over 3km, NO difficult terrain, NO activities lasting over 2 hours without a break, ALWAYS include 1 indoor activity per day, recommend family-friendly restaurants with kids menus, hotels must have family rooms, pace must be relaxed regardless of selected pace, avoid Khinalug/Lahij difficult roads.
 - COUPLE: if group contains "Пара" or "Couple" or "Cütlük" or "Çift": prioritize romantic dinners, rooftop restaurants, sunset viewpoints, boutique hotels, spa experiences, evening walks on Baku boulevard. Include at least 1 romantic restaurant per day.
 - FRIENDS: if group contains "Друзья" or "Friends" or "Dostlar" or "Arkadaşlar": include nightlife options, group-friendly restaurants, adventure activities (ATV, zipline, hiking), street food spots, flexible schedule with free time blocks.
