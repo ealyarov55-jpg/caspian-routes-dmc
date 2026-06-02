@@ -457,8 +457,10 @@ function GeneratingOverlay({ locale }: { locale: string }) {
 }
 // ── MAIN COMPONENT ────────────────────────────────────────────────────
 export default function CaspianCommandCenter() {
-  const params = useParams();
-  const locale = (params?.locale as string) || "ru";
+ const params = useParams();
+const locale = (params?.locale as string) || "ru";
+const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+const destinationParam = searchParams?.get("destination") || null;
 const texts = getTexts(locale);
 const options = getOptions(locale);
   // Chat state
@@ -629,7 +631,7 @@ const fetchStopPhotos = async (planData: Plan, dayNumber: number) => {
         group: finalPrefs.group,
         budget: finalPrefs.budget,
         interests: finalPrefs.interests,
-        from: "Весь Азербайджан",
+        from: destinationParam || "Весь Азербайджан",
         locale,
         diet: [],
         pace: finalPrefs.pace,
