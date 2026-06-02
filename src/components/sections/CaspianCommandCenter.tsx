@@ -459,8 +459,25 @@ function GeneratingOverlay({ locale }: { locale: string }) {
 export default function CaspianCommandCenter() {
  const params = useParams();
 const locale = (params?.locale as string) || "ru";
-const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-const destinationParam = searchParams?.get("destination") || null;
+const [destinationParam, setDestinationParam] = useState<string | null>(null);
+
+const DESTINATION_NAMES: Record<string, Record<string, string>> = {
+  baku:     { ru: "Баку",      en: "Baku",     az: "Bakı",    tr: "Bakü"    },
+  gabala:   { ru: "Габалу",    en: "Gabala",   az: "Qəbələ",  tr: "Gabala"  },
+  sheki:    { ru: "Шеки",      en: "Sheki",    az: "Şəki",    tr: "Şeki"    },
+  gobustan: { ru: "Гобустан",  en: "Gobustan", az: "Qobustan",tr: "Gobustan"},
+  khinalug: { ru: "Хыналыг",  en: "Khinalug", az: "Xınalıq", tr: "Hınalıg" },
+  lahij:    { ru: "Лагич",     en: "Lahij",    az: "Lahıc",   tr: "Lahıc"   },
+  shahdag:  { ru: "Шахдаг",    en: "Shahdag",  az: "Şahdağ",  tr: "Şahdağ"  },
+  guba:     { ru: "Губу",      en: "Guba",     az: "Quba",    tr: "Kuba"    },
+  naftalan: { ru: "Нафталан",  en: "Naftalan", az: "Naftalan",tr: "Naftalan"},
+  lankaran: { ru: "Ленкорань", en: "Lankaran", az: "Lənkəran",tr: "Lenkoran"},
+};
+
+useEffect(() => {
+  const sp = new URLSearchParams(window.location.search);
+  setDestinationParam(sp.get("destination"));
+}, []);
 const texts = getTexts(locale);
 const options = getOptions(locale);
   // Chat state
@@ -508,10 +525,17 @@ const [stopPhotos, setStopPhotos] = useState<Record<string, string>>({});
 
   useEffect(() => {
   const t = getTexts(locale);
-  aiSay(t.greeting, 700, () => {
+  const destName = destinationParam ? DESTINATION_NAMES[destinationParam]?.[locale] || destinationParam : null;
+  const greeting = destName
+    ? (locale === "ru" ? `Отлично! Составляю маршрут по направлению: ${destName}.\n\nОтвечу на несколько вопросов чтобы персонализировать маршрут. 🗺`
+      : locale === "az" ? `Əla! ${destName} üçün marşrut hazırlayıram.\n\nBir neçə sual verəcəyəm. 🗺`
+      : locale === "tr" ? `Harika! ${destName} için rota oluşturuyorum.\n\nBirkaç soru soracağım. 🗺`
+      : `Great! Building an itinerary for ${destName}.\n\nLet me ask a few questions to personalize it. 🗺`)
+    : t.greeting;
+  aiSay(greeting, 700, () => {
     aiSay(t.q_duration, 800, () => { scrollBottom(); setActiveOptions("duration"); });
   });
-}, [locale]);
+}, [locale, destinationParam]);
 
   useEffect(() => {
     if (plan && activeDay) {
