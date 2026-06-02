@@ -242,7 +242,74 @@ declare global {
 declare global {
   interface Window { google: any; initGoogleMap?: () => void; }
 }
+// ── MINI CALENDAR ──────────────────────────────────────────────────────
+function MiniCalendar({ value, onChange, onConfirm, locale, accent, bg, border, text, textMuted, doneLabel }: {
+  value: string; onChange: (v: string) => void; onConfirm: () => void;
+  locale: string; accent: string; bg: string; border: string; text: string; textMuted: string; doneLabel: string;
+}) {
+  const today = new Date();
+  const [viewYear, setViewYear] = useState(today.getFullYear());
+  const [viewMonth, setViewMonth] = useState(today.getMonth());
 
+  const monthNames = locale === "ru"
+    ? ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"]
+    : locale === "tr"
+    ? ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"]
+    : locale === "az"
+    ? ["Yanvar","Fevral","Mart","Aprel","May","İyun","İyul","Avqust","Sentyabr","Oktyabr","Noyabr","Dekabr"]
+    : ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  const dayNames = locale === "ru" ? ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"]
+    : locale === "tr" ? ["Pt","Sa","Ça","Pe","Cu","Ct","Pz"]
+    : locale === "az" ? ["B.e","Ç.a","Çr","Cm.a","Cm","Şn","Bz"]
+    : ["Mo","Tu","We","Th","Fr","Sa","Su"];
+
+  const firstDay = new Date(viewYear, viewMonth, 1);
+  const startDow = (firstDay.getDay() + 6) % 7;
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+  const cells: (number | null)[] = [...Array(startDow).fill(null), ...Array.from({length: daysInMonth}, (_, i) => i + 1)];
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  const prevMonth = () => { if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); } else setViewMonth(m => m - 1); };
+  const nextMonth = () => { if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); } else setViewMonth(m => m + 1); };
+
+  const isSelected = (d: number) => value === `${viewYear}-${String(viewMonth+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+  const isPast = (d: number | null): boolean => d === null ? true : new Date(viewYear, viewMonth, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  return (
+    <div style={{ background: bg, border: `1px solid ${border}`, borderRadius: 12, padding: 16, width: 280, fontFamily: "'DM Sans', sans-serif" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+        <button onClick={prevMonth} style={{ background: "none", border: "none", color: textMuted, cursor: "pointer", fontSize: 18, padding: "0 4px" }}>‹</button>
+        <span style={{ color: text, fontSize: 13, fontWeight: 600 }}>{monthNames[viewMonth]} {viewYear}</span>
+        <button onClick={nextMonth} style={{ background: "none", border: "none", color: textMuted, cursor: "pointer", fontSize: 18, padding: "0 4px" }}>›</button>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2, marginBottom: 8 }}>
+        {dayNames.map(d => (
+          <div key={d} style={{ textAlign: "center", fontSize: 10, color: textMuted, padding: "4px 0" }}>{d}</div>
+        ))}
+        {cells.map((d, i) => (
+          <div key={i} onClick={() => d !== null && !isPast(d) && onChange(`${viewYear}-${String(viewMonth+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`)}
+            style={{
+              textAlign: "center", fontSize: 12, padding: "6px 0", borderRadius: 6, cursor: d && !isPast(d) ? "pointer" : "default",
+              background: d !== null && isSelected(d as number) ? accent : "transparent",
+              color: !d ? "transparent" : isPast(d as number) ? "rgba(255,255,255,0.15)" : isSelected(d as number) ? "#06090f" : text,
+              fontWeight: isSelected(d as number) ? 700 : 400,
+            }}>
+            {d || ""}
+          </div>
+        ))}
+      </div>
+
+      {value && (
+        <button onClick={onConfirm} style={{ width: "100%", padding: "9px", borderRadius: 8, background: accent, color: "#06090f", border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", marginTop: 4 }}>
+          {doneLabel}
+        </button>
+      )}
+    </div>
+  );
+}
 // ── MAP COMPONENT ──────────────────────────────────────────────────────
 function ItineraryMap({ geoDays, activeDay, onMarkerClick }: {
   geoDays: GeoDay[];
@@ -1114,19 +1181,18 @@ const currentGeoDay = geoDays.find(d => d.day === activeDay);
 
           {!isTyping && !generating && activeOptions === "date" && (
             <div style={{ paddingLeft: 40, animation: "fadeUp 0.3s ease" }}>
-              <input
-                type="date"
+              <MiniCalendar
                 value={selectedDate}
-                min={new Date().toISOString().split("T")[0]}
-                onChange={e => setSelectedDate(e.target.value)}
-                style={{ padding: "10px 14px", borderRadius: 10, border: `1px solid ${T.border}`, background: T.bgCard, color: T.text, fontSize: 14, fontFamily: T.font, outline: "none", marginBottom: 10, display: "block" }}
+                onChange={setSelectedDate}
+                onConfirm={handleDateDone}
+                locale={locale}
+                accent={T.accent}
+                bg={T.bgCard}
+                border={T.border}
+                text={T.text}
+                textMuted={T.textMuted}
+                doneLabel={texts.done_btn}
               />
-              <button
-                onClick={handleDateDone}
-                disabled={!selectedDate}
-                style={{ padding: "8px 20px", borderRadius: 20, background: selectedDate ? T.accent : T.bgCard, color: selectedDate ? "#06090f" : T.textMuted, border: "none", fontSize: 13, fontWeight: 700, cursor: selectedDate ? "pointer" : "default", fontFamily: T.font }}>
-                {texts.done_btn}
-              </button>
             </div>
           )}
 
