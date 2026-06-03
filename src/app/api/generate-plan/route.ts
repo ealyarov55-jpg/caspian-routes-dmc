@@ -73,7 +73,14 @@ RULES:
 - RESTAURANT PRICES: Firuze, Shirvanshahlar, Chinar = 30-60 AZN per person minimum. Street food = 5-10 AZN. Teze Bazar snacks = 10-20 AZN. Never underestimate food costs.
 - ATTRACTIONS: Gobustan museum = 10 AZN. Ateshgah = 10 AZN. Icheri Sheher palaces = 15 AZN each. Mud volcanoes = free but need local jeep 20-30 AZN.
 - total_budget_estimate: provide a realistic range in ${currency} currency (e.g. if currency is RUB write "45000-60000 RUB per person", if AZN write "780-1020 AZN per person"). Always use the specified currency symbol.
-- budget_breakdown: all amounts must be in ${currency} currency. Do NOT sum numbers. Base range on: economy=$300-500, comfort=$500-900, business=$900-1800, luxury=$1800+. Adjust up if itinerary includes expensive restaurants or distant regions.
+- budget_breakdown: all amounts must be in ${currency} currency. CRITICAL RULES:
+  1. ALL amounts in budget_breakdown must be PER PERSON, not per family/group total.
+  2. accommodation = price per room per night × number of nights ÷ number of people in group. For family (2 adults + children) divide by 2 adults.
+  3. food = realistic daily food cost PER PERSON × number of days. Never underestimate: Nabran/resort areas cost 40-60 AZN per person per day minimum in summer.
+  4. transport = total transport cost ÷ number of people. For "С детьми"/"Family" with "Расслабленный" pace ALWAYS use taxi/private transfer, never local minibus.
+  5. total must equal sum of all categories per person.
+  6. For FAMILY group: accommodation must be minimum 80-150 AZN per night for a proper family room. Never go below this for resort areas in summer season.
+  7. For ECONOMY budget with FAMILY: be honest — if the destination is expensive in season, say so. Write "бюджет эконом может быть сложен для этого направления в летний сезон" in logistics. Do NOT sum numbers. Base range on: economy=$300-500, comfort=$500-900, business=$900-1800, luxury=$1800+. Adjust up if itinerary includes expensive restaurants or distant regions.
 Return ONLY valid JSON:
 {
   "plan_title": "editorial title",
