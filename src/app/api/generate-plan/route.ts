@@ -39,7 +39,16 @@ RULES:
   Comfort: "Holiday Inn Baku", "Baku Marriott Hotel Boulevard", "Moss Art Hotel Baku"
   Business: "JW Marriott Absheron Baku", "InterContinental Baku", "Hazz Hotel Baku"
   Luxury: "Four Seasons Hotel Baku", "Fairmont Baku Flame Towers"
-  For non-Baku regions use real hotel names that actually exist in that city (e.g. "Sheki Saray Hotel" for Sheki, "Qafqaz Tufandag Hotel" for Gabala, "Qafqaz Resort Hotel" for Gabala). Never recommend Baku hotels for days spent in other regions.
+  For non-Baku regions use real hotel names that actually exist in that specific city. Known real hotels by region:
+  Sheki: "Sheki Saray Hotel", "Khan Evi Hotel Sheki"
+  Gabala: "Qafqaz Tufandag Hotel", "Qafqaz Resort Hotel Gabala", "Chenot Palace Gabala"
+  Guba: "Quba Palace Hotel", "Sport Hotel Guba"
+  Gusar/Shahdag: "Pik Palace Shahdag", "Park Chalet Shahdag"
+  Lankaran: "Khan Hotel Lankaran", "Qafqaz Lankaran Nature Hotel"
+  Nabran: "Nabran Palace Hotel", "Caspian Shore Resort Nabran"
+  Naftalan: "Qafqaz Thermal Hotel Naftalan", "Chinar Hotel Naftalan"
+  Ismayilli/Lahij: "Lahij Inn", "Ismayilli Resort Hotel"
+  CRITICAL: NEVER put Baku hotel names for days/regions outside Baku. Each hotel must be in the city where the guest will sleep that night.
 - For trips outside Baku (Sheki, Gabala, Guba etc) include regional hotels, not only Baku hotels.
 - NO hotels in daily schedule — only in curated_stays
 - curated_stays: 3 real hotels matching budget and regions visited
